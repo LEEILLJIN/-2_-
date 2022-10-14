@@ -9,8 +9,8 @@ def MainMenuContent(isIceBox, today):
     print("5. 종료")
 
     while True:
-        MainMenuInput = int(input())
-        if MainMenuInput == 1:
+        MainMenuInput = str(input())
+        if MainMenuInput == '1':
             if isIceBox:
                 print("이미 냉장고가 생성 되어 있습니다.")
                 continue
@@ -18,25 +18,25 @@ def MainMenuContent(isIceBox, today):
                 print("IceBox_creat로 이동")
                 print(f"today : {today}")
                 print("이때 today를 인자로 전달하여 json파일을 생성할 때 data로 넣어야함")
-        elif MainMenuInput == 2:
+        elif MainMenuInput == '2':
             if isIceBox:
                 print("IceBox_manage로 이동")
             else:
                 print("냉장고를 먼저 생성해주세요")
                 continue
-        elif MainMenuInput == 3:
+        elif MainMenuInput == '3':
             if isIceBox:
                 print("IceBox_update로 이동")
             else:
                 print("냉장고를 먼저 생성해주세요")
                 continue
-        elif MainMenuInput == 4:
+        elif MainMenuInput == '4':
             if isIceBox:
                 print("IceBox_remove로 이동")
             else:
                 print("냉장고를 먼저 생성해주세요")
                 continue
-        elif MainMenuInput == 5:
+        elif MainMenuInput == '5':
             exit(0)
         else:
             print("1이상 5이하의 숫자로 입력해주세요.")
