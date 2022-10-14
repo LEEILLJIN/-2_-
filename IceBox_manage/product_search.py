@@ -18,10 +18,18 @@ def search_by_name() :
             
                     data = json.load(file)
                     items = data['items']
-                    packaged = items['packaged']
                     
                     print("분류\t\t상품명\t\t카테고리\t상품ID\t\t용량\t\t잔량\t\t온도\t\t유효기간")
-                    for item in items["packaged"] :
+                    for item in items['packaged'] :
+                        if(product_name == item['name']) :
+                            for value in item.values() :
+                                print(value, end='\t\t')
+                                cnt+=1
+                            print()
+                        else :
+                            continue
+                        
+                    for item in items['unpackaged'] :
                         if(product_name == item['name']) :
                             for value in item.values() :
                                 print(value, end='\t\t')
@@ -54,12 +62,16 @@ if __name__=="__main__":
     while True:
         print("0. 돌아가기")
         print("1. 상품명 검색")
-        user_input = int(input())
+        user_input = input()
         
-        if user_input == 0 :
+        if user_input == '0' :
             print("함수 대기") # 관리화면 함수 기다리는중
-        elif user_input == 1 :
+            break
+        elif user_input == '1' :
             search_by_name()
+        else :
+            print()
+            print("0 또는 1을 입력해주세요")
 
     
 
