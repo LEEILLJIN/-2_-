@@ -9,11 +9,12 @@
       	"freezer-temp" : "-10"
 	}
 	],
-    "items" : [
+    "items" : {
         "packaged" : [
             {
                 "partition" : "냉장",
                 "name" : "우유",
+                "category" : "유제품",
                 "ID" : 1,
                 "bulk" : 7,
                 "leftover" : 50,
@@ -21,8 +22,20 @@
                 "expiration-date":"2023-03-05"
             },
             {
+                "partition" : "냉장",
+                "name" : "우유",
+                "category" : "유제품",
+                "ID" : 1,
+                "bulk" : 7,
+                "leftover" : 50,
+                "recommended-temp" : -10,
+                "expiration-date":"2023-03-05"
+            },
+    
+            {
                 "partition" : "냉동",
                 "name" : "고추가루",
+                "category" : "가루류",
                 "ID" : 2,
                 "total-bulk" : 20,
                 "leftover-bulk" : 30,
@@ -42,5 +55,5 @@
                 "expiration-date":"2023-03-05"
             }
         ]
-     ]
+    }
 }
