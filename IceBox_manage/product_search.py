@@ -8,6 +8,7 @@ def search_by_name() :
         while True : 
             print()
             product_name = input("검색할 상품명 : ")
+            print()
             for validation in product_name :
                 if validation in special_character :
                     print("특수문자를 사용할 수 없습니다")
@@ -19,27 +20,30 @@ def search_by_name() :
                     data = json.load(file)
                     items = data['items']
                     
-                    print("분류\t\t상품명\t\t카테고리\t상품ID\t\t용량\t\t잔량\t\t온도\t\t유효기간")
+                    # print("분류\t\t상품명\t\t카테고리\t상품ID\t\t용량\t\t잔량\t\t온도\t\t유효기간")
                     for item in items['packaged'] :
                         if(product_name == item['name']) :
-                            for value in item.values() :
-                                print(value, end='\t\t')
-                                cnt+=1
+                            print("<상품 ID: {}, 상품명: {}, 총량: {}, 현재량: {}, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["bulk"], item["leftover"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
+                            # for value in item.values() :
+                            #     print(value, end='\t\t')
+                            cnt+=1
                             print()
                         else :
                             continue
                         
                     for item in items['unpackaged'] :
                         if(product_name == item['name']) :
-                            for value in item.values() :
-                                print(value, end='\t\t')
-                                cnt+=1
+                            print("<상품 ID: {}, 상품명: {}, 총량: {}, 단위 수량: {}, 현재량: {}, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["total-number"], item["bulk-for-unit"],item["leftover-number"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
+                            # for value in item.values() :
+                            #     print(value, end='\t\t')
+                            cnt+=1
                             print()
                         else :
                             continue
                     
                     if cnt == 0 :
-                        print("저장된 상품이 없습니다. 다시 입력해주세요.")
+                        print("저장된 상품이 없습니다.")
+                    print()
                     plus_search = input("추가 검색을 하시겠습니까 ? y/n : ")
                     additional_search(plus_search)
             cnt=0    
