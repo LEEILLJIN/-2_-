@@ -10,8 +10,6 @@ special_character = ['~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')']
 category_list = {
     '1' : '야채', '2':'과일', '3':'유제품', '4':'냉동식품', '5':'육류', '6':'어류', '7':'과자', '8':'음료', '9':'주류', '10':'빙과류', '11':'신선제품', '12':'소스', '13':'곡식류', '14':'가루류', '15':'기타'
 }
-# packaged_product_key = ['partition', 'name', 'category','ID', 'total-bulk', 'leftover', 'recommended-temp', 'expiration-date']
-# unpackaged_product_key = ['partition', 'name', 'category', 'ID', 'bulk-for-unit','total-number', 'leftover-number', 'recommended-temp', 'expiration-date']
 
 
 def search_by_id():
@@ -22,14 +20,6 @@ def search_by_id():
         if product_id.isdigit() == False:
             #ID 입력 예외 처리
             continue
-            # if product_id.isalpha() :
-            #     print("한글이나, 영어를 사용할 수 없습니다.")
-            #     continue
-            # else:
-            #     for validation in product_id :
-            #         if validation in special_character :
-            #             print("특수문자를 사용할 수 없습니다.")
-            #             break
         else :
             #ID입력이 적합한 경우
                 cnt = view_item_data(product_id)
@@ -41,6 +31,7 @@ def search_by_id():
         cnt=0 
 
 def view_item_data(product_id):
+    #상품의 정보를 보여주는 함수
     cnt = 0
     with open(path, "r", encoding='UTF8') as file :
             
@@ -50,8 +41,6 @@ def view_item_data(product_id):
                     for item in items['packaged'] :
                         if(int(product_id) == item['ID']) :
                             print("<상품 ID: {}, 상품명: {}, 총량: {}L, 현재량: {}%, 카테고리: {}, 분류: {}, 보관권장온도: {}도, 유통기한: {}>" .format(item["ID"], item["name"], item["total-bulk"], item["leftover-bulk"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
-                            # for value in item.values() :
-                            #     print(value, end='\t\t')
                             cnt+=1
                             print()
                         else :
@@ -60,8 +49,6 @@ def view_item_data(product_id):
                     for item in items['unpackaged'] :
                         if(int(product_id) == item['ID']) :
                             print("<상품 ID: {}, 상품명: {}, 총량: {}개, 현재량: {}개, 카테고리: {}, 분류: {}, 보관권장온도: {}도, 유통기한: {}>" .format(item["ID"], item["name"],  item["total-number"], item["leftover-number"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
-                            # for value in item.values() :
-                            #     print(value, end='\t\t')
                             cnt+=1
                             print()
                         else :
@@ -69,7 +56,6 @@ def view_item_data(product_id):
     return cnt
 def validate_cate(update_cate):
     #수정할 항목 입력 검사 함수
-    #updatable_cate = ['상품명', '총량', '현재량', '카테고리', '보관권장온도', '유통기한']
     if update_cate in packaged_updatable_cate.keys():
         return True
     else:
