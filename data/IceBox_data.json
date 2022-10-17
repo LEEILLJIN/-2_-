@@ -13,13 +13,14 @@
 		"packaged": [
 			{
 				"partition": "냉장",
-				"name": "당근",
+				"name": "시금치",
 				"category": "과일",
 				"ID": 1,
-				"total-bulk": "9",
-				"leftover": "20",
-				"recommended-temp": "-15",
-				"expiration-date": "2023-03-05"
+				"total-bulk": 15,
+				"leftover-bulk": 50,
+				"recommended-temp": 0,
+				"expiration-date": "2023-03-05",
+				"leftover": 30
 			},
 			{
 				"partition": "냉동",
@@ -39,9 +40,9 @@
 				"category": "야채",
 				"ID": 3,
 				"bulk-for-unit": 3,
-				"total-number": 10,
-				"leftover-number": 5,
-				"recommended-temp": 6,
+				"total-number": 15,
+				"leftover-number": 2,
+				"recommended-temp": -10,
 				"expiration-date": "2023-03-05"
 			}
 		]

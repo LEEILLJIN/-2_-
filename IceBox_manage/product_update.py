@@ -21,14 +21,15 @@ def search_by_id():
         product_id = input("수정할 상품의 ID를 입력해주세요 : ")
         if product_id.isdigit() == False:
             #ID 입력 예외 처리
-            if product_id.isalpha() :
-                print("한글이나, 영어를 사용할 수 없습니다.")
-                continue
-            else:
-                for validation in product_id :
-                    if validation in special_character :
-                        print("특수문자를 사용할 수 없습니다.")
-                        break
+            continue
+            # if product_id.isalpha() :
+            #     print("한글이나, 영어를 사용할 수 없습니다.")
+            #     continue
+            # else:
+            #     for validation in product_id :
+            #         if validation in special_character :
+            #             print("특수문자를 사용할 수 없습니다.")
+            #             break
         else :
             #ID입력이 적합한 경우
                 cnt = view_item_data(product_id)
@@ -46,21 +47,22 @@ def view_item_data(product_id):
                     data = json.load(file)
                     items = data['items']
                     
-                    print("분류\t\t상품명\t\t카테고리\t상품ID\t\t총량\t\t현재량\t\t보관권장온도\t\t유효기간")
                     for item in items['packaged'] :
                         if(int(product_id) == item['ID']) :
-                            for value in item.values() :
-                                print(value, end='\t\t')
-                                cnt+=1
+                            print("<상품 ID: {}, 상품명: {}, 총량: {}L, 현재량: {}%, 카테고리: {}, 분류: {}, 보관권장온도: {}도, 유통기한: {}>" .format(item["ID"], item["name"], item["total-bulk"], item["leftover-bulk"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
+                            # for value in item.values() :
+                            #     print(value, end='\t\t')
+                            cnt+=1
                             print()
                         else :
                             continue
                         
                     for item in items['unpackaged'] :
                         if(int(product_id) == item['ID']) :
-                            for value in item.values() :
-                                print(value, end='\t\t')
-                                cnt+=1
+                            print("<상품 ID: {}, 상품명: {}, 총량: {}개, 현재량: {}개, 카테고리: {}, 분류: {}, 보관권장온도: {}도, 유통기한: {}>" .format(item["ID"], item["name"],  item["total-number"], item["leftover-number"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
+                            # for value in item.values() :
+                            #     print(value, end='\t\t')
+                            cnt+=1
                             print()
                         else :
                             continue
@@ -69,8 +71,6 @@ def validate_cate(update_cate):
     #수정할 항목 입력 검사 함수
     #updatable_cate = ['상품명', '총량', '현재량', '카테고리', '보관권장온도', '유통기한']
     if update_cate in packaged_updatable_cate.keys():
-        if update_cate == '카테고리':
-            print("1.야채, 2.과일, 3.유제품, 4.냉동식품, 5.육류, 6.어류, 7.과자, 8.음료, 9.주류, 10.빙과류, 11.신선제품, 12.소스, 13.곡식류, 14.가루류, 15.기타")
         return True
     else:
         return False
@@ -160,7 +160,7 @@ def validate_data(update_cate,update_data):
                 num = update_data.lstrip("-")
                 num_remove_zero = num.lstrip("0")
                 #선행 0 처리
-                if num.isdigit() == False or num != num_remove_zero:
+                if num != '0' and (num.isdigit() == False or num != num_remove_zero):
                     cnt += 1
                 
                 if cnt == 0:
@@ -178,11 +178,11 @@ def validate_data(update_cate,update_data):
 
 def update_product(product_id):
 
-    # packaged_updatable_cate = {'상품명': 'name', '총량':'total-bulk', '현재량':'leftover', '카테고리':'category', '보관권장온도':'recommended-temp', '유통기한':'expiration-date'}
-    # unpackaged_updatable_cate = {'상품명': 'name', '총량' : 'total-number', '현재량' : 'leftover-number', '카테고리':'category', '보관권장온도':'recommended-temp', '유통기한':'expiration-date'}
     while True:
         print()
         update_cate = input("수정할 항목을 입력해주세요 :")
+        if update_cate == '카테고리':
+            print("1.야채, 2.과일, 3.유제품, 4.냉동식품, 5.육류, 6.어류, 7.과자, 8.음료, 9.주류, 10.빙과류, 11.신선제품, 12.소스, 13.곡식류, 14.가루류, 15.기타")
         update_data = input("수정 정보를 입력해주세요 :")
         print(f"validate_cate : {validate_cate(update_cate)}")
         print(f"validate_data : {validate_data(update_cate, update_data)}")
@@ -199,6 +199,9 @@ def update_product(product_id):
                     if  int(product_id) == item["ID"]:
                         if update_cate == '카테고리':
                             update_data = category_list[update_data]
+                        elif update_cate in ['총량','현재량','보관권장온도']:
+                            update_data = int(update_data)
+
                         item[packaged_updatable_cate[update_cate]] = update_data
                         with open('./data/IceBox_data.json', 'w', encoding='utf-8') as make_file:
 
@@ -208,11 +211,24 @@ def update_product(product_id):
                     if  int(product_id) == item["ID"]:
                         if update_cate == '카테고리':
                             update_data = category_list[update_data]
+                        elif update_cate in ['현재량','보관권장온도','총량']:
+                             update_data = int(update_data)
                         item[unpackaged_updatable_cate[update_cate]] = update_data
                         with open('./data/IceBox_data.json', 'w', encoding='utf-8') as make_file:
 
                             json.dump(json_data, make_file, indent="\t", ensure_ascii=False)
                 view_item_data(product_id)
+                while True:
+                    print("0.돌아가기")
+                    print("1.추가수정")
+                    user_input = input("메뉴를 입력하세요 : ")
+                    if user_input == '0':
+                        print("주 메뉴화면 호출")
+                        exit(0)
+                    elif user_input == '\n':
+                        continue
+                    elif user_input == '1':
+                        search_by_id()
             else:
                 #잘못된 수정 항목이나 수정 정보가 입력된 경우
                 print("잘못된 수정 항목이거나 수정 정보 값입니다. 다시 입력해주세요.")
@@ -221,6 +237,7 @@ def update_product(product_id):
             #잘못된 수정 항목이나 수정 정보가 입력된 경우
             print("잘못된 수정 항목이거나 수정 정보 값입니다. 다시 입력해주세요.")
             continue
+
 if __name__=="__main__":
    search_by_id()
         
