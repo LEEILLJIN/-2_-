@@ -2,12 +2,13 @@
 #기획서에는 json 파일을 냉장고 생성할 때 같이 만드는거로 되었지만 일단 예시 파일로 구현 진행
 import datetime
 import IceBox_menu
+
 def DateInput():
     while True:
-        today = str(input("오늘 날짜를 입력해주세요 : "))
+        today = str(input("오늘 날짜를 입력해주세요. >> "))
         today = validate_date(today)
         if(type(today) == str):
-            print(today,"날짜 적합")
+            print(today,"날짜 적합\n")
             IceBox_menu.MainMenu(today)
             #냉장고 생성 후 json파일이 만들어질떄 today data를 넣기위해 인자로 전달
         else:
