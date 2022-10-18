@@ -18,16 +18,16 @@ def search_by_name() :
                 with open(path, "r", encoding='UTF8') as file :
             
                     data = json.load(file)
-                    items = data['items']
+                    iceboxes = data['iceboxes']
+                    items = iceboxes[0]['items']
                     
                     # print("분류\t\t상품명\t\t카테고리\t상품ID\t\t용량\t\t잔량\t\t온도\t\t유효기간")
                     for item in items['packaged'] :
                         if(product_name == item['name']) :
-                            print("<상품 ID: {}, 상품명: {}, 총량: {}, 현재량: {}, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["bulk"], item["leftover"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
+                            print("<상품 ID: {}, 상품명: {}, 총량: {}, 현재량: {}, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["total-bulk"], item["leftover"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
                             # for value in item.values() :
                             #     print(value, end='\t\t')
                             cnt+=1
-                            print()
                         else :
                             continue
                         
@@ -37,7 +37,6 @@ def search_by_name() :
                             # for value in item.values() :
                             #     print(value, end='\t\t')
                             cnt+=1
-                            print()
                         else :
                             continue
                     

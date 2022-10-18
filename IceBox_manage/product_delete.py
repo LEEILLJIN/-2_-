@@ -1,5 +1,4 @@
 # 상품 삭제 화면
-
 # 상품 검색 화면
 import datetime
 import json
@@ -28,7 +27,8 @@ def delete_by_id() :
                 with open(path, "r", encoding='UTF8') as file :
             
                     data = json.load(file)
-                    items = data['items']
+                    iceboxes = data['iceboxes']
+                    items = iceboxes[0]['items']
                     
                     for i, item in enumerate(items["packaged"]) :
                         if(int(product_id) == item['ID']) :
@@ -67,7 +67,8 @@ def consume_by_id() :
         with open(path, "r", encoding='UTF8') as file :
                 
             data = json.load(file)
-            items = data['items']
+            iceboxes = data['iceboxes']
+            items = iceboxes[0]['items']
             consume_id = input("소모할 상품 ID : ")
             consume_how = input("소모할 상품 양 : ")
                         
@@ -122,7 +123,8 @@ def all_delete() :
         with open(path, "r", encoding='UTF8') as file :
             
             data = json.load(file)
-            items = data['items']
+            iceboxes = data['iceboxes']
+            items = iceboxes[0]['items']
             today = int("".join(str(datetime.date.today()).split("-")))
 
             for item in items["packaged"].copy() :
