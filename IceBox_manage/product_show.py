@@ -95,7 +95,7 @@ def product_show():
         elif user_input == '5' :
             sort_filter=["recommended-temp",False,False,"보관권장온도 기준","up"]
         elif user_input == '6' :
-            sort_filter[2]=True
+            sort_filter[2]= False if sort_filter[2]==True else True
         else :
             print("==========================================")
             print("선택지 내에서 선택해주세요.")

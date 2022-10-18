@@ -2,6 +2,7 @@
 
 import json
 import os
+import IceBox_menu
 
 # 현재 냉장고는 하나 밖에 없으므로, iceboxes 배열의 0번째 정보를 바로 넣었습니다.
 icebox_num = 0 # 냉장고가 여러 개가 되면, 바꿔줘야 한다.
@@ -30,14 +31,19 @@ def icebox_remover():
                     with open(file_path, 'w') as f:
                         json.dump(data, f, ensure_ascii=False, indent=2)
                     print("냉장고가 정상적으로 삭제되었습니다.")
+                    IceBox_menu.MainMenu(data["today"])
                     return
                 elif delete_confirm == 'N' or delete_confirm == 'n':
                     print("냉장고 삭제가 취소되었습니다.")
+                    IceBox_menu.MainMenu(data["today"])
                     return
                 else:
                     print("다시 입력해주세요.")
         else:
             print("삭제할 냉장고가 없습니다 ")
+            IceBox_menu.MainMenu(data["today"])
             return
     else:
         print("냉장고 정보 파일이 존재하지 않습니다.")
+        IceBox_menu.MainMenu(data["today"])
+        return

@@ -8,7 +8,7 @@ def openManageMenu(today):
     with open("./data/IceBox_data.json", 'r', encoding='UTF8') as file:
         json_data = json.load(file)
 
-    items = json_data['items']
+    items = json_data['iceboxes'][0]['items']
 
     print("-" * 20) #-- Line
     print("[냉장]")
