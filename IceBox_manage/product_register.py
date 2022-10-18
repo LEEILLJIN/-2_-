@@ -39,12 +39,14 @@ def save_json (current_json):
     
 def save_product (is_packaged,input_data):    
     loaded_json = load_json()
+    input_data["ID"]=loaded_json["current_item_sequence"]
+    loaded_json["current_item_sequence"]+=1
     if is_packaged:
         loaded_json["items"]["packaged"].append(input_data)
     else:
         loaded_json["items"]["unpackaged"].append(input_data)
     save_json(loaded_json)
-    print(load_json())
+    
     
 
 
@@ -71,8 +73,6 @@ def validate_int (input_data):
 def save_data(input_data,key,input_process_tmp_data) :
     parsed_input_data=input_data
 
-    
-    
     if key == 'bulk-for-unit':
         parsed_input_data = int(input_data)
 
@@ -264,7 +264,7 @@ def register_prodocut():
         input_process_category = packaged_updatable_cate if product_register_type == "1" else unpackaged_updatable_cate
         
         #입력 단계 수
-        max_process_step=len(list(input_process_category.keys()))
+        max_process_step=len(list(input_process_category.keys()))-1
         #입력할 데이터 display string list
         input_process_category_display_list = list(input_process_category.keys())
         #입력할 데이터 key string list
@@ -277,22 +277,29 @@ def register_prodocut():
          
         #상품 데이터 입력 cycle
         while exit_object["is_exit"]==False & process_step<max_process_step:
+            
             print(" ")
             print("==========================================")
             print(" ")
+
+            if len(input_process_category_display_list)<=process_step:
+                break
+
             if input_process_category_display_list[process_step]=="카테고리":
                 for idx,i in enumerate(list(category_object.values())):
                     print(f"({idx+1}) {i}")
             if input_process_category_display_list[process_step]=="파티션":
                 for idx,i in enumerate(list(partition_object.values())):
-                    print(f"({idx+1}) {i}")
-
-                    
+                    print(f"({idx+1}) {i}")        
             input_data =  input(f"{input_process_category_display_list[process_step]} 입력:")
             # print(input_data)
+
             #입력값 검증
             if set_input_process_tmp_data(input_data,input_process_category_key_list[process_step],input_process_tmp_data,exit_object) == False :
-                continue
+                if exit_object["is_exit"]==True:
+                    break
+                else:
+                    continue
             else :
                 process_step+=1
 
@@ -306,6 +313,5 @@ def register_prodocut():
 
         
 register_prodocut()
-# if __name__=="__main__":
-#    search_by_id()
+
         

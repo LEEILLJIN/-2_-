@@ -28,15 +28,6 @@
         "leftover-bulk": 30,
         "recommended-temp": 10,
         "expiration-date": "2023-06-07"
-      },
-      {
-        "partition": "냉장",
-        "name": "1",
-        "total-bulk": 4,
-        "leftover": 3,
-        "category": "과일",
-        "recommended-temp": 1,
-        "expiration-date": "10"
       }
     ],
     "unpackaged": [
@@ -49,27 +40,8 @@
         "leftover-number": 5,
         "recommended-temp": 6,
         "expiration-date": "2023-03-05"
-      },
-      {
-        "partition": "냉장",
-        "name": "2",
-        "total-number": 1000,
-        "leftover-number": 999,
-        "bulk-for-unit": 3000,
-        "category": "소스",
-        "recommended-temp": 99012390,
-        "expiration-date": "22222"
-      },
-      {
-        "partition": null,
-        "name": null,
-        "total-number": null,
-        "leftover-number": null,
-        "bulk-for-unit": null,
-        "category": null,
-        "recommended-temp": null,
-        "expiration-date": null
       }
     ]
-  }
+  },
+  "current_item_sequence": 23
 }
