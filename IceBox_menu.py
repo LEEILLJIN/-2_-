@@ -49,6 +49,7 @@ def MainMenuContent(isIceBox, today):
 
 
 def MainMenu(today):
+    
     isIceBox = False
     with open("./data/IceBox_data.json", 'r', encoding='UTF8') as file:
         json_data = json.load(file)
