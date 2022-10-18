@@ -163,7 +163,7 @@ def additional_delete(request) :
         additional_delete(plus_delete)
 
                         
-if __name__=="__main__":
+def product_delete():
     while True:
         print("0. 돌아가기")
         print("1. 상품 폐기")

@@ -25,19 +25,11 @@ def show_items() :
     print("----냉동----")
     for item in list(filter((lambda x: x["partition"]=="냉동"),items)):
         show_item(item)
-<<<<<<< HEAD
     print("----냉장----")
     for item in list(filter((lambda x: x["partition"]=="냉장"),items)):
         show_item(item)
     
-                     
-            
-=======
-
-
-
->>>>>>> d21841d17085443993107f35155cab2d19c319ff
-
+                    
 def product_show():
     while True:
         show_items()
@@ -53,12 +45,6 @@ def product_show():
             print(" ")
             print("==========================================")
             print(" ")
-<<<<<<< HEAD
             print("선택지 내에서 선택해주세요.")
     
-product_show()
-=======
-            print("카테고리 범주 내에서 선택해주세요.")
-
 # product_show()
->>>>>>> d21841d17085443993107f35155cab2d19c319ff
