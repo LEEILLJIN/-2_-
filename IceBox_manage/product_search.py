@@ -21,12 +21,9 @@ def search_by_name() :
                     iceboxes = data['iceboxes']
                     items = iceboxes[0]['items']
                     
-                    # print("분류\t\t상품명\t\t카테고리\t상품ID\t\t용량\t\t잔량\t\t온도\t\t유효기간")
                     for item in items['packaged'] :
                         if(product_name == item['name']) :
                             print("<상품 ID: {}, 상품명: {}, 총량: {}, 현재량: {}, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["total-bulk"], item["leftover"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
-                            # for value in item.values() :
-                            #     print(value, end='\t\t')
                             cnt+=1
                         else :
                             continue
@@ -34,8 +31,6 @@ def search_by_name() :
                     for item in items['unpackaged'] :
                         if(product_name == item['name']) :
                             print("<상품 ID: {}, 상품명: {}, 총량: {}, 단위 수량: {}, 현재량: {}, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["total-number"], item["bulk-for-unit"],item["leftover-number"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
-                            # for value in item.values() :
-                            #     print(value, end='\t\t')
                             cnt+=1
                         else :
                             continue
@@ -68,18 +63,11 @@ if __name__=="__main__":
         user_input = input()
         
         if user_input == '0' :
-            print("함수 대기") # 관리화면 함수 기다리는중
+            # 관리화면 함수 기다리는중
+            print("함수 대기") 
             break
         elif user_input == '1' :
             search_by_name()
         else :
             print()
             print("0 또는 1을 입력해주세요")
-
-    
-
-    
-
-# 상품 검색 목록 나열할 때 양식 수정
-# 상품명 문법 형식에 특수문자 제외 추가
-# 상품명 동치 비교 예를 들어 ~~ 없애기

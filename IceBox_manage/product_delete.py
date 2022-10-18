@@ -1,28 +1,17 @@
 # 상품 삭제 화면
-# 상품 검색 화면
 import datetime
 import json
 
 path = "./data/IceBox_data.json"
 # 상품 id로 상품 폐기
 def delete_by_id() :
-        # special_character = ['~','!','@','#','$','%','^','&','*','(', ')',"'", '-','+','<','>','?']
         cnt = 0
         while True : 
             print()
             product_id = input("폐기할 상품 ID : ")
             if product_id.isdigit() == False:
                 print("상품 ID는 숫자만 입력 가능합니다.")
-                # if product_id.isalpha() :
-                #     print("한글이나, 영어를 사용할 수 없습니다.")
-                #     continue
-                # else:
-                #     for validation in product_id :
-                #         if validation in special_character :
-                #             print("특수문자를 사용할 수 없습니다.")
-                #             break
                 
-            
             elif product_id.isdigit() == True :
                 with open(path, "r", encoding='UTF8') as file :
             
@@ -122,6 +111,7 @@ def all_delete() :
     if delete_all == 'y' :
         with open(path, "r", encoding='UTF8') as file :
             
+
             data = json.load(file)
             iceboxes = data['iceboxes']
             items = iceboxes[0]['items']
@@ -218,14 +208,3 @@ if __name__=="__main__":
             print()
             print("0, 1, 2 중에서 메뉴를 골라주세요.")
             continue
-
-
-
-
-    
-
-    
-
-# 상품 검색 목록 나열할 때 양식 수정
-# 상품명 문법 형식에 특수문자 제외 추가
-# 상품명 동치 비교 예를 들어 ~~ 없애기
