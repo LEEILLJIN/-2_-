@@ -28,6 +28,36 @@
         "leftover-bulk": 30,
         "recommended-temp": 10,
         "expiration-date": "2023-06-07"
+      },
+      {
+        "partition": "냉동",
+        "name": "맛있는사과",
+        "total-bulk": 4,
+        "leftover": 2,
+        "category": "과일",
+        "recommended-temp": 17,
+        "expiration-date": "20222222",
+        "ID": 23
+      },
+      {
+        "partition": "냉장",
+        "name": "비싼참치",
+        "total-bulk": 1,
+        "leftover": 1,
+        "category": "기타",
+        "recommended-temp": 2,
+        "expiration-date": "2222-22-22",
+        "ID": 24
+      },
+      {
+        "partition": "냉장",
+        "name": "sadf",
+        "total-bulk": 12,
+        "leftover": 12,
+        "category": "소스",
+        "recommended-temp": -1,
+        "expiration-date": "2018-11-11",
+        "ID": 25
       }
     ],
     "unpackaged": [
@@ -43,5 +73,5 @@
       }
     ]
   },
-  "current_item_sequence": 23
+  "current_item_sequence": 26
 }
