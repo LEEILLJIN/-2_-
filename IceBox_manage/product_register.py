@@ -40,12 +40,19 @@ def save_json (current_json):
     
 def save_product (is_packaged,input_data):    
     loaded_json = load_json()
-    input_data["ID"]=loaded_json["current_item_sequence"]
-    loaded_json["current_item_sequence"]+=1
+
+    #max seq 구하기
+    max_seq=0
+    
+    for item in (list(loaded_json["iceboxes"][0]["items"].values())[0]+list(loaded_json["iceboxes"][0]["items"].values())[1]):
+        if item["ID"]>=max_seq:
+            max_seq=item["ID"]
+    input_data["ID"]=max_seq
+
     if is_packaged:
-        loaded_json["items"]["packaged"].append(input_data)
+        loaded_json["iceboxes"][0]["items"]["packaged"].append(input_data)
     else:
-        loaded_json["items"]["unpackaged"].append(input_data)
+        loaded_json["iceboxes"][0]["items"]["unpackaged"].append(input_data)
     save_json(loaded_json)
     
     
