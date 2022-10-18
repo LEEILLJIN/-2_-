@@ -3,6 +3,7 @@
 #냉장고 관리 화면에서 사용자가 ‘5’를 입력하면 나오는 화면입니다.
 import json
 from unicodedata import category
+
 # import IceBox
 path = "./data/IceBox_data.json"
 packaged_updatable_cate = {'상품명': 'name', '총량':'total-bulk', '현재량':'leftover', '카테고리':'category', '보관권장온도':'recommended-temp', '유통기한':'expiration-date'}
