@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #냉장고 생성 화면 - 샤에디
 
 import IceBox_menu
@@ -44,3 +45,6 @@ def createIceBox(today):
 
     # 메인 메뉴로 이동
     IceBox_menu.MainMenu(today)
+=======
+#냉장고 생성 화면
+>>>>>>> b8c8f1ca74f6e572b3d3f7bc3172beb1425c687d

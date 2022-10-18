@@ -1,4 +1,7 @@
 #main (초기 화면)
+<<<<<<< HEAD
+#기획서에는 json 파일을 냉장고 생성할 때 같이 만드는거로 되었지만 일단 예시 파일로 구현 진행
+=======
 #기획서에는 json 파일을 냉장고 생성할 때 같이 만드는거로 되었지만 일단 예시 파일로 구현 진행
 import datetime
 import IceBox_menu
@@ -32,3 +35,4 @@ def main():
 
 if __name__ == "__main__":
 	main()
+>>>>>>> e73c0ca5d1f516f66ed5bbeb0f86d1424a1e6a77
