@@ -3,16 +3,12 @@
 #냉장고 관리 화면에서 사용자가 ‘5’를 입력하면 나오는 화면입니다.
 import json
 from unicodedata import category
-<<<<<<< HEAD
+import datetime
 
-# import IceBox
-=======
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
-import datetime
 
->>>>>>> c9269dd0088d7b2ed49b4915d0efc091f1d1489f
 path = "./data/IceBox_data.json"
 packaged_updatable_cate = {'상품명': 'name', '총량':'total-bulk', '현재량':'leftover', '카테고리':'category', '보관권장온도':'recommended-temp', '유통기한':'expiration-date'}
 unpackaged_updatable_cate = {'상품명': 'name', '총량' : 'total-number', '현재량' : 'leftover-number', '카테고리':'category', '보관권장온도':'recommended-temp', '유통기한':'expiration-date'}
@@ -253,6 +249,5 @@ def update_product(product_id):
             print("잘못된 수정 항목이거나 수정 정보 값입니다. 다시 입력해주세요.")
             continue
 
-search_by_id()
 def product_update():
    search_by_id()

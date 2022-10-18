@@ -149,7 +149,7 @@ def all_delete() :
                 
 
     elif delete_all == 'n' :
-        print("초기 화면 함수 대기")
+        main_screen()
         exit()
     else :
         print("y 또는 n을 입력해주세요.")
