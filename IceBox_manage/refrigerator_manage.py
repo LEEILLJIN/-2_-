@@ -1,8 +1,16 @@
 #냉장고 관리 화면(초기화면) - 샤에디
 
+import sys, os
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+
 import IceBox_menu
 import json
 import os
+from IceBox_manage.product_delete import product_delete
+from IceBox_manage.product_register import register_product
+from IceBox_manage.product_search import product_search
+from IceBox_manage.product_show import product_show
+from IceBox_manage.product_update import search_by_id
 
 def openManageMenu(today):
     with open("./data/IceBox_data.json", 'r', encoding='UTF8') as file:
@@ -44,17 +52,18 @@ def openManageMenu(today):
     while True:
         subMenuInput = str(input("\n번호를 입력하세요. >> "))
         if subMenuInput == '0':
+            print("")
             IceBox_menu.MainMenu(today)
         elif subMenuInput == '1':
-            print("product_register 함수로 이동")
+            register_product()
         elif subMenuInput == '2':
-            print("product_show 함수로 이동")
+            product_show()
         elif subMenuInput == '3':
-            print("product_delete 함수로 이동")
+            product_delete()
         elif subMenuInput == '4':
-            print("product_search 함수로 이동")
+            product_search()
         elif subMenuInput == '5':
-            print("product_update 함수로 이동")
+            search_by_id()
         else:
             print("0이상 5이하의 숫자로 입력해주세요.")
             continue

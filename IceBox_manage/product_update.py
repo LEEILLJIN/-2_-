@@ -29,7 +29,7 @@ def search_by_id():
                     continue
                 else:
                     update_product(product_id)
-        cnt=0 
+        cnt=0
 
 def view_item_data(product_id):
     #상품의 정보를 보여주는 함수
@@ -45,7 +45,7 @@ def view_item_data(product_id):
 
                         else :
                             continue
-                        
+
                     for item in items['unpackaged'] :
                         if(int(product_id) == item['ID']) :
                             print("<상품 ID: {}, 상품명: {}, 총량: {}개, 현재량: {}개, 카테고리: {}, 분류: {}, 보관권장온도: {}도, 유통기한: {}>" .format(item["ID"], item["name"],  item["total-number"], item["leftover-number"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
@@ -91,7 +91,7 @@ def validate_data(update_cate,update_data):
                         if validation in special_character :
                             #특수문자가 포함되어있는 경우
                             cnt += 1
-            
+
                 if cnt == 0:
                     #입력이 적법한 경우
                     return True
@@ -114,7 +114,7 @@ def validate_data(update_cate,update_data):
                         if validation in special_character :
                             #특수문자가 포함되어있는 경우
                             cnt += 1
-                
+
                 if cnt == 0:
                     #입력이 적법한 경우
                     return True
@@ -148,7 +148,7 @@ def validate_data(update_cate,update_data):
                 #선행 0 처리
                 if num != '0' and (num.isdigit() == False or num != num_remove_zero):
                     cnt += 1
-                
+
                 if cnt == 0:
                 #입력이 적법한 경우
                     return True
@@ -227,5 +227,5 @@ def update_product(product_id):
             print("잘못된 수정 항목이거나 수정 정보 값입니다. 다시 입력해주세요.")
             continue
 
-if __name__=="__main__":
-   search_by_id()
+# if __name__=="__main__":
+#    search_by_id()

@@ -16,7 +16,7 @@ category_data_type={
     'leftover-number': "int",
     'category': "select",
     'recommended-temp': "int",
-    'expiration-date': "string" 
+    'expiration-date': "string"
 }
 category_object = {
     '1' : '야채', '2':'과일', '3':'유제품', '4':'냉동식품', '5':'육류', '6':'어류', '7':'과자', '8':'음료', '9':'주류', '10':'빙과류', '11':'신선제품', '12':'소스', '13':'곡식류', '14':'가루류', '15':'기타'
@@ -36,8 +36,8 @@ def load_json ():
 def save_json (current_json):
     with open(file_path, 'w') as f:
         json.dump(current_json, f, ensure_ascii=False, indent=2)
-    
-def save_product (is_packaged,input_data):    
+
+def save_product (is_packaged,input_data):
     loaded_json = load_json()
     input_data["ID"]=loaded_json["current_item_sequence"]
     loaded_json["current_item_sequence"]+=1
@@ -46,8 +46,8 @@ def save_product (is_packaged,input_data):
     else:
         loaded_json["items"]["unpackaged"].append(input_data)
     save_json(loaded_json)
-    
-    
+
+
 
 
 def set_input_process_tmp_data(input_data,key,input_process_tmp_data,exit_object):
@@ -78,7 +78,7 @@ def save_data(input_data,key,input_process_tmp_data) :
 
     if key == 'partition':
         parsed_input_data = partition_object[input_data]
-    
+
     if key == 'product-type':
         parsed_input_data = input_data
 
@@ -90,7 +90,7 @@ def save_data(input_data,key,input_process_tmp_data) :
 
     elif key == 'leftover':
         parsed_input_data = int(input_data)
-        
+
     elif key == 'total-number':
         parsed_input_data = int(input_data)
 
@@ -99,17 +99,17 @@ def save_data(input_data,key,input_process_tmp_data) :
 
     elif key == 'category':
         parsed_input_data = category_object[input_data]
-        
+
     elif key == 'recommended-temp':
         parsed_input_data = int(input_data)
 
     elif key == 'expiration-date':
         parsed_input_data = input_data
-        #date check    
+        #date check
     input_process_tmp_data[key]=parsed_input_data
 
 def validate_input_data(input_data,key,input_process_tmp_data) :
-    
+
 
     if key == 'product-type':
         if(validate_int(input_data)==False):
@@ -122,7 +122,7 @@ def validate_input_data(input_data,key,input_process_tmp_data) :
             print("카테고리 범주 내에서 선택해주세요.")
             print("다시 입력해주세요.")
             return False
-        
+
 
     if key == 'name':
         return True
@@ -138,7 +138,7 @@ def validate_input_data(input_data,key,input_process_tmp_data) :
             print("자연수만 입력 가능합니다.")
             print("다시 입력해주세요.")
             return False
-        
+
 
     elif key == 'leftover':
         if(validate_int(input_data)==False):
@@ -156,8 +156,8 @@ def validate_input_data(input_data,key,input_process_tmp_data) :
                 print("자연수만 입력 가능합니다.")
                 print("다시 입력해주세요.")
                 return False
-            
-        
+
+
     elif key == 'total-number':
         if(validate_int(input_data)==False):
             print("자연수만 입력 가능합니다.")
@@ -212,7 +212,7 @@ def validate_input_data(input_data,key,input_process_tmp_data) :
             print("카테고리 범주 내에서 선택해주세요.")
             print("다시 입력해주세요.")
             return False
-        
+
 
     elif key == 'category':
         if(validate_int(input_data)==False):
@@ -225,8 +225,8 @@ def validate_input_data(input_data,key,input_process_tmp_data) :
             print("카테고리 범주 내에서 선택해주세요.")
             print("다시 입력해주세요.")
             return False
-        
-        
+
+
     elif key == 'recommended-temp':
         if(validate_int(input_data)==False):
             print("정수만 입력 가능합니다.")
@@ -241,7 +241,7 @@ def validate_input_data(input_data,key,input_process_tmp_data) :
     return False
 
 
-def register_prodocut():
+def register_product():
     #수정할 상품 ID 입력하여 해당 ID의 예외 처리 후 적법할 경우 상품을 찾는 함수
     exit_object={
         "is_exit": False
@@ -262,7 +262,7 @@ def register_prodocut():
         process_step=0
         #입력할 데이터 Form 선택
         input_process_category = packaged_updatable_cate if product_register_type == "1" else unpackaged_updatable_cate
-        
+
         #입력 단계 수
         max_process_step=len(list(input_process_category.keys()))-1
         #입력할 데이터 display string list
@@ -273,11 +273,11 @@ def register_prodocut():
         input_process_tmp_data = {input_process_category_key_list[i]: None for i in range(0, len(input_process_category_key_list))}
         #페키지 언페키지
         is_input_process_tmp_data_packaged= True if product_register_type == "1" else False
-        
-         
+
+
         #상품 데이터 입력 cycle
         while exit_object["is_exit"]==False & process_step<max_process_step:
-            
+
             print(" ")
             print("==========================================")
             print(" ")
@@ -290,7 +290,7 @@ def register_prodocut():
                     print(f"({idx+1}) {i}")
             if input_process_category_display_list[process_step]=="파티션":
                 for idx,i in enumerate(list(partition_object.values())):
-                    print(f"({idx+1}) {i}")        
+                    print(f"({idx+1}) {i}")
             input_data =  input(f"{input_process_category_display_list[process_step]} 입력:")
             # print(input_data)
 
@@ -305,13 +305,11 @@ def register_prodocut():
 
             if(exit_object["is_exit"]==True):
                 break
-        
+
         if(exit_object["is_exit"]==False):
-            save_product(is_input_process_tmp_data_packaged,input_process_tmp_data)    
-        
+            save_product(is_input_process_tmp_data_packaged,input_process_tmp_data)
 
 
-        
-register_prodocut()
 
-        
+
+# register_product()
