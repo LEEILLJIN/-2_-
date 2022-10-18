@@ -3,6 +3,7 @@
 from itertools import product
 import json
 from unicodedata import category
+import re
 # import IceBox
 path = "./data/IceBox_data.json"
 packaged_updatable_cate = {"파티션": "partition",'상품명': 'name', '총량':'total-bulk', '현재량':'leftover', '카테고리':'category', '보관권장온도':'recommended-temp', '유통기한':'expiration-date'}
@@ -62,7 +63,7 @@ def set_input_process_tmp_data(input_data,key,input_process_tmp_data,exit_object
 
 def validate_int (input_data):
     try:
-        if input_data.isdigit()==True:
+        if type(int(input_data)) is int:
             return True
         else:
             return False
@@ -105,6 +106,8 @@ def save_data(input_data,key,input_process_tmp_data) :
 
     elif key == 'expiration-date':
         parsed_input_data = input_data
+        
+
         #date check    
     input_process_tmp_data[key]=parsed_input_data
 
@@ -119,7 +122,7 @@ def validate_input_data(input_data,key,input_process_tmp_data) :
         if (int(input_data) >= 0) & (int(input_data)<=2):
             return True
         else:
-            print("카테고리 범주 내에서 선택해주세요.")
+            print("선택지 내에서 선택해주세요.")
             print("다시 입력해주세요.")
             return False
         
@@ -209,7 +212,7 @@ def validate_input_data(input_data,key,input_process_tmp_data) :
         if (int(input_data) >= 0) & (int(input_data) <= 2):
             return True
         else:
-            print("카테고리 범주 내에서 선택해주세요.")
+            print("선택지 내에서 선택해주세요.")
             print("다시 입력해주세요.")
             return False
         
@@ -219,10 +222,10 @@ def validate_input_data(input_data,key,input_process_tmp_data) :
             print("자연수만 입력 가능합니다.")
             print("다시 입력해주세요.")
             return False
-        if int(input_data)<=len(list(category_object.keys())):
+        if  (int(input_data) >= 0) & (int(input_data)<=len(list(category_object.keys()))):
             return True
         else:
-            print("카테고리 범주 내에서 선택해주세요.")
+            print("선택지 내에서 선택해주세요.")
             print("다시 입력해주세요.")
             return False
         
@@ -235,9 +238,13 @@ def validate_input_data(input_data,key,input_process_tmp_data) :
         return True
 
     elif key == 'expiration-date':
-        return True
-        #date check
-        #미개발
+        date_regex = r'\d{4}-\d{2}-\d{2}'
+        if bool(re.match(date_regex, input_data)):
+            return True
+        else :
+            print("'YYYY-MM-DD' 형식으로 입력 가능합니다.")
+            print("다시 입력해주세요.")
+            return False
     return False
 
 

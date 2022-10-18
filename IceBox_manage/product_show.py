@@ -44,6 +44,6 @@ def product_show():
             print(" ")
             print("==========================================")
             print(" ")
-            print("카테고리 범주 내에서 선택해주세요.")
+            print("선택지 내에서 선택해주세요.")
     
 product_show()
