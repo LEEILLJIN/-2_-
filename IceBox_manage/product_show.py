@@ -22,7 +22,7 @@ def load_json ():
         return json.load(f)
 
 def show_item(item):
-    print('bulk-for-unit' in item)
+    # print('bulk-for-unit' in item)
     if 'bulk-for-unit' in item:
         #unpackaged
         print("<상품 ID: {}, 상품명: {}, 총량: {}, 단위 수량: {}, 현재량: {}, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["total-number"], item["bulk-for-unit"],item["leftover-number"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
@@ -102,4 +102,4 @@ def product_show():
     
 # print(dic_key_change([{"test":1,"test2":2}],"test2","nextkey"))
 
-product_show()
+# product_show()
