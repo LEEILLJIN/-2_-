@@ -293,9 +293,9 @@ def register_product():
         #상품 데이터 입력 cycle
         while exit_object["is_exit"]==False & process_step<max_process_step:
             
-            print(" ")
+            
             print("==========================================")
-            print(" ")
+            
 
             if len(input_process_category_display_list)<=process_step:
                 break
