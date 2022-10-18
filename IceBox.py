@@ -7,11 +7,11 @@ def DateInput():
         today = str(input("오늘 날짜를 입력해주세요 : "))
         today = validate_date(today)
         if(type(today) == str):
-            print(today,"날짜 적합")
+            # print(today,"날짜 적합")
             IceBox_menu.MainMenu(today)
             #냉장고 생성 후 json파일이 만들어질떄 today data를 넣기위해 인자로 전달
         else:
-            print(today,"날짜 부적합")
+            # print(today,"날짜 부적합")
             continue
 
 def validate_date(today):
