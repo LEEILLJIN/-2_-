@@ -9,7 +9,7 @@ def load_json ():
         return json.load(f)
 
 def show_item(item):
-    print('bulk-for-unit' in item)
+    # print('bulk-for-unit' in item)
     if 'bulk-for-unit' in item:
         #unpackaged
         print("<상품 ID: {}, 상품명: {}, 총량: {}, 단위 수량: {}, 현재량: {}, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["total-number"], item["bulk-for-unit"],item["leftover-number"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
@@ -21,9 +21,12 @@ def show_item(item):
 
 def show_items() :        
     data=load_json()
-    items=data["items"]["unpackaged"]+data["items"]["packaged"]
-    # print(list(filter((lambda x: x["partition"]=="냉장"),items)))
+    items=data["iceboxes"][0]["items"]["unpackaged"]+data["iceboxes"][0]["items"]["packaged"]
+    print("----냉동----")
     for item in list(filter((lambda x: x["partition"]=="냉동"),items)):
+        show_item(item)
+    print("----냉장----")
+    for item in list(filter((lambda x: x["partition"]=="냉장"),items)):
         show_item(item)
     
                      
@@ -44,6 +47,6 @@ def product_show():
             print(" ")
             print("==========================================")
             print(" ")
-            print("카테고리 범주 내에서 선택해주세요.")
+            print("선택지 내에서 선택해주세요.")
     
 product_show()
