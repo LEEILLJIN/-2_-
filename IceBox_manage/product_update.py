@@ -3,7 +3,11 @@
 #냉장고 관리 화면에서 사용자가 ‘5’를 입력하면 나오는 화면입니다.
 import json
 from unicodedata import category
-# import IceBox
+import sys, os
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+
+import datetime
+
 path = "./data/IceBox_data.json"
 packaged_updatable_cate = {'상품명': 'name', '총량':'total-bulk', '현재량':'leftover', '카테고리':'category', '보관권장온도':'recommended-temp', '유통기한':'expiration-date'}
 unpackaged_updatable_cate = {'상품명': 'name', '총량' : 'total-number', '현재량' : 'leftover-number', '카테고리':'category', '보관권장온도':'recommended-temp', '유통기한':'expiration-date'}
@@ -60,6 +64,19 @@ def validate_cate(update_cate):
         return True
     else:
         return False
+
+def validate_date(today):
+    try:
+        temp = today.split("-")
+        for i in range(len(temp)):
+            temp[i] = str(int(temp[i]))
+        today='-'.join(temp)
+        datetime.datetime.strptime(today,"%Y-%m-%d")
+        return today
+    except ValueError:
+        # print("Incorrect data format({0}), should be YYYY-MM-DD".format(today))
+        return False
+
 def validate_data(update_cate,update_data):
     #수정할 항목의 정보 입력 검사 함수
     cnt = 0
@@ -156,11 +173,15 @@ def validate_data(update_cate,update_data):
                     return False
             elif i == 5:
                 #유통기한 입력 검사
+                # import IceBox
+
                 print("유통기한 입력 검사")
-                # if (type(IceBox.validate_date(update_data)) == str):
-                #     return True
-                # else:
-                #     return False
+                print(update_data)
+                
+                if (type(validate_date(update_data)) == str):
+                    return True
+                else:
+                    return False
 
 def update_product(product_id):
 
@@ -227,5 +248,6 @@ def update_product(product_id):
             print("잘못된 수정 항목이거나 수정 정보 값입니다. 다시 입력해주세요.")
             continue
 
+search_by_id()
 def product_update():
    search_by_id()

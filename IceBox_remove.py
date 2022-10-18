@@ -10,7 +10,7 @@ def icebox_remover():
     # json 파일 열기
     file_path = './data/IceBox_data.json'
     if os.path.isfile(file_path):
-        with open(file_path, 'r') as f:
+        with open(file_path, 'r',encoding="utf-8") as f:
             data = json.load(f)
         # 현재 냉장고가 있는 경우
         if data['iceboxes']: 
@@ -28,7 +28,7 @@ def icebox_remover():
                 if delete_confirm == 'Y' or  delete_confirm == 'y':
                     # 냉장고 삭제 (현재 냉장고 정보 삭제 -> json 파일 덮어쓰기)
                     del data['iceboxes'][icebox_num]
-                    with open(file_path, 'w') as f:
+                    with open(file_path, 'w',encoding="utf-8") as f:
                         json.dump(data, f, ensure_ascii=False, indent=2)
                     print("냉장고가 정상적으로 삭제되었습니다.")
                     IceBox_menu.MainMenu(data["today"])

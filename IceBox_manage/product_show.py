@@ -5,7 +5,7 @@ import json
 file_path = "./data/IceBox_data.json"
 
 def load_json ():
-    with open(file_path, 'r') as f:
+    with open(file_path, 'r', encoding="utf-8") as f:
         return json.load(f)
 
 def show_item(item):
