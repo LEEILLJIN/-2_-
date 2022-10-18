@@ -49,7 +49,10 @@ def MainMenuContent(isIceBox, today):
 
 
 def MainMenu(today):
+<<<<<<< HEAD
     
+=======
+>>>>>>> 9db3aac1bb3d7578f202f93dda30ccbe2fee6962
     isIceBox = False
     with open("./data/IceBox_data.json", 'r', encoding='UTF8') as file:
         json_data = json.load(file)
@@ -66,6 +69,7 @@ def MainMenu(today):
         MainMenuContent(isIceBox,today)
     else:
         print("냉장고를 생성해주세요.")
+<<<<<<< HEAD
         MainMenuContent(isIceBox, today)
 
 # def MainMenu(today):
@@ -90,3 +94,6 @@ def MainMenu(today):
 #     else:
 #         print("냉장고를 생성해주세요.")
 #         MainMenuContent(isIceBox, today)
+=======
+        MainMenuContent(isIceBox, today)
+>>>>>>> 9db3aac1bb3d7578f202f93dda30ccbe2fee6962
