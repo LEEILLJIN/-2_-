@@ -1,8 +1,10 @@
 #냉장고 생성 화면 - 샤에디
 
-import IceBox_menu
 import json
 import os
+
+import IceBox_menu
+
 
 def createIceBox(today):
     with open("./data/IceBox_data.json", 'r', encoding='UTF8') as file:

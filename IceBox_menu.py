@@ -1,9 +1,10 @@
 #main menu
 import json
+
 import IceBox_create
-from IceBox_manage import refrigerator_manage
-import IceBox_update
 import IceBox_remove
+import IceBox_update
+from IceBox_manage import refrigerator_manage
 
 
 def MainMenuContent(isIceBox, today):

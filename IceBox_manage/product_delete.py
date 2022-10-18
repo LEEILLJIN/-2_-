@@ -1,6 +1,11 @@
 # 상품 삭제 화면
 import datetime
 import json
+import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+import IceBox_menu
 
 path = "./data/IceBox_data.json"
 # 상품 id로 상품 폐기
@@ -69,6 +74,7 @@ def consume_by_id() :
                         print("ID '{}'에 해당하는 제품 '{}'의 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover']))
 
                         print()
+                        main_screen()
                         continue
                     else :
                         item['leftover']-=int(consume_how)
@@ -77,6 +83,7 @@ def consume_by_id() :
                             json.dump(data, consume_file, indent="\t", ensure_ascii=False)
                         print("ID '{}'에 해당하는 제품 '{}'을(를) 소모하고 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover']))
                         print()
+                        main_screen()
             
             for item in items["unpackaged"] :
                 if int(consume_id) == item['ID'] :
@@ -85,6 +92,7 @@ def consume_by_id() :
                         print("남은 양이 부족합니다.")
                         print("ID '{}'에 해당하는 제품 '{}'의 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-number']))
                         print()
+                        main_screen()
                         continue
                     else :
                         item['leftover-number']-=int(consume_how)
@@ -93,6 +101,7 @@ def consume_by_id() :
                             json.dump(data, consume_file, indent="\t", ensure_ascii=False)
                         print("ID '{}'에 해당하는 제품 '{}'을(를) 소모하고 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-number']))
                         print()
+                        main_screen()
             
                         
         if cnt == 0:
@@ -147,6 +156,14 @@ def all_delete() :
         print()
         all_delete()
 
+def main_screen() :
+    with open(path, "r", encoding='UTF8') as file :
+          
+            data = json.load(file)
+            today = data['today']
+            IceBox_menu.MainMenu(today)
+
+
 
 # 추가 삭제
 def additional_delete(request) :
@@ -155,7 +172,7 @@ def additional_delete(request) :
         delete_by_id()
         
     elif request == 'n' :
-        print("초기 화면 함수 대기")
+        main_screen()
         exit()
     else :
         print("y 또는 n을 입력해주세요.")
@@ -171,7 +188,7 @@ def product_delete():
         user_input = input()
         
         if user_input == '0' :
-            print("함수 대기") # 돌아가기
+            main_screen()
             break
         elif user_input == '1' :
             print()
@@ -180,7 +197,7 @@ def product_delete():
             print("2. 유통기한 지난 물품 전체 삭제")
             user_input = input()
             if user_input == '0' :
-                print("함수 대기") # 돌아가기
+                main_screen()
                 break
             elif user_input == '1' :
                 delete_by_id()
