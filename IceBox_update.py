@@ -2,6 +2,7 @@
 
 import json
 import os
+import IceBox_menu
 
 # 현재 냉장고는 하나 밖에 없으므로, iceboxes 배열의 0번째 정보를 바로 넣었습니다.
 icebox_num = 0 # 냉장고가 여러 개가 되면, 바꿔줘야 한다.
@@ -93,6 +94,7 @@ def icebox_updater():
 
                 if menu == '0':
                     # 메인 메뉴로 돌아가기
+                    IceBox_menu.MainMenu(data["today"])
                     return
                 elif menu == '1' or menu == '2' or menu == '3'  or menu == '4' :
                     # 정보 수정 handler 호출
@@ -111,6 +113,9 @@ def icebox_updater():
                     print("올바른 입력값이 아닙니다.\n")
         else:
             print("삭제할 냉장고가 없습니다 ")
+            IceBox_menu.MainMenu(data["today"])
             return
     else:
         print("냉장고 정보 파일이 존재하지 않습니다.")
+        IceBox_menu.MainMenu(data["today"])
+        return
