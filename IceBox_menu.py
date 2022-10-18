@@ -2,6 +2,9 @@
 import json
 import IceBox_create
 from IceBox_manage import refrigerator_manage
+import IceBox_update
+import IceBox_remove
+
 
 def MainMenuContent(isIceBox, today):
     print("1. 냉장고 생성")
@@ -21,20 +24,19 @@ def MainMenuContent(isIceBox, today):
 
         elif MainMenuInput == '2':
             if isIceBox:
-                print("냉장고 과리로 이동합니다.\n")
                 refrigerator_manage.openManageMenu(today)
             else:
                 print("냉장고를 먼저 생성해주세요.")
                 continue
         elif MainMenuInput == '3':
             if isIceBox:
-                print("IceBox_update로 이동")
+                IceBox_update.icebox_updater()
             else:
                 print("냉장고를 먼저 생성해주세요.")
                 continue
         elif MainMenuInput == '4':
             if isIceBox:
-                print("IceBox_remove로 이동")
+                IceBox_remove.icebox_remover()
             else:
                 print("냉장고를 먼저 생성해주세요.")
                 continue
@@ -46,26 +48,44 @@ def MainMenuContent(isIceBox, today):
             continue
 
 
-
 def MainMenu(today):
+    isIceBox = False
     with open("./data/IceBox_data.json", 'r', encoding='UTF8') as file:
         json_data = json.load(file)
 
-    iceBox = json_data["iceboxes"]
-    isIceBox = iceBox[0]["creation-status"]
-
-    if isIceBox:
-        print("\n현재 냉장고")
+    if json_data["iceboxes"]:
+        isIceBox = True
+        print("현재 냉장고")
         iceBox = json_data['iceboxes']
-        sizeData = ["refrigerator-size","freezer-size"]
-        tempData = ["refrigerator-temp", "freezer-temp"]
-        partition = ["냉장", "냉동"]
-
-        for i in range(len(partition)):
-            print(f"{partition[i]} - <{iceBox[0][sizeData[i]]}L, {iceBox[0][tempData[i]]}°C>")
-        print("")
+        iceBoxSizeData = ["refrigerator-size","freezer-size"]
+        iceBoxtmpData = ["refrigerator-temp", "freezer-temp"]
+        partion = ["냉장", "냉동"]
+        for i in range(len(partion)):
+            print(f"{partion[i]} - <{iceBox[0][iceBoxSizeData[i]]}L, {iceBox[0][iceBoxtmpData[i]]}°C>")
         MainMenuContent(isIceBox,today)
-
     else:
         print("냉장고를 생성해주세요.")
         MainMenuContent(isIceBox, today)
+
+# def MainMenu(today):
+#     with open("./data/IceBox_data.json", 'r', encoding='UTF8') as file:
+#         json_data = json.load(file)
+
+#     iceBox = json_data["iceboxes"]
+#     isIceBox = iceBox[0]["creation-status"]
+
+#     if isIceBox:
+#         print("\n현재 냉장고")
+#         iceBox = json_data['iceboxes']
+#         sizeData = ["refrigerator-size","freezer-size"]
+#         tempData = ["refrigerator-temp", "freezer-temp"]
+#         partition = ["냉장", "냉동"]
+
+#         for i in range(len(partition)):
+#             print(f"{partition[i]} - <{iceBox[0][sizeData[i]]}L, {iceBox[0][tempData[i]]}°C>")
+#         print("")
+#         MainMenuContent(isIceBox,today)
+
+#     else:
+#         print("냉장고를 생성해주세요.")
+#         MainMenuContent(isIceBox, today)
