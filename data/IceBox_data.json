@@ -6,45 +6,55 @@
 			"refrigerator-size": "100",
 			"refrigerator-temp": "7",
 			"freezer-size": "50",
-			"freezer-temp": "-10"
+			"freezer-temp": "-10",
+			"items": {
+				"packaged": [
+					{
+						"partition": "냉장",
+						"name": "우유",
+						"category": "유제품",
+						"ID": 1,
+						"total-bulk": 7,
+						"leftover": 40,
+						"recommended-temp": -10,
+						"expiration-date": "2023-03-05"
+					},
+					{
+						"partition": "냉동",
+						"name": "고추가루",
+						"category": "가루류",
+						"ID": 2,
+						"total-bulk": 20,
+						"leftover": 30,
+						"recommended-temp": 10,
+						"expiration-date": "2023-06-07"
+					}
+				],
+				"unpackaged": [
+					{
+						"partition": "냉장",
+						"name": "당근",
+						"category": "야채",
+						"ID": 3,
+						"bulk-for-unit": 3,
+						"total-number": 10,
+						"leftover-number": 5,
+						"recommended-temp": 6,
+						"expiration-date": "2023-03-05"
+					},
+					{
+						"partition": "냉장",
+						"name": "당근",
+						"category": "야채",
+						"ID": 4,
+						"bulk-for-unit": 3,
+						"total-number": 10,
+						"leftover-number": 5,
+						"recommended-temp": 6,
+						"expiration-date": "2023-03-05"
+					}
+				]
+			}
 		}
-	],
-	"items": {
-		"packaged": [
-			{
-				"partition": "냉장",
-				"name": "시금치",
-				"category": "과일",
-				"ID": 1,
-				"total-bulk": 15,
-				"leftover-bulk": 50,
-				"recommended-temp": 0,
-				"expiration-date": "2023-03-05",
-				"leftover": 30
-			},
-			{
-				"partition": "냉동",
-				"name": "고추가루",
-				"category": "가루류",
-				"ID": 2,
-				"total-bulk": 20,
-				"leftover-bulk": 30,
-				"recommended-temp": 10,
-				"expiration-date": "2023-06-07"
-			}
-		],
-		"unpackaged": [
-			{
-				"partition": "냉장",
-				"name": "당근",
-				"category": "야채",
-				"ID": 3,
-				"bulk-for-unit": 3,
-				"total-number": 15,
-				"leftover-number": 2,
-				"recommended-temp": -10,
-				"expiration-date": "2023-03-05"
-			}
-		]
-	}
+	]
 }

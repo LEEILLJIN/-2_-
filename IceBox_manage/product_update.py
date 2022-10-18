@@ -34,15 +34,14 @@ def view_item_data(product_id):
     #상품의 정보를 보여주는 함수
     cnt = 0
     with open(path, "r", encoding='UTF8') as file :
-            
                     data = json.load(file)
-                    items = data['items']
-                    
+                    icebox = data['iceboxes']
+                    items = icebox[0]["items"]
                     for item in items['packaged'] :
                         if(int(product_id) == item['ID']) :
-                            print("<상품 ID: {}, 상품명: {}, 총량: {}L, 현재량: {}%, 카테고리: {}, 분류: {}, 보관권장온도: {}도, 유통기한: {}>" .format(item["ID"], item["name"], item["total-bulk"], item["leftover-bulk"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
+                            print("<상품 ID: {}, 상품명: {}, 총량: {}L, 현재량: {}%, 카테고리: {}, 분류: {}, 보관권장온도: {}도, 유통기한: {}>" .format(item["ID"], item["name"], item["total-bulk"], item["leftover"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
                             cnt+=1
-                            print()
+
                         else :
                             continue
                         
@@ -50,7 +49,7 @@ def view_item_data(product_id):
                         if(int(product_id) == item['ID']) :
                             print("<상품 ID: {}, 상품명: {}, 총량: {}개, 현재량: {}개, 카테고리: {}, 분류: {}, 보관권장온도: {}도, 유통기한: {}>" .format(item["ID"], item["name"],  item["total-number"], item["leftover-number"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
                             cnt+=1
-                            print()
+
                         else :
                             continue
     return cnt
@@ -170,14 +169,16 @@ def update_product(product_id):
         if update_cate == '카테고리':
             print("1.야채, 2.과일, 3.유제품, 4.냉동식품, 5.육류, 6.어류, 7.과자, 8.음료, 9.주류, 10.빙과류, 11.신선제품, 12.소스, 13.곡식류, 14.가루류, 15.기타")
         update_data = input("수정 정보를 입력해주세요 :")
-        print(f"validate_cate : {validate_cate(update_cate)}")
-        print(f"validate_data : {validate_data(update_cate, update_data)}")
+        # print(f"validate_cate : {validate_cate(update_cate)}")
+        # print(f"validate_data : {validate_data(update_cate, update_data)}")
         if validate_cate(update_cate):
             if validate_data(update_cate, update_data):
                 #올바른 수정 항목과 수정 정보가 입력된 경우
                 with open("./data/IceBox_data.json", 'r', encoding='UTF8') as file:
                     json_data = json.load(file)
-                items = json_data["items"]
+
+                icebox = json_data['iceboxes']
+                items = icebox[0]["items"]
                 packaged_itemlist = items["packaged"]
                 unpackaged_itemlist = items["unpackaged"]
 
@@ -208,6 +209,7 @@ def update_product(product_id):
                     print("0.돌아가기")
                     print("1.추가수정")
                     user_input = input("메뉴를 입력하세요 : ")
+                    print()
                     if user_input == '0':
                         print("주 메뉴화면 호출")
                         exit(0)
