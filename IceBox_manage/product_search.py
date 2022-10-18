@@ -1,5 +1,8 @@
 # 상품 검색 화면
 import json
+import sys, os
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+import product_delete
 
 path = "./data/IceBox_data.json"
 def search_by_name() :
@@ -49,8 +52,7 @@ def additional_search(request) :
         search_by_name()
 
     elif request == 'n' :
-        print("초기 화면 함수 대기")
-        exit()
+        product_delete.main_screen()
     else :
         print("y 또는 n을 입력해주세요.")
         plus_search = input("추가 검색을 하시겠습니까 ? y/n : ")
@@ -63,8 +65,7 @@ def product_search():
         user_input = input()
 
         if user_input == '0' :
-            # 관리화면 함수 기다리는중
-            print("함수 대기")
+            product_delete.main_screen()
             break
         elif user_input == '1' :
             search_by_name()
