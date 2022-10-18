@@ -1,14 +1,15 @@
 #냉장고 관리 화면(초기화면) - 샤에디
 
-import IceBox_menu
 import json
 import os
 
+import IceBox_menu
 from IceBox_manage.product_delete import product_delete
 from IceBox_manage.product_register import register_product
 from IceBox_manage.product_search import product_search
 from IceBox_manage.product_show import product_show
 from IceBox_manage.product_update import product_update
+
 
 def openManageMenu(today):
     with open("./data/IceBox_data.json", 'r', encoding='UTF8') as file:

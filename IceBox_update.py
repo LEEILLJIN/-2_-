@@ -2,6 +2,7 @@
 
 import json
 import os
+
 import IceBox_menu
 
 # 현재 냉장고는 하나 밖에 없으므로, iceboxes 배열의 0번째 정보를 바로 넣었습니다.
