@@ -255,7 +255,7 @@ def validate_input_data(input_data,key,input_process_tmp_data) :
     return False
 
 
-def register_prodocut():
+def register_product():
     #수정할 상품 ID 입력하여 해당 ID의 예외 처리 후 적법할 경우 상품을 찾는 함수
     exit_object={
         "is_exit": False
@@ -326,6 +326,6 @@ def register_prodocut():
 
 
         
-register_prodocut()
+# register_prodocut()
 
         

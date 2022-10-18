@@ -56,7 +56,7 @@ def additional_search(request) :
         plus_search = input("추가 검색을 하시겠습니까 ? y/n : ")
         additional_search(plus_search)
 
-if __name__=="__main__":
+def product_search():
     while True:
         print("0. 돌아가기")
         print("1. 상품명 검색")

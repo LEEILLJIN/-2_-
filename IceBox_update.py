@@ -74,7 +74,7 @@ def icebox_updater():
     # json 파일 열기
     file_path = './data/IceBox_data.json'
     if os.path.isfile(file_path):
-        with open(file_path, 'r') as f:
+        with open(file_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
         # 현재 냉장고가 있는 경우
         if data['iceboxes']: 
@@ -102,7 +102,7 @@ def icebox_updater():
                     info_updater(current_icebox)
                     
                     # 수정 정보 저장
-                    with open(file_path, 'w') as f:
+                    with open(file_path, 'w', encoding='utf-8') as f:
                         json.dump(data, f, ensure_ascii=False, indent=2)
                     print("해당 냉장고 설정 정보를 변경되었습니다.\n")
 

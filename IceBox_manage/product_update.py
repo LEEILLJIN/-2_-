@@ -227,5 +227,5 @@ def update_product(product_id):
             print("잘못된 수정 항목이거나 수정 정보 값입니다. 다시 입력해주세요.")
             continue
 
-if __name__=="__main__":
+def product_update():
    search_by_id()
