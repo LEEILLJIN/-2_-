@@ -3,28 +3,27 @@
   "iceboxes": [
     {
       "name": "Home",
-      "creation-status": true,
-      "refrigerator-size": 100.0,
-      "refrigerator-temp": 7.0,
-      "freezer-size": 50.0,
-      "freezer-temp": -10.0
+      "refrigerator-size": "100",
+      "refrigerator-temp": "7",
+      "freezer-size": "50",
+      "freezer-temp": "-10"
     }
   ],
   "items": {
     "packaged": [
       {
-        "ID": 1,
         "partition": "냉장",
         "name": "우유",
+        "ID": 1,
         "bulk": 7,
         "leftover": 50,
         "recommended-temp": -10,
         "expiration-date": "2023-03-05"
       },
       {
-        "ID": 2,
         "partition": "냉동",
         "name": "고추가루",
+        "ID": 2,
         "total-bulk": 20,
         "leftover-bulk": 30,
         "recommended-temp": 10,
@@ -33,9 +32,9 @@
     ],
     "unpackaged": [
       {
-        "ID": 3,
         "partition": "냉장",
         "name": "당근",
+        "ID": 3,
         "bulk-for-unit": 3,
         "total-number": 10,
         "leftover-number": 5,
@@ -43,5 +42,6 @@
         "expiration-date": "2023-03-05"
       }
     ]
-  }
+  },
+  "current_item_sequence": 23
 }
