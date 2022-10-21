@@ -1,8 +1,8 @@
 # 상품 삭제 화면
-import datetime
 import json
 import os
 import sys
+import time
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 import IceBox_menu
@@ -58,50 +58,105 @@ def delete_by_id() :
 def consume_by_id() :
     cnt = 0
     while True :
-        with open(path, "r", encoding='UTF8') as file :
-                
-            data = json.load(file)
-            iceboxes = data['iceboxes']
-            items = iceboxes[0]['items']
-            consume_id = input("소모할 상품 ID : ")
-            consume_how = input("소모할 상품 양 : ")
-                        
-            for item in items["packaged"] :
-                if int(consume_id) == item['ID'] :
-                    if item['leftover'] < int(consume_how) :
-                        cnt+=1
-                        print("남은 양이 부족합니다.")
-                        print("ID '{}'에 해당하는 제품 '{}'의 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover']))
+        consume_id = input("소모할 상품 ID : ")
+        consume_how = input("소모할 상품 양 : ")
 
-                        print()
-                        main_screen()
-                        continue
-                    else :
-                        item['leftover']-=int(consume_how)
-                        cnt += 1
-                        with open(path, 'w', encoding='UTF8') as consume_file :
-                            json.dump(data, consume_file, indent="\t", ensure_ascii=False)
-                        print("ID '{}'에 해당하는 제품 '{}'을(를) 소모하고 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover']))
-                        print()
-                        main_screen()
+        # 상품 ID와 상품 양에 대한 문법 형식 검사
+        if consume_id.isdigit() == False or consume_how.isdigit() == False:
+                print("상품 ID와 상품 양은 숫자만 입력 가능합니다.")
+                
+        elif consume_id.isdigit() == True or consume_how.isdigit() == True :
+        
+            with open(path, "r", encoding='UTF8') as file :
+                    
+                data = json.load(file)
+                iceboxes = data['iceboxes']
+                items = iceboxes[0]['items']
+                
+                            
+                for item in items["packaged"] :
+                    if int(consume_id) == item['ID'] :
+                        if item['leftover'] < int(consume_how) :
+                            cnt+=1
+                            print("남은 양이 부족합니다.")
+                            print("ID '{}'에 해당하는 제품 '{}'의 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover']))
+
+                            print()
+                            continue
+                        else :
+                            item['leftover']-=int(consume_how)
+                            cnt += 1
+                            with open(path, 'w', encoding='UTF8') as consume_file :
+                                json.dump(data, consume_file, indent="\t", ensure_ascii=False)
+                            print("ID '{}'에 해당하는 제품 '{}'을(를) 소모하고 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover']))
+                            print()
+                            main_screen()
+                
+                for item in items["unpackaged"] :
+                    if int(consume_id) == item['ID'] :
+                        if item['leftover-number'] < int(consume_how) :
+                            cnt+=1
+                            print("남은 양이 부족합니다.")
+                            print("ID '{}'에 해당하는 제품 '{}'의 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-number']))
+                            print()
+                            main_screen()
+                            continue
+                        else :
+                            item['leftover-number']-=int(consume_how)
+                            cnt += 1
+                            with open(path, 'w', encoding='UTF8') as consume_file :
+                                json.dump(data, consume_file, indent="\t", ensure_ascii=False)
+                            print("ID '{}'에 해당하는 제품 '{}'을(를) 소모하고 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-number']))
+                            print()
+                            main_screen()
+
+
+    # def consume_by_id() :
+    # cnt = 0
+    # while True :
+    #     with open(path, "r", encoding='UTF8') as file :
+                
+    #         data = json.load(file)
+    #         iceboxes = data['iceboxes']
+    #         items = iceboxes[0]['items']
+    #         consume_id = input("소모할 상품 ID : ")
+    #         consume_how = input("소모할 상품 양 : ")
+                        
+    #         for item in items["packaged"] :
+    #             if int(consume_id) == item['ID'] :
+    #                 if item['leftover'] < int(consume_how) :
+    #                     cnt+=1
+    #                     print("남은 양이 부족합니다.")
+    #                     print("ID '{}'에 해당하는 제품 '{}'의 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover']))
+
+    #                     print()
+    #                     continue
+    #                 else :
+    #                     item['leftover']-=int(consume_how)
+    #                     cnt += 1
+    #                     with open(path, 'w', encoding='UTF8') as consume_file :
+    #                         json.dump(data, consume_file, indent="\t", ensure_ascii=False)
+    #                     print("ID '{}'에 해당하는 제품 '{}'을(를) 소모하고 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover']))
+    #                     print()
+    #                     main_screen()
             
-            for item in items["unpackaged"] :
-                if int(consume_id) == item['ID'] :
-                    if item['leftover-number'] < int(consume_how) :
-                        cnt+=1
-                        print("남은 양이 부족합니다.")
-                        print("ID '{}'에 해당하는 제품 '{}'의 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-number']))
-                        print()
-                        main_screen()
-                        continue
-                    else :
-                        item['leftover-number']-=int(consume_how)
-                        cnt += 1
-                        with open(path, 'w', encoding='UTF8') as consume_file :
-                            json.dump(data, consume_file, indent="\t", ensure_ascii=False)
-                        print("ID '{}'에 해당하는 제품 '{}'을(를) 소모하고 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-number']))
-                        print()
-                        main_screen()
+    #         for item in items["unpackaged"] :
+    #             if int(consume_id) == item['ID'] :
+    #                 if item['leftover-number'] < int(consume_how) :
+    #                     cnt+=1
+    #                     print("남은 양이 부족합니다.")
+    #                     print("ID '{}'에 해당하는 제품 '{}'의 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-number']))
+    #                     print()
+    #                     main_screen()
+    #                     continue
+    #                 else :
+    #                     item['leftover-number']-=int(consume_how)
+    #                     cnt += 1
+    #                     with open(path, 'w', encoding='UTF8') as consume_file :
+    #                         json.dump(data, consume_file, indent="\t", ensure_ascii=False)
+    #                     print("ID '{}'에 해당하는 제품 '{}'을(를) 소모하고 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-number']))
+    #                     print()
+    #                     main_screen()
             
                         
         if cnt == 0:
@@ -124,10 +179,12 @@ def all_delete() :
             data = json.load(file)
             iceboxes = data['iceboxes']
             items = iceboxes[0]['items']
-            today = int("".join(str(datetime.date.today()).split("-")))
+            # today = int("".join(str(datetime.date.today()).split("-")))
+            today_data = data["today"]
+            today = time.strptime(today_data, "%Y-%m-%d")
 
             for item in items["packaged"].copy() :
-                expiration = int("".join(item['expiration-date'].split("-")))
+                expiration = time.strptime(item['expiration-date'], "%Y-%m-%d")
                 
                 if today > expiration :
                     del items['packaged'][items['packaged'].index(item)]
@@ -136,7 +193,7 @@ def all_delete() :
 
 
             for item in items["unpackaged"].copy() :
-                expiration = int("".join(item['expiration-date'].split("-")))
+                expiration = time.strptime(item['expiration-date'], "%Y-%m-%d")
                 
                 if today > expiration :
                     del items['unpackaged'][items['unpackaged'].index(item)]

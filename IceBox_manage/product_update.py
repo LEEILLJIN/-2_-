@@ -12,7 +12,7 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 
 path = "./data/IceBox_data.json"
-packaged_updatable_cate = {'상품명': 'name', '총량':'total-bulk', '현재량':'leftover', '카테고리':'category', '보관권장온도':'recommended-temp', '유통기한':'expiration-date'}
+packaged_updatable_cate = {'상품명': 'name', '총량':'total-bulk', '현재량':'leftover-bulk', '카테고리':'category', '보관권장온도':'recommended-temp', '유통기한':'expiration-date'}
 unpackaged_updatable_cate = {'상품명': 'name', '총량' : 'total-number', '현재량' : 'leftover-number', '카테고리':'category', '보관권장온도':'recommended-temp', '유통기한':'expiration-date'}
 special_character = ['~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')']
 category_list = {
@@ -47,7 +47,7 @@ def view_item_data(product_id):
                     items = icebox[0]["items"]
                     for item in items['packaged'] :
                         if(int(product_id) == item['ID']) :
-                            print("<상품 ID: {}, 상품명: {}, 총량: {}L, 현재량: {}%, 카테고리: {}, 분류: {}, 보관권장온도: {}도, 유통기한: {}>" .format(item["ID"], item["name"], item["total-bulk"], item["leftover"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
+                            print("<상품 ID: {}, 상품명: {}, 총량: {}L, 현재량: {}%, 카테고리: {}, 분류: {}, 보관권장온도: {}도, 유통기한: {}>" .format(item["ID"], item["name"], item["total-bulk"], item["leftover-bulk"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
                             cnt+=1
 
                         else :
@@ -71,6 +71,12 @@ def validate_cate(update_cate):
 def validate_date(today):
     try:
         temp = today.split("-")
+        year = int(temp[0])
+        month = int(temp[1])
+        day = int(temp[2])
+
+        if 2000 > year or 2999 < year:
+            return False
         for i in range(len(temp)):
             temp[i] = str(int(temp[i]))
         today='-'.join(temp)
@@ -182,6 +188,10 @@ def validate_data(update_cate,update_data):
                 today = time.strptime(today_data,"%Y-%m-%d")
                 
                 if (type(validate_date(update_data)) == str):
+                    temp = update_data.split("-")
+                    for i in range(len(temp)):
+                        temp[i] = str(int(temp[i]))
+                    update_data='-'.join(temp)
                     input_date = time.strptime(update_data,"%Y-%m-%d")
                     if today > input_date:
                         return False
@@ -217,6 +227,11 @@ def update_product(product_id):
                             update_data = category_list[update_data]
                         elif update_cate in ['총량','현재량','보관권장온도']:
                             update_data = int(update_data)
+                        elif update_cate == '유통기한':
+                            temp = update_data.split("-")
+                            for i in range(len(temp)):
+                                temp[i] = str(int(temp[i]))
+                            update_data='-'.join(temp)
 
                         item[packaged_updatable_cate[update_cate]] = update_data
                         with open('./data/IceBox_data.json', 'w', encoding='utf-8') as make_file:
