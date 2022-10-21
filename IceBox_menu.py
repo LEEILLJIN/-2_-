@@ -2,7 +2,7 @@
 import json
 
 import os
-
+import platform
 import IceBox_create
 import IceBox_remove
 import IceBox_update
@@ -23,26 +23,38 @@ def MainMenuContent(isIceBox, today):
                 print("이미 냉장고가 생성되어 있습니다.")
                 continue
             else:
-                os.system("cls")
+                if platform.system() == "Windows":
+                    os.system("cls")
+                elif platform.system() == "Darwin":
+                    os.system("clear")
                 IceBox_create.createIceBox(today)
 
         elif MainMenuInput == '2':
             if isIceBox:
-                os.system("cls")
+                if platform.system() == "Windows":
+                    os.system("cls")
+                elif platform.system() == "Darwin":
+                    os.system("clear")
                 refrigerator_manage.openManageMenu(today)
             else:
                 print("냉장고를 먼저 생성해주세요.")
                 continue
         elif MainMenuInput == '3':
             if isIceBox:
-                os.system("cls")
+                if platform.system() == "Windows":
+                    os.system("cls")
+                elif platform.system() == "Darwin":
+                    os.system("clear")
                 IceBox_update.icebox_updater()
             else:
                 print("냉장고를 먼저 생성해주세요.")
                 continue
         elif MainMenuInput == '4':
             if isIceBox:
-                os.system("cls")
+                if platform.system() == "Windows":
+                    os.system("cls")
+                elif platform.system() == "Darwin":
+                    os.system("clear")
                 IceBox_remove.icebox_remover()
             else:
                 print("냉장고를 먼저 생성해주세요.")
@@ -57,7 +69,12 @@ def MainMenuContent(isIceBox, today):
 
 def MainMenu(today):
     isIceBox = False
-    os.system("cls")
+    if platform.system() == "Windows":
+        os.system("cls")
+    elif platform.system() == "Darwin":
+        os.system("clear")
+
+
 
     with open("./data/IceBox_data.json", 'r', encoding='UTF8') as file:
         json_data = json.load(file)

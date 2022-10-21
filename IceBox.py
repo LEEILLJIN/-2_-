@@ -2,12 +2,16 @@
 #기획서에는 json 파일을 냉장고 생성할 때 같이 만드는거로 되었지만 일단 예시 파일로 구현 진행
 import datetime
 import os
+import platform
 
 import IceBox_menu
 
 
 def DateInput():
-    os.system("cls")
+    if platform.system() == "Windows":
+        os.system("cls")
+    elif platform.system() == "Darwin":
+        os.system("clear")
     while True:
         today = str(input("오늘 날짜를 입력해주세요. >> "))
         today = validate_date(today)
