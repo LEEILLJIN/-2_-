@@ -6,6 +6,7 @@ import json
 import os
 import sys
 from unicodedata import category
+import time
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
@@ -82,7 +83,6 @@ def validate_date(today):
 def validate_data(update_cate,update_data):
     #수정할 항목의 정보 입력 검사 함수
     cnt = 0
-
     for i, item in enumerate( packaged_updatable_cate.keys()):
         if item == update_cate:
             if i == 0:
@@ -176,13 +176,18 @@ def validate_data(update_cate,update_data):
             elif i == 5:
                 #유통기한 입력 검사
                 # import IceBox
-
-                print("유통기한 입력 검사")
-                print(update_data)
+                with open("./data/IceBox_data.json", 'r', encoding='UTF8') as file:
+                    json_data = json.load(file)
+                today_data = json_data["today"]
+                today = time.strptime(today_data,"%Y-%m-%d")
                 
                 if (type(validate_date(update_data)) == str):
-                    return True
-                else:
+                    input_date = time.strptime(update_data,"%Y-%m-%d")
+                    if today > input_date:
+                        return False
+                    else :
+                        return True
+                else: 
                     return False
 
 def update_product(product_id):
