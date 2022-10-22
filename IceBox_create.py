@@ -14,16 +14,16 @@ def createIceBox(today):
     iceBox = json_data['iceboxes']
 
     inputData = {
-        "refrigerator-size": ["냉장 크기", "(단위 : 리터(L))"],
-        "refrigerator-temp": ["냉장 온도", "(단위 : 섭씨(°C))"],
-        "freezer-size": ["냉동 크기", "(단위 : 리터(L))"],
-        "freezer-temp": ["냉동 온도", "(단위 : 섭씨(°C))"]
+        "refrigerator-size": "냉장 크기(L)",
+        "refrigerator-temp": "냉장 온도(°C)",
+        "freezer-size": "냉동 크기(L)",
+        "freezer-temp": "냉동 온도(°C)"
     }
 
     for key in inputData:
         while True:
             try:
-                i = float(input(f"{inputData[key][0]}를 입력해주세요 {inputData[key][1]} : "))
+                i = float(input(f"{inputData[key]}를 입력해주세요. >> "))
                 inputData[key] = i
                 break
             except ValueError:
