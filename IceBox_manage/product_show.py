@@ -69,7 +69,7 @@ def show_items(sort_filter) :
 
 def product_show():
     #unpackeged defaultReverseFlag defaultReverseFlagOfreverse Display defaultSortDisplay
-    sort_filter=["expiration-date",True,False,"유통기한 기준","up"]
+    sort_filter=["expiration-date",False,False,"유통기한 기준","up"]
     while True:
         show_items(sort_filter)
         print("==========================================")
@@ -85,7 +85,7 @@ def product_show():
         if user_input == '0' :
             break; 
         elif user_input == '1' :
-            sort_filter=["expiration-date",True,False,"유통기한 기준","up"]
+            sort_filter=["expiration-date",False,False,"유통기한 기준","up"]
         elif user_input == '2' :
             sort_filter=["name",False,False,"상품명 사전식","up"]
         elif user_input == '3' :

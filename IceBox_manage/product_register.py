@@ -4,6 +4,7 @@ import json
 import re
 from itertools import product
 from unicodedata import category
+from IceBox import validate_date
 
 # import IceBox
 path = "./data/IceBox_data.json"
@@ -248,7 +249,12 @@ def validate_input_data(input_data,key,input_process_tmp_data) :
     elif key == 'expiration-date':
         date_regex = r'\d{4}-\d{2}-\d{2}'
         if bool(re.match(date_regex, input_data)):
-            return True
+            if validate_date(input_data):
+                return True
+            else:
+                print("'YYYY-MM-DD' 형식으로 입력 가능합니다.")
+                print("다시 입력해주세요.")
+                return False
         else :
             print("'YYYY-MM-DD' 형식으로 입력 가능합니다.")
             print("다시 입력해주세요.")
