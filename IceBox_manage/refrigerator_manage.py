@@ -78,7 +78,7 @@ def openManageMenu(today):
             if items[i][j]["partition"] == "냉동":
                 if (today >= expDate):
                     print('\u001b[2;31m', end="")
-                elif (today < expDate and (today + timedelta(5)) >= expDate):
+                elif (today < expDate and (today + timedelta(5)) > expDate):
                     print('\u001b[2;33m', end="")
                 print("<",end="")
                 for k in items[i][j]:

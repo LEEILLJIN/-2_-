@@ -24,8 +24,11 @@ def createIceBox(today):
         while True:
             try:
                 i = float(input(f"{inputData[key][0]}를 입력해주세요 {inputData[key][1]} : "))
-                inputData[key] = i
-                break
+                if (key in ["refrigerator-size", "freezer-size"] and i < 0):
+                    raise ValueError
+                else:
+                    inputData[key] = i
+                    break
             except ValueError:
                 print("다시 입력해주세요.")
 
