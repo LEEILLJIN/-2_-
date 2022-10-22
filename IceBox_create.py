@@ -27,7 +27,7 @@ def createIceBox(today):
                 inputData[key] = i
                 break
             except ValueError:
-                print("숫자를 입력하세요.")
+                print("다시 입력해주세요.")
 
     inputData["name"] = "home"
     iceBox.append(inputData)
