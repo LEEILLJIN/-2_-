@@ -1,8 +1,16 @@
 # 상품 조회 화면
 
 import json
-
+import IceBox_menu
 file_path = "./data/IceBox_data.json"
+
+def main_screen2() :
+    with open(file_path, "r", encoding='UTF8') as file :
+          
+            data = json.load(file)
+            today = data['today']
+            IceBox_menu.MainMenu(today)
+
 
 def sort_display(direction,reverse):
     if direction=="up":
@@ -69,32 +77,37 @@ def show_items(sort_filter) :
 
 def product_show():
     #unpackeged defaultReverseFlag defaultReverseFlagOfreverse Display defaultSortDisplay
-    sort_filter=["expiration-date",True,False,"유통기한 기준","up"]
+    sort_filter=["expiration-date",False,False,"유통기한 기준","up"]
     while True:
         show_items(sort_filter)
         print("==========================================")
-        print("(0) 돌아가기")
-        print("(1) 유통기한 기준 조회")
-        print("(2) 상품명 사전식 조회")
-        print("(3) 총량 기준 조회")
-        print("(4) 현재량 기준 조회")
-        print("(5) 보관권장온도 기준 조회")
-        print("(6) 역순 조회")
-        user_input = input("선택 항목 입력:")
+        print("0. 돌아가기")
+        print("1. 유통기한 기준 조회")
+        print("2. 카테고리 기준 조회")
+        print("3. 역순 조회")
+        # print("(3) 상품명 사전식 조회")
+        # print("(4) 총량 기준 조회")
+        # print("(5) 현재량 기준 조회")
+        # print("(6) 보관권장온도 기준 조회")
+        # print("(7) 역순 조회")
+        user_input = input("조회할 기준을 선택해주세요.:")
         
         if user_input == '0' :
+            main_screen2()
             break; 
         elif user_input == '1' :
-            sort_filter=["expiration-date",True,False,"유통기한 기준","up"]
+            sort_filter=["expiration-date",False,False,"유통기한 기준","up"]
         elif user_input == '2' :
-            sort_filter=["name",False,False,"상품명 사전식","up"]
+            sort_filter=["category",False,False,"카테고리 기준","up"]
+        # elif user_input == '3' :
+        #     sort_filter=["name",False,False,"상품명 사전식","up"]
+        # elif user_input == '4' :
+        #     sort_filter=["total-number",True,False,"총량 기준","down"]
+        # elif user_input == '5' :
+        #     sort_filter=["leftover-number",True,False,"현재량 기준","down"]
+        # elif user_input == '6' :
+        #     sort_filter=["recommended-temp",False,False,"보관권장온도 기준","up"]
         elif user_input == '3' :
-            sort_filter=["total-number",True,False,"총량 기준","down"]
-        elif user_input == '4' :
-            sort_filter=["leftover-number",True,False,"현재량 기준","down"]
-        elif user_input == '5' :
-            sort_filter=["recommended-temp",False,False,"보관권장온도 기준","up"]
-        elif user_input == '6' :
             sort_filter[2]= False if sort_filter[2]==True else True
         else :
             print("==========================================")
