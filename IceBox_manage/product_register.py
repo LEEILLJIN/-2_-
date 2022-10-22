@@ -5,6 +5,13 @@ import re
 from itertools import product
 from unicodedata import category
 from IceBox import validate_date
+import IceBox_menu
+def main_screen2() :
+    with open(file_path, "r", encoding='UTF8') as file :
+          
+            data = json.load(file)
+            today = data['today']
+            IceBox_menu.MainMenu(today)
 
 # import IceBox
 path = "./data/IceBox_data.json"
@@ -39,6 +46,8 @@ def load_json ():
 def save_json (current_json):
     with open(file_path, 'w') as f:
         json.dump(current_json, f, ensure_ascii=False, indent=2)
+    print("상품이 등록되었습니다.")
+    print("==========================================")
     
 def save_product (is_packaged,input_data):    
     loaded_json = load_json()
@@ -63,6 +72,7 @@ def save_product (is_packaged,input_data):
 def set_input_process_tmp_data(input_data,key,input_process_tmp_data,exit_object):
     if(input_data=="0"):
         exit_object["is_exit"]=True
+        main_screen2()
         return False
     if validate_input_data(input_data,key,input_process_tmp_data) == True:
         save_data(input_data,key,input_process_tmp_data)
@@ -268,8 +278,9 @@ def register_product():
         "is_exit": False
     }
     while exit_object["is_exit"]==False:
-        print("(1) 보관함으로 저장")
-        print("(2) 개별 저장")
+        print("0. 돌아가기")
+        print("1. 보관함으로 저장")
+        print("2. 개별 저장")
         product_register_type =  input("상품의 저장 환경을 선택하세요: ")
 
         #입력값 검증
@@ -291,6 +302,7 @@ def register_product():
         #입력할 데이터 key string list
         input_process_category_key_list = list(input_process_category.values())
         #저장할 데이터
+        
         input_process_tmp_data = {input_process_category_key_list[i]: None for i in range(0, len(input_process_category_key_list))}
         #페키지 언페키지
         is_input_process_tmp_data_packaged= True if product_register_type == "1" else False
@@ -305,13 +317,14 @@ def register_product():
 
             if len(input_process_category_display_list)<=process_step:
                 break
-
+            print("0. 돌아가기")   
             if input_process_category_display_list[process_step]=="카테고리":
                 for idx,i in enumerate(list(category_object.values())):
-                    print(f"({idx+1}) {i}")
+                    print(f"{idx+1}. {i}")
             if input_process_category_display_list[process_step]=="파티션":
                 for idx,i in enumerate(list(partition_object.values())):
-                    print(f"({idx+1}) {i}")        
+                    print(f"{idx+1}. {i}")     
+            
             input_data =  input(f"{input_process_category_display_list[process_step]} 입력:")
             # print(input_data)
 
