@@ -48,7 +48,7 @@ def delete_by_id() :
                             continue
                     
                     if cnt == 0 :
-                        print("존재하지 않는 상품 ID 입니다.")
+                        print("존재하지 않는 상품 아이디입니다.")
                         continue
                     
                     plus_delete = input("다른 아이디로 삭제하시겠습니까? (Y/N) : ")
@@ -210,7 +210,7 @@ def all_delete() :
         main_screen()
         exit()
     else :
-        print("y 또는 n을 입력해주세요.")
+        print("Y 또는 N을 입력해주세요.")
         print()
         all_delete()
 
@@ -272,7 +272,7 @@ def product_delete():
 
             else :
                 print()
-                print("0, 1, 2 중에서 메뉴를 골라주세요.")
+                print("다시 입력해주세요.")
                 continue
 
         elif user_input == '2' :
@@ -280,10 +280,10 @@ def product_delete():
         
         elif user_input.isdigit() == False :
             print()
-            print("숫자만 입력 해주세요.")
+            print("다시 입력해주세요.")
             continue
 
         else :
             print()
-            print("0, 1, 2 중에서 메뉴를 골라주세요.")
+            print("다시 입력해주세요.")
             continue

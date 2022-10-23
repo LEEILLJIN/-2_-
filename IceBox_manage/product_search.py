@@ -17,7 +17,7 @@ def search_by_name() :
             print()
             for validation in product_name :
                 if validation in special_character :
-                    print("특수문자를 사용할 수 없습니다")
+                    print("다시 입력해주세요.")
                     break
             
             else :
@@ -57,7 +57,7 @@ def additional_search(request) :
     elif request == 'N' :
         main_screen2()
     else :
-        print("y 또는 n을 입력해주세요.")
+        print("Y 또는 N을 입력해주세요.")
         plus_search = input("추가 검색을 하시겠습니까? (Y/N) : ")
         additional_search(plus_search)
 
@@ -86,5 +86,5 @@ def product_search():
             search_by_name()
         else :
             print()
-            print("0 또는 1을 입력해주세요")
+            print("다시 입력해주세요.")
 
