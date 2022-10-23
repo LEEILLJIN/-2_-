@@ -21,8 +21,7 @@ category_list = {
     '1' : '야채', '2':'과일', '3':'유제품', '4':'냉동식품', '5':'육류', '6':'어류', '7':'과자', '8':'음료', '9':'주류', '10':'빙과류', '11':'신선제품', '12':'소스', '13':'곡식류', '14':'가루류', '15':'기타'
 }
 def main_screen2() :
-    with open(path, "r", encoding='UTF8') as file :
-          
+    with open(path, "r", encoding='UTF8') as file :          
             data = json.load(file)
             today = data['today']
             IceBox_menu.MainMenu(today)
@@ -100,9 +99,11 @@ def validate_data(update_cate,update_data):
         if item == update_cate:
             if i == 0:
                 #상품명 입력 검사
+                if update_data.find(' ')==0 or update_data.find(' ') == len(update_data)-1 or len(update_data) <= 0:
+                #공백류가 맨앞이나 맨뒤에 있다면
+                    return False
                 for validation in update_data :
                     if validation in special_character :
-                        print("특수문자를 사용할 수 없습니다.")
                         cnt += 1
                 if cnt == 0:
                     return True
@@ -112,7 +113,6 @@ def validate_data(update_cate,update_data):
                 #총량 입력 검사
                 #packaged의 총량은 남은냉장고 부피보다 작아야되고
                 #unpackaged의 총량은 현재 개수보다 작아야됨
-                
                 #둘다 1~100의 정수로 입력 규칙을 정하자
                 if update_data.isalpha() or update_data.find(' ')>=0:
                     #숫자가 아니거나 공백류가 포함된 경우
@@ -155,8 +155,8 @@ def validate_data(update_cate,update_data):
             elif i ==3:
                 #카테고리 입력 검사
                 #1.야채, 2.과일, 3.유제품, 4.냉동식품, 5.육류, 6.어류, 7.과자, 8.음료, 9.주류, 10.빙과류, 11.신선제품, 12.소스, 13.곡식류, 14.가루류, 15.기타
-                if update_data.isalpha() :
-                    #숫자가 아닌 경우
+                if update_data.isalpha() or update_data.find(' ')>=0:
+                    #숫자가 아닌 경우 또는 공백류가 포함된 경우
                     return False
                 elif 1 > int(update_data) or int(update_data) > 15:
                     #입력 범위에 벗어난 경우
@@ -282,4 +282,3 @@ def product_update():
    search_by_id()
 
 
-search_by_id()
