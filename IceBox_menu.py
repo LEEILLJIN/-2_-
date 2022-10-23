@@ -82,6 +82,10 @@ def MainMenu(today):
     with open("./data/IceBox_data.json", 'r', encoding='UTF8') as file:
         json_data = json.load(file)
 
+    json_data['today'] = today
+    with open("./data/IceBox_data.json", 'w', encoding='UTF8') as file:
+        json.dump(json_data, file, ensure_ascii=False, indent=2)
+
     if json_data["iceboxes"]:
         isIceBox = True
         print("현재 냉장고")

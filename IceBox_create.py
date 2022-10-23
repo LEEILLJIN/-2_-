@@ -13,6 +13,9 @@ def createIceBox(today):
     json_data['today'] = today
     iceBox = json_data['iceboxes']
 
+    with open("./data/IceBox_data.json", 'w', encoding='UTF8') as file:
+        json.dump(json_data, file, ensure_ascii=False, indent=2)
+
     inputData = {
         "refrigerator-size": ["냉장 크기", "(단위 : 리터(L))"],
         "refrigerator-temp": ["냉장 온도", "(단위 : 섭씨(°C))"],
