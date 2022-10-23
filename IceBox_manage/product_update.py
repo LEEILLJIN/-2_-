@@ -8,6 +8,7 @@ import os
 import sys
 from unicodedata import category
 import time
+from IceBox import validate_date
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 import IceBox_menu
@@ -74,23 +75,6 @@ def validate_cate(update_cate):
     else:
         return False
 
-def validate_date(today):
-    try:
-        temp = today.split("-")
-        year = int(temp[0])
-        month = int(temp[1])
-        day = int(temp[2])
-
-        if 2000 > year or 2999 < year:
-            return False
-        for i in range(len(temp)):
-            temp[i] = str(int(temp[i]))
-        today='-'.join(temp)
-        datetime.datetime.strptime(today,"%Y-%m-%d")
-        return today
-    except ValueError:
-        # print("Incorrect data format({0}), should be YYYY-MM-DD".format(today))
-        return False
 
 def validate_data(update_cate,update_data):
     #수정할 항목의 정보 입력 검사 함수

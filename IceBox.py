@@ -30,17 +30,20 @@ def DateInput():
 def validate_date(today):
     try:
         temp = today.split("-")
-        year = int(temp[0])
-        month = int(temp[1])
-        day = int(temp[2])
-
-        if 2000 > year or 2999 < year:
+        if str(len(temp)) != "3":
             return False
-        for i in range(len(temp)):
-            temp[i] = str(int(temp[i]))
-        today='-'.join(temp)
-        datetime.datetime.strptime(today,"%Y-%m-%d")
-        return today
+        else:
+            year = int(temp[0])
+            month = int(temp[1])
+            day = int(temp[2])
+
+            if 2000 > year or 2999 < year:
+                return False
+            for i in range(len(temp)):
+                temp[i] = str(int(temp[i]))
+            today='-'.join(temp)
+            datetime.datetime.strptime(today,"%Y-%m-%d")
+            return today
     except ValueError:
         # print("Incorrect data format({0}), should be YYYY-MM-DD".format(today))
         if today.isspace() or today == "":
