@@ -33,10 +33,10 @@ def show_item(item):
     # print('bulk-for-unit' in item)
     if 'bulk-for-unit' in item:
         #unpackaged
-        print("<상품 ID: {}, 상품명: {}, 총량(L): {}, 단위 수량(L): {}, 현재량(L): {}, 현재수량: {}, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["total-number"]*item["bulk-for-unit"], item["bulk-for-unit"],item["leftover-number"]*item["bulk-for-unit"],item["leftover-number"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
+        print("<상품 ID: {}, 상품명: {}, 총량: {}, 단위 수량: {}, 현재량: {}, 현재수량: {}, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["total-number"]*item["bulk-for-unit"], item["bulk-for-unit"],item["leftover-number"]*item["bulk-for-unit"],item["leftover-number"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
     else:
         #packaged
-        print("<상품 ID: {}, 상품명: {}, 총량(L): {}, 현재량(L): {}, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["total-bulk"], item["leftover-bulk"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))  
+        print("<상품 ID: {}, 상품명: {}, 총량: {}, 현재량: {}, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["total-bulk"], item["leftover-bulk"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))  
         
 def dic_key_change(dic,prevKey,nextkey) :
     new_items=[]

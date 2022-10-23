@@ -233,7 +233,7 @@ def additional_delete(request) :
         main_screen()
         exit()
     else :
-        print("N 또는 N을 입력해주세요.")
+        print("Y 또는 N을 입력해주세요.")
         plus_delete = input("다른 아이디로 삭제하시겠습니까? (Y/N) : ")
         additional_delete(plus_delete)
 

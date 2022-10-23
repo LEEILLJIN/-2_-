@@ -36,7 +36,11 @@ def createIceBox(today):
                 print("다시 입력해주세요.")
 
     inputData["name"] = "home"
+    inputData["items"] = {
+        
+    }
     iceBox.append(inputData)
+   
 
     #JSON 파일 업데이트
     with open("./data/IceBox_data.json", 'w', encoding='UTF8') as file:

@@ -54,7 +54,7 @@ def openManageMenu(today):
     for i in items:
         for j in range(len(items[i])):
             expDate = datetime.strptime(items[i][j]['expiration-date'], '%Y-%m-%d').date()
-            cnt = 0;
+            cnt = 0
             if items[i][j]["partition"] == "냉장":
                 if (today >= expDate):
                     print('\u001b[2;31m', end="")
