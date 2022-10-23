@@ -3,6 +3,7 @@ import json
 import os
 import sys
 import time
+import platform
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 import IceBox_menu
@@ -47,10 +48,10 @@ def delete_by_id() :
                             continue
                     
                     if cnt == 0 :
-                        print("존재하지 않는 상품 아이디입니다.")
+                        print("존재하지 않는 상품 ID 입니다.")
                         continue
                     
-                    plus_delete = input("다른 아이디로 삭제하시겠습니까 ? y/n : ")
+                    plus_delete = input("다른 아이디로 삭제하시겠습니까? (Y/N) : ")
                     additional_delete(plus_delete)
             cnt=0
 
@@ -79,7 +80,7 @@ def consume_by_id() :
                         if item['leftover'] < int(consume_how) :
                             cnt+=1
                             print("남은 양이 부족합니다.")
-                            print("ID '{}'에 해당하는 제품 '{}'의 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover']))
+                            print("ID '{}'에 해당하는 제품 '{}'의 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-bulk']))
 
                             print()
                             continue
@@ -88,7 +89,7 @@ def consume_by_id() :
                             cnt += 1
                             with open(path, 'w', encoding='UTF8') as consume_file :
                                 json.dump(data, consume_file, indent="\t", ensure_ascii=False)
-                            print("ID '{}'에 해당하는 제품 '{}'을(를) 소모하고 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover']))
+                            print("ID '{}'에 해당하는 제품 '{}'을(를) 소모하고 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-bulk']))
                             print()
                             main_screen()
                 
@@ -170,9 +171,9 @@ def consume_by_id() :
 def all_delete() :
     
     print("유통기한 지난 물품 전체 삭제")
-    delete_all = input("삭제하시겠습니까? (y/n) : ")
+    delete_all = input("삭제하시겠습니까? (Y/N) : ")
 
-    if delete_all == 'y' :
+    if delete_all == 'Y' :
         with open(path, "r", encoding='UTF8') as file :
             
 
@@ -205,7 +206,7 @@ def all_delete() :
         print()
                 
 
-    elif delete_all == 'n' :
+    elif delete_all == 'N' :
         main_screen()
         exit()
     else :
@@ -225,19 +226,23 @@ def main_screen() :
 # 추가 삭제
 def additional_delete(request) :
                 
-    if request == 'y' :
+    if request == 'Y' :
         delete_by_id()
         
-    elif request == 'n' :
+    elif request == 'N' :
         main_screen()
         exit()
     else :
-        print("y 또는 n을 입력해주세요.")
-        plus_delete = input("다른 아이디로 삭제하시겠습니까 ? y/n : ")
+        print("N 또는 N을 입력해주세요.")
+        plus_delete = input("다른 아이디로 삭제하시겠습니까? (Y/N) : ")
         additional_delete(plus_delete)
 
                         
 def product_delete():
+    if platform.system() == "Windows":
+        os.system("cls")
+    elif platform.system() == "Darwin":
+        os.system("clear")
     while True:
         print("0. 돌아가기")
         print("1. 상품 폐기")

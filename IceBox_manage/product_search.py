@@ -2,6 +2,7 @@
 import json
 import os
 import sys
+import platform
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 import IceBox_menu
@@ -43,21 +44,21 @@ def search_by_name() :
                     if cnt == 0 :
                         print("저장된 상품이 없습니다.")
                     print()
-                    plus_search = input("추가 검색을 하시겠습니까 ? y/n : ")
+                    plus_search = input("추가 검색을 하시겠습니까? (Y/N) : ")
                     additional_search(plus_search)
             cnt=0    
             
             
 def additional_search(request) :
                 
-    if request == 'y' :
+    if request == 'Y' :
         search_by_name()
         
-    elif request == 'n' :
+    elif request == 'N' :
         main_screen2()
     else :
         print("y 또는 n을 입력해주세요.")
-        plus_search = input("추가 검색을 하시겠습니까 ? y/n : ")
+        plus_search = input("추가 검색을 하시겠습니까? (Y/N) : ")
         additional_search(plus_search)
 
 
@@ -69,6 +70,10 @@ def main_screen2() :
             IceBox_menu.MainMenu(today)
 
 def product_search():
+    if platform.system() == "Windows":
+        os.system("cls")
+    elif platform.system() == "Darwin":
+        os.system("clear")
     while True:
         print("0. 돌아가기")
         print("1. 상품명 검색")
