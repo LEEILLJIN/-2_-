@@ -85,11 +85,13 @@ def save_product (is_packaged,input_data):
 
     #max seq 구하기
     max_seq=0
-    
-    for item in (list(loaded_json["iceboxes"][0]["items"].values())[0]+list(loaded_json["iceboxes"][0]["items"].values())[1]):
-        if item["ID"]>=max_seq:
-            max_seq=item["ID"]
-    input_data["ID"]=max_seq+1
+    if loaded_json["iceboxes"][0]["items"] :
+        for item in (list(loaded_json["iceboxes"][0]["items"].values())[0]+list(loaded_json["iceboxes"][0]["items"].values())[1]):
+            if item["ID"]>=max_seq:
+                max_seq=item["ID"]
+        input_data["ID"]=max_seq+1
+    else:
+        input_data["ID"]=max_seq+1
 
     if is_packaged:
         loaded_json["iceboxes"][0]["items"]["packaged"].append(input_data)

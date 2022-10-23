@@ -36,9 +36,7 @@ def createIceBox(today):
                 print("다시 입력해주세요.")
 
     inputData["name"] = "home"
-    inputData["items"] = {
-        
-    }
+    inputData["items"] = {"packaged" : [], "unpackaged":[]}
     iceBox.append(inputData)
    
 
