@@ -19,6 +19,8 @@ def openManageMenu(today):
     items = json_data['iceboxes'][0]['items']
     today = datetime.strptime(today, '%Y-%m-%d').date()
     # print("오늘 날짜:", today, "\n")
+    with open("./data/IceBox_data.json", 'w', encoding='UTF8') as file:
+        json.dump(json_data, file, ensure_ascii=False, indent=2)
 
     keyNames = {
         "partition": "파티션",
