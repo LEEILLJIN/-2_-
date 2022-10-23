@@ -281,4 +281,3 @@ def update_product(product_id):
 def product_update():
    search_by_id()
 
-

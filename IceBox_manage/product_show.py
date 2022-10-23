@@ -33,10 +33,10 @@ def show_item(item):
     # print('bulk-for-unit' in item)
     if 'bulk-for-unit' in item:
         #unpackaged
-        print("<상품 ID: {}, 상품명: {}, 총량: {}, 단위 수량: {}, 현재량: {}, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["total-number"], item["bulk-for-unit"],item["leftover-number"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
+        print("<상품 ID: {}, 상품명: {}, 총량(L): {}, 단위 수량(L): {}, 현재량(L): {}, 현재수량: {}, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["total-number"]*item["bulk-for-unit"], item["bulk-for-unit"],item["leftover-number"]*item["bulk-for-unit"],item["leftover-number"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
     else:
         #packaged
-        print("<상품 ID: {}, 상품명: {}, 총량: {}, 현재량: {}, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["total-number"], item["leftover-number"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))  
+        print("<상품 ID: {}, 상품명: {}, 총량(L): {}, 현재량(L): {}, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["total-bulk"], item["leftover-bulk"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))  
         
 def dic_key_change(dic,prevKey,nextkey) :
     new_items=[]
@@ -55,10 +55,9 @@ def dic_key_change(dic,prevKey,nextkey) :
 def show_items(sort_filter) :        
     data=load_json()
     unpackedged_itmes=data["iceboxes"][0]["items"]["unpackaged"]
-    #normalize
-    normarlized_packaged_items = dic_key_change(data["iceboxes"][0]["items"]["packaged"],"total-bulk","total-number")
-    normarlized_packaged_items = dic_key_change(normarlized_packaged_items,"leftover","leftover-number")
+    normarlized_packaged_items = data["iceboxes"][0]["items"]["packaged"]
     items=unpackedged_itmes+normarlized_packaged_items
+    #items
 
     #filter
     items=sorted(items, key=lambda item: item[sort_filter[0]] ,reverse=(( not sort_filter[1]) if sort_filter[2]==True else  sort_filter[1]))
