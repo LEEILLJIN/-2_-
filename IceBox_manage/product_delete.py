@@ -77,7 +77,7 @@ def consume_by_id() :
                             
                 for item in items["packaged"] :
                     if int(consume_id) == item['ID'] :
-                        if item['leftover'] < int(consume_how) :
+                        if item['leftover-bulk'] < int(consume_how) :
                             cnt+=1
                             print("남은 양이 부족합니다.")
                             print("ID '{}'에 해당하는 제품 '{}'의 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-bulk']))
@@ -85,7 +85,7 @@ def consume_by_id() :
                             print()
                             continue
                         else :
-                            item['leftover']-=int(consume_how)
+                            item['leftover-bulk']-=int(consume_how)
                             cnt += 1
                             with open(path, 'w', encoding='UTF8') as consume_file :
                                 json.dump(data, consume_file, indent="\t", ensure_ascii=False)
