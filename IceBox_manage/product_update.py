@@ -1,6 +1,7 @@
 # 상품 수정 화면
 # 상품 수정 화면
 #냉장고 관리 화면에서 사용자가 ‘5’를 입력하면 나오는 화면입니다.
+
 import datetime
 import json
 import os
@@ -9,16 +10,22 @@ from unicodedata import category
 import time
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
-
+import IceBox_menu
 
 path = "./data/IceBox_data.json"
+
 packaged_updatable_cate = {'상품명': 'name', '총량':'total-bulk', '현재량':'leftover-bulk', '카테고리':'category', '보관권장온도':'recommended-temp', '유통기한':'expiration-date'}
 unpackaged_updatable_cate = {'상품명': 'name', '총량' : 'total-number', '현재량' : 'leftover-number', '카테고리':'category', '보관권장온도':'recommended-temp', '유통기한':'expiration-date'}
 special_character = ['~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')']
 category_list = {
     '1' : '야채', '2':'과일', '3':'유제품', '4':'냉동식품', '5':'육류', '6':'어류', '7':'과자', '8':'음료', '9':'주류', '10':'빙과류', '11':'신선제품', '12':'소스', '13':'곡식류', '14':'가루류', '15':'기타'
 }
-
+def main_screen2() :
+    with open(path, "r", encoding='UTF8') as file :
+          
+            data = json.load(file)
+            today = data['today']
+            IceBox_menu.MainMenu(today)
 
 def search_by_id():
     #수정할 상품 ID 입력하여 해당 ID의 예외 처리 후 적법할 경우 상품을 찾는 함수
@@ -47,7 +54,7 @@ def view_item_data(product_id):
                     items = icebox[0]["items"]
                     for item in items['packaged'] :
                         if(int(product_id) == item['ID']) :
-                            print("<상품 ID: {}, 상품명: {}, 총량: {}L, 현재량: {}%, 카테고리: {}, 분류: {}, 보관권장온도: {}도, 유통기한: {}>" .format(item["ID"], item["name"], item["total-bulk"], item["leftover-bulk"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
+                            print("<상품 ID: {}, 상품명: {}, 총량: {}, 현재량: {}, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["total-bulk"], item["leftover-bulk"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
                             cnt+=1
 
                         else :
@@ -55,7 +62,7 @@ def view_item_data(product_id):
                         
                     for item in items['unpackaged'] :
                         if(int(product_id) == item['ID']) :
-                            print("<상품 ID: {}, 상품명: {}, 총량: {}개, 현재량: {}개, 카테고리: {}, 분류: {}, 보관권장온도: {}도, 유통기한: {}>" .format(item["ID"], item["name"],  item["total-number"], item["leftover-number"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
+                            print("<상품 ID: {}, 상품명: {}, 총량: {}개, 현재량: {}, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"],  item["total-number"], item["leftover-number"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
                             cnt+=1
 
                         else :
@@ -103,13 +110,14 @@ def validate_data(update_cate,update_data):
                     return False
             elif i == 1:
                 #총량 입력 검사
-                #packaged의 총량은 L
-                #unpackaged의 총량은 개수
+                #packaged의 총량은 남은냉장고 부피보다 작아야되고
+                #unpackaged의 총량은 현재 개수보다 작아야됨
+                
                 #둘다 1~100의 정수로 입력 규칙을 정하자
-                if update_data.isalpha() :
-                    #숫자가 아닌 경우
+                if update_data.isalpha() or update_data.find(' ')>=0:
+                    #숫자가 아니거나 공백류가 포함된 경우
                     return False
-                elif 1 > int(update_data) or int(update_data) > 100:
+                elif 1 > int(update_data) or int(update_data) > 100 :
                     cnt += 1
                 else:
                     for validation in update_data :
@@ -125,13 +133,12 @@ def validate_data(update_cate,update_data):
 
             elif i ==2:
                 #현재량 입력 검사
-                #packaged의 현재량은 퍼센트 1~100
-                #unpackaged의 현재량은 개수 1~100
-                # 현재량이 0이면? -=> 자동으로 삭제될지 기획서 수정해야함
-                if update_data.isalpha() :
-                    #숫자가 아닌 경우
+                #packaged의 현재량은 현재부피보다 작아야되고
+                #unpackaged의 현재량은 현재개수보다 작아야됨
+                if update_data.isalpha() or update_data.find(' ')>=0:
+                    #숫자가 아니거나 공백류가 포함된 경우
                     return False
-                elif 1 > int(update_data) or int(update_data) > 100:
+                elif 1 > int(update_data) or int(update_data) > 100 :
                     #입력 범위에 벗어난 경우
                     cnt += 1
                 else:
@@ -255,7 +262,8 @@ def update_product(product_id):
                     user_input = input("메뉴를 입력하세요 : ")
                     print()
                     if user_input == '0':
-                        print("주 메뉴화면 호출")
+                        main_screen2()
+                        break
                         exit(0)
                     elif user_input == '\n':
                         continue
@@ -272,3 +280,6 @@ def update_product(product_id):
 
 def product_update():
    search_by_id()
+
+
+search_by_id()
