@@ -29,7 +29,10 @@ def DateInput():
 
 def validate_date(today):
     try:
-        temp = today.split("-")
+        if today.isspace() or today == "":
+            today = "whiteSpace"
+            return today
+        temp = today.split("-")         
         if str(len(temp)) != "3":
             return False
         else:
@@ -46,9 +49,6 @@ def validate_date(today):
             return today
     except ValueError:
         # print("Incorrect data format({0}), should be YYYY-MM-DD".format(today))
-        if today.isspace() or today == "":
-            today = "whiteSpace"
-            return today
         return False
 
 def main():
