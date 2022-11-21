@@ -82,7 +82,7 @@ def icebox_updater():
     def password_reset(current_icebox):
         print("냉장고 비밀번호 수정:")
         while(True):
-            password = input("6자리 숫자를 입력해주세요 >> ")
+            password = input("6자리 숫자를 입력해주세요 >> ").strip()
             if not password.isdigit():
                 print("숫자로만 입력해주세요.")
             elif len(password) != 6:

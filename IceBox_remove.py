@@ -5,8 +5,11 @@ import os
 import time
 import IceBox_menu
 
-# 현재 냉장고는 하나 밖에 없으므로, iceboxes 배열의 0번째 정보를 바로 넣었습니다.
-icebox_num = 0 # 냉장고가 여러 개가 되면, 바꿔줘야 한다.
+# 배열에서의 현재 냉장고 위치를 받아 와야 함.
+
+
+
+icebox_num = 0
 def icebox_remover():
     # json 파일 열기
     file_path = './data/IceBox_data.json'
@@ -29,21 +32,28 @@ def icebox_remover():
                 if delete_confirm == "":
                     print("입력된 값이 없습니다.")
                 elif delete_confirm == 'Y' or  delete_confirm == 'y':
-                    # 냉장고 삭제 (현재 냉장고 정보 삭제 -> json 파일 덮어쓰기)
-                    del data['iceboxes'][icebox_num]
-                    with open(file_path, 'w',encoding="utf-8") as f:
-                        json.dump(data, f, ensure_ascii=False, indent=2)
-                    print("냉장고가 정상적으로 삭제되었습니다.")
-                    time.sleep(0.7)
-                    IceBox_menu.MainMenu(data["today"])
-                    return
+                    password = input("비밀번호를 입력해주세요 >> ")
+                    if password != current_icebox["password"]:
+                        print("비밀번호가 일치하지 않습니다.")
+                        time.sleep(0.7)
+                        IceBox_menu.MainMenu(data["today"])
+                        return
+                    else:
+                        # 냉장고 삭제 (현재 냉장고 정보 삭제 -> json 파일 덮어쓰기)
+                        del data['iceboxes'][icebox_num]
+                        with open(file_path, 'w',encoding="utf-8") as f:
+                            json.dump(data, f, ensure_ascii=False, indent=2)
+                        print("냉장고가 정상적으로 삭제되었습니다.")
+                        time.sleep(0.7)
+                        IceBox_menu.MainMenu(data["today"])
+                        return
                 elif delete_confirm == 'N' or delete_confirm == 'n':
                     print("냉장고 삭제가 취소되었습니다.")
                     time.sleep(0.7)
                     IceBox_menu.MainMenu(data["today"])
                     return
                 else:
-                    print("다시 입력해주세요.")
+                    print("Y(y), N(n)으로 다시 입력해주세요.")
         else:
             # 냉장고 정보가 없는 경우
             return
