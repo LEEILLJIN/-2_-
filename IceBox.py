@@ -1,31 +1,139 @@
 #main (초기 화면)
 #기획서에는 json 파일을 냉장고 생성할 때 같이 만드는거로 되었지만 일단 예시 파일로 구현 진행
+import json
+
 import datetime
+import os
+import platform
+
 import IceBox_menu
+
+
 def DateInput():
+    if platform.system() == "Windows":
+        os.system("cls")
+    elif platform.system() == "Darwin":
+        os.system("clear")
     while True:
-        today = str(input("오늘 날짜를 입력해주세요 : "))
+        today = str(input("오늘 날짜를 입력해주세요. >> "))
         today = validate_date(today)
-        if(type(today) == str):
-            # print(today,"날짜 적합")
-            IceBox_menu.MainMenu(today)
+        if today == "whiteSpace":
+            print("입력된 값이 없습니다.")
+            continue
+        elif(type(today) == str):
+            # print(today,"날짜 적합\n")
+            # IceBox_menu.MainMenu(today)
+            LogInorJoin(today)
             #냉장고 생성 후 json파일이 만들어질떄 today data를 넣기위해 인자로 전달
         else:
-            # print(today,"날짜 부적합")
+            print(today,"날짜 부적합")
             continue
 
 def validate_date(today):
     try:
-        temp = today.split("-")
-        for i in range(len(temp)):
-            temp[i] = str(int(temp[i]))
-        today='-'.join(temp)
-        datetime.datetime.strptime(today,"%Y-%m-%d")
-        return today
+        if today.isspace() or today == "":
+            today = "whiteSpace"
+            return today
+        temp = today.split("-")         
+        if str(len(temp)) != "3":
+            return False
+        else:
+            year = int(temp[0])
+            month = int(temp[1])
+            day = int(temp[2])
+
+            if 2000 > year or 2999 < year:
+                return False
+            for i in range(len(temp)):
+                temp[i] = str(int(temp[i]))
+            today='-'.join(temp)
+            datetime.datetime.strptime(today,"%Y-%m-%d")
+            return today
     except ValueError:
         # print("Incorrect data format({0}), should be YYYY-MM-DD".format(today))
         return False
 
+def LogInorJoin(today):
+    if platform.system() == "Windows":
+        os.system("cls")
+    elif platform.system() == "Darwin":
+        os.system("clear")
+
+    print(f"오늘 날짜 : <{today}>")
+    print("1. 로그인")
+    print("2. 회원가입")
+
+    while True:
+        menuInput = input()
+        if menuInput.isspace() or menuInput == "":
+            print("입력된 값이 없습니다.")
+            continue
+        elif menuInput == "1":
+            LogIn(today)
+            # 로그인 화면으로
+        elif menuInput == "2":
+            print()
+            Join()
+            # 회원가입 화면으로
+        else:
+            print("1 또는 2만 입력할 수 있습니다.")
+
+def LogIn(today):
+    print()
+    with open("./data/IceBox_data.json", 'r', encoding='UTF8') as file:
+        json_data = json.load(file)
+    # json_data['today'] = today
+    # today를 업데이트 하는건 IceBox_menu에서
+    # with open("./data/IceBox_data.json", 'w', encoding='UTF8') as file:
+    #     json.dump(json_data, file, ensure_ascii=False, indent=2)
+    # today를 업데이트 하는건 IceBox_menu에서
+    MaxId = 1
+    if json_data["iceboxes"]:
+        iceBox = json_data['iceboxes']
+        MaxId = len(iceBox)
+    if platform.system() == "Windows":
+        os.system("cls")
+    elif platform.system() == "Darwin":
+        os.system("clear")
+
+    while True :
+        IdInput = input("아이디 : ")
+        if validate_ID(IdInput, MaxId) :
+            RightPassword = iceBox[int(IdInput)-1]["password"]
+            while True:
+                PasswordInput = input("비밀번호 : ")
+                if validate_Password(IdInput,PasswordInput, RightPassword) :
+                    IceBox_menu.MainMenu(today, IdInput)
+                else :
+                    continue
+        else:
+            continue
+
+def validate_Password(IdInput, PasswordInput, RightPassword) :
+    if PasswordInput == RightPassword:
+        return True
+    elif PasswordInput.isspace() or PasswordInput == "":
+        print("입력된 값이 없습니다.")
+        return False
+    else :
+        print("비밀번호는 6자리 숫자로 입력해주세요.")
+        return False
+
+def validate_ID(IdInput, MaxId):
+    if IdInput.isspace() or IdInput == "":
+        print("입력된 값이 없습니다.")
+        return False
+    elif IdInput.isdigit() == False:
+        print("존재하지 않는 ID입니다.")
+        return False
+    elif (IdInput.isdigit() == True) & (int(IdInput) <= MaxId):
+        return True
+    else :
+        print("존재하지 않는 ID입니다.")
+        return False
+
+def Join():
+    print()
 def main():
     DateInput()
 
