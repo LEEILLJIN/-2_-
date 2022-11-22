@@ -131,18 +131,20 @@ def save_data(input_data,key,input_process_tmp_data) :
     input_process_tmp_data[key]=parsed_input_data
 
 def validate_input_data(input_data,key,input_process_tmp_data) :
-    
+    print(key)
+    print(input_data)
+    print(input_process_tmp_data)
 
     if key == 'product-type':
         if(validate_int(input_data)==False):
-            print("자연수만 입력 가능합니다.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 선택지입니다. 다시 입력해주세요.")
+            print("선택지를 입력해주세요.")
             return False
         if (int(input_data) >= 0) & (int(input_data)<=2):
             return True
         else:
-            print("선택지 내에서 선택해주세요.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 선택지입니다. 다시 입력해주세요.")
+            print("선택지를 입력해주세요.")
             return False
         
 
@@ -151,32 +153,32 @@ def validate_input_data(input_data,key,input_process_tmp_data) :
 
     elif key == 'total-bulk':
         if(validate_int(input_data)==False):
-            print("자연수만 입력 가능합니다.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 총량입니다. 다시 입력해주세요.")
+            print("총량을 입력해주세요.")
             return False
         if (int(input_data) >= 0):
             return True
         else:
-            print("자연수만 입력 가능합니다.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 총량입니다. 다시 입력해주세요.")
+            print("총량을 입력해주세요.")
             return False
         
 
     elif key == 'leftover':
         if(validate_int(input_data)==False):
-            print("자연수만 입력 가능합니다.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 현재량입니다. 다시 입력해주세요.")
+            print("현재량을 입력해주세요.")
             return False
         if input_process_tmp_data["total-bulk"]<int(input_data):
-            print("총량보다 작은 값만 입력 가능합니다.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 현재량입니다. 다시 입력해주세요.")
+            print("현재량을 입력해주세요.")
             return False
         else :
             if int(input_data) >= 0:
                 return True
             else:
-                print("자연수만 입력 가능합니다.")
-                print("다시 입력해주세요.")
+                print("유효하지 않은 현재량입니다. 다시 입력해주세요.")
+                print("현재량을 입력해주세요.")
                 return False
             
         
@@ -195,64 +197,64 @@ def validate_input_data(input_data,key,input_process_tmp_data) :
 
     elif key == 'leftover-number':
         if(validate_int(input_data)==False):
-            print("자연수만 입력 가능합니다.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 현재량입니다. 다시 입력해주세요.")
+            print("현재량을 입력해주세요.")
             return False
         if input_process_tmp_data["total-number"]<int(input_data):
-            print("총량보다 작은 값만 입력 가능합니다.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 현재량입니다. 다시 입력해주세요.")
+            print("현재량을 입력해주세요.")
             return False
         else :
             if int(input_data) >= 0:
                 return True
             else:
-                print("자연수만 입력 가능합니다.")
-                print("다시 입력해주세요.")
+                print("유효하지 않은 현재량입니다. 다시 입력해주세요.")
+                print("현재량을 입력해주세요.")
                 return False
 
     elif key == 'bulk-for-unit':
             if(validate_int(input_data)==False):
-                print("자연수만 입력 가능합니다.")
-                print("다시 입력해주세요.")
+                print("유효하지 않은 개당 부피입니다. 다시 입력해주세요.")
+                print("개당 부피를 입력해주세요.")
                 return False
             if int(input_data) >= 0:
                 return True
             else:
-                print("자연수만 입력 가능합니다.")
-                print("다시 입력해주세요.")
+                print("유효하지 않은 현재량입니다. 다시 입력해주세요.")
+                print("현재량을 입력해주세요.")
                 return False
 
     elif key == 'partition':
         if(validate_int(input_data)==False):
-            print("자연수만 입력 가능합니다.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 저장환경입니다. 다시 입력해주세요.")
+            print("저장환경을 입력해주세요.")
             return False
 
         if (int(input_data) >= 0) & (int(input_data) <= 2):
             return True
         else:
-            print("선택지 내에서 선택해주세요.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 저장환경입니다. 다시 입력해주세요.")
+            print("저장환경을 입력해주세요.")
             return False
         
 
     elif key == 'category':
         if(validate_int(input_data)==False):
-            print("자연수만 입력 가능합니다.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 카테고리입니다. 다시 입력해주세요.")
+            print("카테고리를 입력해주세요.")
             return False
         if  (int(input_data) >= 0) & (int(input_data)<=len(list(category_object.keys()))):
             return True
         else:
-            print("선택지 내에서 선택해주세요.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 카테고리입니다. 다시 입력해주세요.")
+            print("카테고리를 입력해주세요.")
             return False
         
         
     elif key == 'recommended-temp':
         if(validate_int(input_data)==False):
-            print("정수만 입력 가능합니다.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 보관온도입니다. 다시 입력해주세요.")
+            print("보관온도를 입력해주세요.")
             return False
         return True
 
@@ -262,12 +264,12 @@ def validate_input_data(input_data,key,input_process_tmp_data) :
             if validate_date(input_data):
                 return True
             else:
-                print("'YYYY-MM-DD' 형식으로 입력 가능합니다.")
-                print("다시 입력해주세요.")
+                print("유효하지 않은 유통기한입니다. 다시 입력해주세요.")
+                print("유통기한을 입력해주세요.")
                 return False
         else :
-            print("'YYYY-MM-DD' 형식으로 입력 가능합니다.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 유통기한입니다. 다시 입력해주세요.")
+            print("유통기한을 입력해주세요.")
             return False
     return False
 
