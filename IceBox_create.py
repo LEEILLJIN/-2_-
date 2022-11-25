@@ -6,24 +6,29 @@ import IceBox_menu
 import time
 
 
-def createIceBox(today):
+def createIceBox(today, UserID):
     with open("./data/IceBox_data.json", 'r', encoding='UTF8') as file:
         json_data = json.load(file)
 
     json_data['today'] = today
-    iceBox = json_data['iceboxes']
+    iceBoxes = json_data['iceboxes']
 
     with open("./data/IceBox_data.json", 'w', encoding='UTF8') as file:
         json.dump(json_data, file, ensure_ascii=False, indent=2)
 
-    userIceBox = json_data['iceboxes'][0]
-
-    # inputData = {
-    #     "refrigerator-size": ["냉장 크기", "(단위 : 리터(L))"],
-    #     "refrigerator-temp": ["냉장 온도", "(단위 : 섭씨(°C))"],
-    #     "freezer-size": ["냉동 크기", "(단위 : 리터(L))"],
-    #     "freezer-temp": ["냉동 온도", "(단위 : 섭씨(°C))"]
-    # }
+    # iceBox 검색
+    userIceBox = {}
+    p = 0
+    while (p < len(iceBoxes)):
+        if (iceBoxes[p]["id"] == UserID):
+            userIceBox = iceBoxes[p]
+            break
+        else:
+            p += 1
+    else:
+        print("사용자 아이디가 존재하지 않습니다.")
+        time.sleep(1.5)
+        IceBox_menu.MainMenu(today)
 
     inputData = {
         "refrigerator-size": {
@@ -161,23 +166,6 @@ def createIceBox(today):
     userIceBox["refrigerator-temp"] = inputData["refrigerator-temp"]
     userIceBox["freezer-size"] = inputData["freezer-size"]
     userIceBox["freezer-temp"] = inputData["freezer-temp"]
-
-    # for key in inputData:
-    #     while True:
-    #         try:
-    #             i = float(input(f"{inputData[key][0]}를 입력해주세요 {inputData[key][1]} : "))
-    #             if (key in ["refrigerator-size", "freezer-size"] and i < 0):
-    #                 raise ValueError
-    #             else:
-    #                 inputData[key] = i
-    #                 break
-    #         except ValueError:
-    #             print("다시 입력해주세요.")
-    #
-    # inputData["name"] = "home"
-    # inputData["items"] = {"packaged" : [], "unpackaged":[]}
-    # iceBox.append(inputData)
-
 
     #JSON 파일 업데이트
     with open("./data/IceBox_data.json", 'w', encoding='UTF8') as file:
