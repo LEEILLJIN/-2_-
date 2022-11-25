@@ -114,7 +114,7 @@ def createIceBox(today):
 
                         while True:
                             try:
-                                i = input(f"{categoryName[categoryRef[index]]} : ")
+                                i = input(f"  {categoryName[categoryRef[index]]} : ")
 
                                 if (i == "x"):
                                     print("\n냉장고 생성이 취소되었습니다.")
