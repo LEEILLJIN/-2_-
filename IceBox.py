@@ -26,7 +26,7 @@ def DateInput():
             LogInorJoin(today)
             #냉장고 생성 후 json파일이 만들어질떄 today data를 넣기위해 인자로 전달
         else:
-            print(today,"날짜 부적합")
+            print("유효하지 않은 날짜입니다. 다시 입력해주세요.")
             continue
 
 def validate_date(today):
@@ -39,14 +39,14 @@ def validate_date(today):
             return False
         else:
             year = int(temp[0])
-            month = int(temp[1])
-            day = int(temp[2])
+            # month = int(temp[1])
+            # day = int(temp[2])
 
             if 2000 > year or 2999 < year:
                 return False
-            for i in range(len(temp)):
-                temp[i] = str(int(temp[i]))
-            today='-'.join(temp)
+            # for i in range(len(temp)):
+            #     temp[i] = str(int(temp[i]))
+            # today='-'.join(temp)
             datetime.datetime.strptime(today,"%Y-%m-%d")
             return today
     except ValueError:
@@ -58,6 +58,8 @@ def LogInorJoin(today):
         os.system("cls")
     elif platform.system() == "Darwin":
         os.system("clear")
+    with open("./data/IceBox_data.json", 'r', encoding='UTF8') as file:
+        json_data = json.load(file)
 
     print(f"오늘 날짜 : <{today}>")
     print("1. 로그인")
@@ -69,17 +71,27 @@ def LogInorJoin(today):
             print("입력된 값이 없습니다.")
             continue
         elif menuInput == "1":
-            LogIn(today)
-            # 로그인 화면으로
+            if json_data["iceboxes"]:
+                LogIn(today)
+                # 로그인 화면으로
+            else :
+                # iceboxes에 아무것도 없을 경우 -> 2차 기획서 수정해야함
+                #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+                print("등록된 회원이 없습니다. 먼저 회원가입을 해주세요.")
+                continue
+           
         elif menuInput == "2":
-            print()
-            Join()
+            Join(today)
             # 회원가입 화면으로
         else:
             print("1 또는 2만 입력할 수 있습니다.")
 
 def LogIn(today):
-    print()
+    if platform.system() == "Windows":
+        os.system("cls")
+    elif platform.system() == "Darwin":
+        os.system("clear")
+
     with open("./data/IceBox_data.json", 'r', encoding='UTF8') as file:
         json_data = json.load(file)
     # json_data['today'] = today
@@ -87,29 +99,26 @@ def LogIn(today):
     # with open("./data/IceBox_data.json", 'w', encoding='UTF8') as file:
     #     json.dump(json_data, file, ensure_ascii=False, indent=2)
     # today를 업데이트 하는건 IceBox_menu에서
-    MaxId = 1
+
     if json_data["iceboxes"]:
         iceBox = json_data['iceboxes']
         MaxId = len(iceBox)
-    if platform.system() == "Windows":
-        os.system("cls")
-    elif platform.system() == "Darwin":
-        os.system("clear")
-
+    else :
+        MaxId = 1
     while True :
         IdInput = input("아이디 : ")
-        if validate_ID(IdInput, MaxId) :
+        if Validate_ID(IdInput, MaxId) :
             RightPassword = iceBox[int(IdInput)-1]["password"]
             while True:
                 PasswordInput = input("비밀번호 : ")
-                if validate_Password(IdInput,PasswordInput, RightPassword) :
+                if Validate_Password(PasswordInput, RightPassword) :
                     IceBox_menu.MainMenu(today, IdInput)
                 else :
                     continue
         else:
             continue
 
-def validate_Password(IdInput, PasswordInput, RightPassword) :
+def Validate_Password(PasswordInput, RightPassword) :
     if PasswordInput == RightPassword:
         return True
     elif PasswordInput.isspace() or PasswordInput == "":
@@ -119,11 +128,17 @@ def validate_Password(IdInput, PasswordInput, RightPassword) :
         print("비밀번호는 6자리 숫자로 입력해주세요.")
         return False
 
-def validate_ID(IdInput, MaxId):
+def Validate_ID(IdInput, MaxId):
     if IdInput.isspace() or IdInput == "":
         print("입력된 값이 없습니다.")
         return False
     elif IdInput.isdigit() == False:
+        print("존재하지 않는 ID입니다.")
+        return False
+    elif len(str(int(IdInput))) != len(IdInput):
+        print("존재하지 않는 ID입니다.")
+        return False
+    elif int(IdInput) <= 0:
         print("존재하지 않는 ID입니다.")
         return False
     elif (IdInput.isdigit() == True) & (int(IdInput) <= MaxId):
@@ -132,8 +147,46 @@ def validate_ID(IdInput, MaxId):
         print("존재하지 않는 ID입니다.")
         return False
 
-def Join():
-    print()
+def Join(today):
+    if platform.system() == "Windows":
+        os.system("cls")
+    elif platform.system() == "Darwin":
+        os.system("clear")
+
+    with open("./data/IceBox_data.json", 'r', encoding='UTF8') as file:
+        json_data = json.load(file)
+
+    iceBox = json_data['iceboxes']
+    # today를 업데이트 하는건 IceBox_menu에서
+    inputData = {"id" : "", "password" : ""}
+    if json_data["iceboxes"]:
+        #현재 회원이 있을 경우 
+        UserId = len(iceBox)+1
+    else:
+        #현재 회원이 없는 경우
+        UserId = 1
+    
+    print(f"귀하의 ID는 {UserId}입니다.")
+    print("비밀번호를 설정해주세요.")
+    while True:
+        UserPassword = input()
+        if UserPassword.isspace() or UserPassword == "":
+            print("입력된 값이 없습니다.")
+            continue
+        elif (UserPassword.isdigit() == False) or (len(UserPassword) != 6):
+            print("비밀번호는 6자리 숫자로 입력해주세요.")
+            continue
+        else:
+            break
+    inputData["id"] = UserId
+    inputData["password"] = UserPassword
+    iceBox.append(inputData)
+    #JSON 파일 업데이트
+    with open("./data/IceBox_data.json", 'w', encoding='UTF8') as file:
+        json.dump(json_data, file, ensure_ascii=False, indent=2)
+
+    LogInorJoin(today) 
+
 def main():
     DateInput()
 

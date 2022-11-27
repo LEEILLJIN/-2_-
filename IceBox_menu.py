@@ -9,7 +9,7 @@ import IceBox_update
 from IceBox_manage import refrigerator_manage
 
 
-def MainMenuContent(isIceBox, today):
+def MainMenuContent(isIceBox, today, UserID):
 
     print("1. 냉장고 생성")
     print("2. 냉장고 관리")
@@ -32,7 +32,7 @@ def MainMenuContent(isIceBox, today):
                         os.system("cls")
                     elif platform.system() == "Darwin":
                         os.system("clear")
-                    IceBox_create.createIceBox(today)
+                    IceBox_create.createIceBox(today, UserID)
 
             elif MainMenuInput == '2':
                 if isIceBox:
@@ -40,7 +40,7 @@ def MainMenuContent(isIceBox, today):
                         os.system("cls")
                     elif platform.system() == "Darwin":
                         os.system("clear")
-                    refrigerator_manage.openManageMenu(today)
+                    refrigerator_manage.openManageMenu(today, UserID)
                 else:
                     print("냉장고를 먼저 생성해주세요.")
                     continue
@@ -50,7 +50,7 @@ def MainMenuContent(isIceBox, today):
                         os.system("cls")
                     elif platform.system() == "Darwin":
                         os.system("clear")
-                    IceBox_update.icebox_updater()
+                    IceBox_update.icebox_updater(UserID)
                 else:
                     print("냉장고를 먼저 생성해주세요.")
                     continue
@@ -71,6 +71,28 @@ def MainMenuContent(isIceBox, today):
                 print("1이상 5이하의 숫자로 입력해주세요.")
                 continue
 
+def CalculateUsedSize(partition, category, icebox):
+    PackagedList = icebox["items"]["packaged"]
+    UnpackagedList = icebox["items"]["unpackaged"]
+    UsedSize = 0
+    # print(f"partition = {partition}, category = {category}", end = " ")
+    if PackagedList :
+        for i in PackagedList:
+            if (i["category"] == category) and (i["partition"] == partition):
+                UsedSize += i["total-bulk"]
+    else :
+        UsedSize += 0
+
+    if UnpackagedList :
+        for i in UnpackagedList:
+            if (i["category"] == category) and (i["partition"] == partition): 
+                UsedSize += i["leftover-number"] * i["bulk-for-unit"]  
+    else :
+        UsedSize += 0
+
+    return UsedSize  
+
+
 
 def MainMenu(today,UserID):
     #today랑 userID도 같이 인자로 받아와야함
@@ -86,17 +108,62 @@ def MainMenu(today,UserID):
     json_data['today'] = today
     with open("./data/IceBox_data.json", 'w', encoding='UTF8') as file:
         json.dump(json_data, file, ensure_ascii=False, indent=2)
-
-    if json_data["iceboxes"]:
-        isIceBox = True
-        print("현재 냉장고")
-        iceBox = json_data['iceboxes']
-        iceBoxSizeData = ["refrigerator-size","freezer-size"]
-        iceBoxtmpData = ["refrigerator-temp", "freezer-temp"]
-        partion = ["냉장", "냉동"]
-        for i in range(len(partion)):
-            print(f"{partion[i]} - <{iceBox[0][iceBoxSizeData[i]]}L, {iceBox[0][iceBoxtmpData[i]]}°C>")
-        MainMenuContent(isIceBox,today)
-    else:
+    iceBox = json_data['iceboxes']
+   
+    if len(iceBox[int(UserID)-1]) == 2:
+        # len가 2이면(id, password) 아직 냉장고를 생성하지 않은 것
         print("냉장고를 생성해주세요.")
         MainMenuContent(isIceBox, today)
+    else:
+        isIceBox = True
+        print("현재 냉장고")
+        iterator = [3,2]
+        PartitionSizeDataList = {
+            "vegetable" : "야채", 
+            "beverage" : "음료", 
+            "etc" : "기타",
+            "fruit" : "과일", 
+            "alcohol" : "주류",
+            "dairy-product" : "유제품", 
+            "ice-cream" : "빙과류", 
+            "frozen-food" : "냉동식품", 
+            "fresh-product" : "신선제품", 
+            "meat" : "육류", 
+            "sauce" : "소스", 
+            "seafood" : "어류", 
+            "grains" : "곡식류", 
+            "snack" : "과자", 
+            "powder" : "가루류"
+            }
+        PrintLine = 7
+        refriPartitionSizeData = iceBox[int(UserID)-1]["refrigerator-size"]
+        freezerPartitionSizeData = iceBox[int(UserID)-1]["freezer-size"]
+
+        iceBoxSizeData = [refriPartitionSizeData, freezerPartitionSizeData ]
+        iceBoxtmpData = ["refrigerator-temp", "freezer-temp"]
+        partition = ["냉장", "냉동"]
+        for i in range(len(partition)):
+            cnt =3 
+            iteratorCheck = True
+            print()
+            print(f"{partition[i]} - <{iceBoxSizeData[i]['total']}L, {iceBox[0][iceBoxtmpData[i]]}°C>")
+            print()
+            print("사용 부피/총 부피")
+            print()
+            for _ in range(PrintLine):
+                if iteratorCheck:
+                    for j in range(iterator[0]):
+                        # print(f"{j}", end=" ")
+                        print(f"{list(PartitionSizeDataList.values())[j]} - {CalculateUsedSize(partition[i],list(PartitionSizeDataList.values())[j],iceBox[int(UserID)-1])}L/{iceBoxSizeData[i][list(PartitionSizeDataList.keys())[j]]}L", end="\t\t\t")
+                    iteratorCheck = False
+                else:
+                    for j in range(iterator[1]):
+                        if (list(PartitionSizeDataList.values())[cnt+j] == "유제품") or (list(PartitionSizeDataList.values())[cnt+j] == "냉동식품") :
+                            print(f"{list(PartitionSizeDataList.values())[cnt+j]} - {CalculateUsedSize(partition[i], list(PartitionSizeDataList.values())[cnt+j],iceBox[int(UserID)-1])}L/{iceBoxSizeData[i][list(PartitionSizeDataList.keys())[cnt+j]]}L", end="\t\t")
+                        else :
+                            print(f"{list(PartitionSizeDataList.values())[cnt+j]} - {CalculateUsedSize(partition[i], list(PartitionSizeDataList.values())[cnt+j],iceBox[int(UserID)-1])}L/{iceBoxSizeData[i][list(PartitionSizeDataList.keys())[cnt+j]]}L", end="\t\t\t")
+
+                    cnt += iterator[1]
+                print()
+        MainMenuContent(isIceBox,today, UserID)
+
