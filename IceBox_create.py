@@ -104,7 +104,7 @@ def createIceBox(today, UserID):
                         partition = "냉장"
                     # 안내 문자열 출력
                     print(f"\n{partition}의 각 카테고리 크기를 입력해주세요(단위 : 리터(L))")
-                    print("(이전 카테고리 크기를 다시 입력하는 경우, 'b' 입력, 냉장 생성 취소하는 경우 'x' 입력)")
+                    print("(이전 카테고리 크기를 다시 입력하는 경우, 'b' 입력, 냉장 생성 취소하는 경우, 'x' 입력)")
 
                     totalSize = 0
                     index = 0
