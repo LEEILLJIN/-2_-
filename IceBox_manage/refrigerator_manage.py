@@ -11,12 +11,27 @@ from IceBox_manage.product_show import product_show
 from IceBox_manage.product_update import product_update
 from datetime import datetime, timedelta
 
-def openManageMenu(today):
+def openManageMenu(today, UserID):
     with open("./data/IceBox_data.json", 'r', encoding='UTF8') as file:
         json_data = json.load(file)
 
     json_data['today'] = today
-    items = json_data['iceboxes'][0]['items']
+    iceBoxes = json_data['iceboxes']
+
+    # iceBox 검색
+    items = {}
+    p = 0
+    while (p < len(iceBoxes)):
+        if (iceBoxes[p]["id"] == UserID):
+            items = iceBoxes[p]['items']
+            break
+        else:
+            p += 1
+    else:
+        print("사용자 아이디가 존재하지 않습니다.")
+        time.sleep(1.5)
+        IceBox_menu.MainMenu(today)
+
     today = datetime.strptime(today, '%Y-%m-%d').date()
     # print("오늘 날짜:", today, "\n")
     with open("./data/IceBox_data.json", 'w', encoding='UTF8') as file:
