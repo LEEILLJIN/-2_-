@@ -178,8 +178,8 @@ def Join(today):
             continue
         else:
             break
-    inputData["id"] = UserId
-    inputData["password"] = UserPassword
+    inputData["id"] = str(UserId)
+    inputData["password"] = str(UserPassword)
     iceBox.append(inputData)
     #JSON 파일 업데이트
     with open("./data/IceBox_data.json", 'w', encoding='UTF8') as file:

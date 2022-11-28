@@ -113,7 +113,7 @@ def MainMenu(today,UserID):
     if len(iceBox[int(UserID)-1]) == 2:
         # len가 2이면(id, password) 아직 냉장고를 생성하지 않은 것
         print("냉장고를 생성해주세요.")
-        MainMenuContent(isIceBox, today)
+        MainMenuContent(isIceBox, today, UserID)
     else:
         isIceBox = True
         print("현재 냉장고")
