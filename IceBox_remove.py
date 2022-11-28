@@ -3,7 +3,6 @@
 import json
 import os
 import time
-from IceBox import DateInput
 import IceBox_menu
 
 def icebox_remover(UserID):
@@ -38,12 +37,16 @@ def icebox_remover(UserID):
                         IceBox_menu.MainMenu(data["today"], UserID)
                     else:
                         # 냉장고 삭제 (현재 냉장고 정보 삭제 -> json 파일 덮어쓰기)
-                        del data['iceboxes'][icebox_num]
+                        del data['iceboxes'][icebox_num]["refrigerator-size"]
+                        del data['iceboxes'][icebox_num]["refrigerator-temp"]
+                        del data['iceboxes'][icebox_num]["freezer-size"]
+                        del data['iceboxes'][icebox_num]["freezer-temp"]
+                        del data['iceboxes'][icebox_num]["items"]
                         with open(file_path, 'w',encoding="utf-8") as f:
                             json.dump(data, f, ensure_ascii=False, indent=2)
                         print("냉장고가 정상적으로 삭제되었습니다.")
                         time.sleep(0.7)
-                        DateInput()
+                        IceBox_menu.MainMenu(data["today"], UserID)
 
                 elif delete_confirm == 'N' or delete_confirm == 'n':
                     print("냉장고 삭제가 취소되었습니다.")
