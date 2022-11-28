@@ -60,7 +60,7 @@ def MainMenuContent(isIceBox, today, UserID):
                         os.system("cls")
                     elif platform.system() == "Darwin":
                         os.system("clear")
-                    IceBox_remove.icebox_remover()
+                    IceBox_remove.icebox_remover(UserID)
                 else:
                     print("냉장고를 먼저 생성해주세요.")
                     continue
