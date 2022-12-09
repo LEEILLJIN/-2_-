@@ -1,4 +1,5 @@
 # 상품 삭제 화면
+import datetime
 import json
 import os
 import sys
@@ -110,62 +111,11 @@ def consume_by_id() :
                             print("ID '{}'에 해당하는 제품 '{}'을(를) 소모하고 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-number']))
                             print()
                             main_screen()
-
-
-    # def consume_by_id() :
-    # cnt = 0
-    # while True :
-    #     with open(path, "r", encoding='UTF8') as file :
-                
-    #         data = json.load(file)
-    #         iceboxes = data['iceboxes']
-    #         items = iceboxes[0]['items']
-    #         consume_id = input("소모할 상품 ID : ")
-    #         consume_how = input("소모할 상품 양 : ")
-                        
-    #         for item in items["packaged"] :
-    #             if int(consume_id) == item['ID'] :
-    #                 if item['leftover'] < int(consume_how) :
-    #                     cnt+=1
-    #                     print("남은 양이 부족합니다.")
-    #                     print("ID '{}'에 해당하는 제품 '{}'의 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover']))
-
-    #                     print()
-    #                     continue
-    #                 else :
-    #                     item['leftover']-=int(consume_how)
-    #                     cnt += 1
-    #                     with open(path, 'w', encoding='UTF8') as consume_file :
-    #                         json.dump(data, consume_file, indent="\t", ensure_ascii=False)
-    #                     print("ID '{}'에 해당하는 제품 '{}'을(를) 소모하고 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover']))
-    #                     print()
-    #                     main_screen()
-            
-    #         for item in items["unpackaged"] :
-    #             if int(consume_id) == item['ID'] :
-    #                 if item['leftover-number'] < int(consume_how) :
-    #                     cnt+=1
-    #                     print("남은 양이 부족합니다.")
-    #                     print("ID '{}'에 해당하는 제품 '{}'의 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-number']))
-    #                     print()
-    #                     main_screen()
-    #                     continue
-    #                 else :
-    #                     item['leftover-number']-=int(consume_how)
-    #                     cnt += 1
-    #                     with open(path, 'w', encoding='UTF8') as consume_file :
-    #                         json.dump(data, consume_file, indent="\t", ensure_ascii=False)
-    #                     print("ID '{}'에 해당하는 제품 '{}'을(를) 소모하고 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-number']))
-    #                     print()
-    #                     main_screen()
-            
-                        
-        if cnt == 0:
-            print("일치하는 상품 ID가 없습니다.")
-            print()
-            break
-            
-        
+ 
+                if cnt == 0:
+                    print("일치하는 상품 ID가 없습니다.")
+                    print()
+                    break
             
 # 유통기한 지난 물품 전체 삭제
 def all_delete() :
@@ -180,7 +130,7 @@ def all_delete() :
             data = json.load(file)
             iceboxes = data['iceboxes']
             items = iceboxes[0]['items']
-            # today = int("".join(str(datetime.date.today()).split("-")))
+            today = int("".join(str(datetime.date.today()).split("-")))
             today_data = data["today"]
             today = time.strptime(today_data, "%Y-%m-%d")
 
@@ -272,18 +222,18 @@ def product_delete():
 
             else :
                 print()
-                print("다시 입력해주세요.")
+                print("0, 1, 2 이외의 값은 입력할 수 없습니다.")
                 continue
 
         elif user_input == '2' :
             consume_by_id()
         
-        elif user_input.isdigit() == False :
-            print()
-            print("다시 입력해주세요.")
-            continue
-
+        # elif user_input.isdigit() == False :
+        #     print()
+        #     print("다시 입력해주세요.")
+        #     continue
+        
         else :
             print()
-            print("다시 입력해주세요.")
+            print("0, 1, 2 이외의 값은 입력할 수 없습니다.")
             continue

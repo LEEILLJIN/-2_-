@@ -1,17 +1,19 @@
 #냉장고 수정 화면
-
 import json
 import os
 import IceBox_menu
+import time
+import platform
 
-# 현재 냉장고 정보를 담아야 한다. 
-icebox_num = 0 
-def icebox_updater():
+def icebox_updater(UserID):
+    # 냉장고 정보 배열 중 현재 냉장고 index
+    icebox_num = int(UserID)-1
+
     # 현재 정보 출력
     def current_info_printer(current_icebox):
         print("현재 냉장고: \n")
-        print(f'냉장 - 크기 {current_icebox["refrigerator-size"]}L, 온도 {current_icebox["refrigerator-temp"]}°C')
-        print(f'냉동 - 크기 {current_icebox["freezer-size"]}L, 온도 {current_icebox["freezer-temp"]}°C\n')
+        print(f'냉장 - 크기 {current_icebox["refrigerator-size"]["total"]}L, 온도 {current_icebox["refrigerator-temp"]}°C')
+        print(f'냉동 - 크기 {current_icebox["freezer-size"]["total"]}L, 온도 {current_icebox["freezer-temp"]}°C\n')
     
     # 메뉴 출력
     def menu_printer():
@@ -91,9 +93,22 @@ def icebox_updater():
                 current_icebox["password"] = password
                 return
 
-
-
     handlers = {'1': refrigerator_temp_handler, '2': freezer_temp_handler, '3': password_reset }
+
+    def updater(current_icebox, menu):
+        # 정보 수정 handler 호출
+        info_updater = handlers[menu]
+        info_updater(current_icebox)
+        
+        # 수정 정보 저장
+        with open(file_path, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+        print("해당 냉장고 설정 정보를 변경되었습니다.\n")
+
+        # 수정이 반영된 현재 상태 출력
+        current_info_printer(current_icebox)
+        print("또 다른 설정을 수정하시겠습니까?")
+        menu_printer()
 
     # json 파일 열기
     file_path = './data/IceBox_data.json'
@@ -116,22 +131,25 @@ def icebox_updater():
                     print("입력된 값이 없습니다.")
                 elif menu == '0':
                     # 메인 메뉴로 돌아가기
-                    IceBox_menu.MainMenu(data["today"])
+                    IceBox_menu.MainMenu(data["today"], UserID)
                     return
-                elif menu == '1' or menu == '2' or menu == '3' :
-                    # 정보 수정 handler 호출
-                    info_updater = handlers[menu]
-                    info_updater(current_icebox)
-                    
-                    # 수정 정보 저장
-                    with open(file_path, 'w', encoding='utf-8') as f:
-                        json.dump(data, f, ensure_ascii=False, indent=2)
-                    print("해당 냉장고 설정 정보를 변경되었습니다.\n")
-
-                    # 수정이 반영된 현재 상태 출력
-                    current_info_printer(current_icebox)
-                    print("또 다른 설정을 수정하시겠습니까?")
-                    menu_printer()
+                elif menu == '1' or menu == '2':
+                    updater(current_icebox, menu)
+                elif menu == '3':
+                    current_password = input("현재 비밀번호를 입력해주세요 >> ").strip()
+                    if current_password != current_icebox["password"]:
+                        print("비밀번호가 올바르지 않습니다.")
+                        time.sleep(0.7)
+                        if platform.system() == "Windows":
+                            os.system("cls")
+                        elif platform.system() == "Darwin":
+                            os.system("clear")
+                        current_info_printer(current_icebox)
+                        print("어떤 설정 정보를 수정하시겠습니까?")
+                        menu_printer()
+                        continue
+                    else:
+                        updater(current_icebox, menu)
                 else:
                     print("올바른 입력값이 아닙니다.\n")
         else:

@@ -28,7 +28,7 @@ def createIceBox(today, UserID):
     else:
         print("사용자 아이디가 존재하지 않습니다.")
         time.sleep(1.5)
-        IceBox_menu.MainMenu(today)
+        IceBox_menu.MainMenu(today, UserID)
 
     inputData = {
         "refrigerator-size": {
@@ -104,7 +104,7 @@ def createIceBox(today, UserID):
                         partition = "냉장"
                     # 안내 문자열 출력
                     print(f"\n{partition}의 각 카테고리 크기를 입력해주세요(단위 : 리터(L))")
-                    print("(이전 카테고리 크기를 다시 입력하는 경우, 'b' 입력, 냉장 생성 취소하는 경우 'x' 입력)")
+                    print("(이전 카테고리 크기를 다시 입력하는 경우, 'b' 입력, 냉장 생성 취소하는 경우, 'x' 입력)")
 
                     totalSize = 0
                     index = 0
@@ -166,6 +166,7 @@ def createIceBox(today, UserID):
     userIceBox["refrigerator-temp"] = inputData["refrigerator-temp"]
     userIceBox["freezer-size"] = inputData["freezer-size"]
     userIceBox["freezer-temp"] = inputData["freezer-temp"]
+    userIceBox["items"] = {"packaged" : [], "unpackaged" : []}
 
     #JSON 파일 업데이트
     with open("./data/IceBox_data.json", 'w', encoding='UTF8') as file:
@@ -173,4 +174,4 @@ def createIceBox(today, UserID):
 
     print("")
 
-    IceBox_menu.MainMenu(today)
+    IceBox_menu.MainMenu(today, UserID)
