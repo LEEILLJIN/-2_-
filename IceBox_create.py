@@ -124,7 +124,7 @@ def createIceBox(today, UserID):
                                 if (i == "x"):
                                     print("\n냉장고 생성이 취소되었습니다.")
                                     time.sleep(1)
-                                    IceBox_menu.MainMenu(today)
+                                    IceBox_menu.MainMenu(today, UserID)
                                 elif (i == "b"):
                                     print("이전 카테고리 크기를 다시 입력해주세요.")
                                     break
@@ -151,7 +151,7 @@ def createIceBox(today, UserID):
                     if (i == "x"):
                         print("\n냉장고 생성이 취소되었습니다.")
                         time.sleep(1)
-                        IceBox_menu.MainMenu(today)
+                        IceBox_menu.MainMenu(today, UserID)
 
                     i = float(i)
                     if (type(i) != float):
