@@ -29,6 +29,12 @@ def icebox_updater(UserID):
         print(f'냉장 온도 – 현재: {current_temp}°C\n')
         while(True):
             temp_str = input("정수를 입력해주세요 >> ").strip()
+            if temp_str == "":
+                print("입력된 값이 없습니다.\n")
+                continue
+            if temp_str == "-0" or temp_str == "+0":
+                print("올바른 입력값이 아닙니다.\n")
+                continue
             # 정수 확인
             try:
                 temp = int(temp_str)
@@ -58,6 +64,12 @@ def icebox_updater(UserID):
         print(f'냉동 온도 – 현재: {current_temp}°C\n')
         while(True):
             temp_str = input("정수를 입력해주세요 >> ").strip()
+            if temp_str == "":
+                print("입력된 값이 없습니다.\n")
+                continue
+            if temp_str == "-0" or temp_str == "+0":
+                print("올바른 입력값이 아닙니다.\n")
+                continue
             # 정수 확인
             try:
                 temp = int(temp_str)
@@ -85,7 +97,9 @@ def icebox_updater(UserID):
         print("냉장고 비밀번호 수정:")
         while(True):
             password = input("6자리 숫자를 입력해주세요 >> ").strip()
-            if not password.isdigit():
+            if password == "":
+                print("입력된 값이 없습니다.\n")
+            elif not password.isdigit():
                 print("숫자로만 입력해주세요.")
             elif len(password) != 6:
                 print("비밀번호는 6자리 숫자여야 합니다. 다시 입력해주세요.")
@@ -136,7 +150,11 @@ def icebox_updater(UserID):
                 elif menu == '1' or menu == '2':
                     updater(current_icebox, menu)
                 elif menu == '3':
-                    current_password = input("현재 비밀번호를 입력해주세요 >> ").strip()
+                    while(True):
+                        current_password = input("현재 비밀번호를 입력해주세요 >> ").strip()
+                        if current_password != "":
+                            break
+                        print("입력된 값이 없습니다.\n")
                     if current_password != current_icebox["password"]:
                         print("비밀번호가 올바르지 않습니다.")
                         time.sleep(0.7)
