@@ -82,7 +82,6 @@ def consume_by_id() :
                             cnt+=1
                             print("남은 양이 부족합니다.")
                             print("ID '{}'에 해당하는 제품 '{}'의 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-bulk']))
-
                             print()
                             continue
                         else :
@@ -158,7 +157,7 @@ def all_delete() :
 
     elif delete_all == 'N' :
         main_screen()
-        exit()
+        # exit()
     else :
         print("Y 또는 N을 입력해주세요.")
         print()

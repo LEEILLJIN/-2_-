@@ -11,13 +11,13 @@ path = "./data/IceBox_data.json"
 def search_by_name() :
         special_character = ['~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')']
         cnt = 0
-        while True : 
+        while True :
             print()
             product_name = input("검색할 상품명 : ")
             print()
             for validation in product_name :
                 if validation in special_character :
-                    print("다시 입력해주세요.")
+                    print("상품명은 한글 또는 영어만 입력 가능합니다.")
                     break
             
             else :
@@ -46,7 +46,7 @@ def search_by_name() :
                     print()
                     plus_search = input("추가 검색을 하시겠습니까? (Y/N) : ")
                     additional_search(plus_search)
-            cnt=0    
+            cnt=0
             
             
 def additional_search(request) :
@@ -86,5 +86,4 @@ def product_search():
             search_by_name()
         else :
             print()
-            print("다시 입력해주세요.")
-
+            print("0, 1 이외의 값은 입력할 수 없습니다.")
