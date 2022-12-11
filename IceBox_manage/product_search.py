@@ -2,33 +2,39 @@
 import json
 import os
 import sys
+import platform
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 import IceBox_menu
 
 path = "./data/IceBox_data.json"
-def search_by_name() :
+global global_id
+
+def search_by_name(global_id) :
+
         special_character = ['~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')']
         cnt = 0
-        while True : 
+        while True :
             print()
             product_name = input("검색할 상품명 : ")
             print()
             for validation in product_name :
                 if validation in special_character :
-                    print("특수문자를 사용할 수 없습니다")
+                    print("상품명은 한글,영어, 숫자만 입력 가능합니다.")
                     break
             
             else :
                 with open(path, "r", encoding='UTF8') as file :
             
                     data = json.load(file)
-                    iceboxes = data['iceboxes']
-                    items = iceboxes[0]['items']
+                    iceboxes = data['iceboxes'][int(global_id)-1]
+
+                    items = iceboxes['items']
+                    
                     
                     for item in items['packaged'] :
-                        if(product_name == item['name']) :
-                            print("<상품 ID: {}, 상품명: {}, 총량: {}, 현재량: {}, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["total-bulk"], item["leftover"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
+                        if(product_name == item['name'] ) :
+                            print("<상품 ID: {}, 상품명: {}, 총량: {}, 현재량: {}, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["total-bulk"], item["leftover-bulk"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
                             cnt+=1
                         else :
                             continue
@@ -43,32 +49,37 @@ def search_by_name() :
                     if cnt == 0 :
                         print("저장된 상품이 없습니다.")
                     print()
-                    plus_search = input("추가 검색을 하시겠습니까 ? y/n : ")
+                    plus_search = input("추가 검색을 하시겠습니까? (Y/N) : ")
                     additional_search(plus_search)
-            cnt=0    
+            cnt=0
             
             
 def additional_search(request) :
-                
-    if request == 'y' :
-        search_by_name()
+
+    if request == 'Y' :
+        search_by_name(global_id)
         
-    elif request == 'n' :
+    elif request == 'N' :
         main_screen2()
     else :
-        print("y 또는 n을 입력해주세요.")
-        plus_search = input("추가 검색을 하시겠습니까 ? y/n : ")
+        print("Y 또는 N을 입력해주세요.")
+        plus_search = input("추가 검색을 하시겠습니까? (Y/N) : ")
         additional_search(plus_search)
 
 
 def main_screen2() :
     with open(path, "r", encoding='UTF8') as file :
-          
-            data = json.load(file)
-            today = data['today']
-            IceBox_menu.MainMenu(today)
 
-def product_search():
+            data = json.load(file)
+            iceboxes = data['iceboxes'][int(global_id)-1]
+            today = data['today']
+        
+            IceBox_menu.MainMenu(today, global_id)
+
+def product_search(UserId):
+    global global_id
+    global_id = UserId
+
     while True:
         print("0. 돌아가기")
         print("1. 상품명 검색")
@@ -78,8 +89,7 @@ def product_search():
             main_screen2()
             break
         elif user_input == '1' :
-            search_by_name()
+            search_by_name(global_id)
         else :
             print()
-            print("0 또는 1을 입력해주세요")
-
+            print("0, 1 이외의 값은 입력할 수 없습니다.")

@@ -3,15 +3,17 @@ import datetime
 import json
 import os
 import sys
+import time
+import platform
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 import IceBox_menu
 
 path = "./data/IceBox_data.json"
 # 상품 id로 상품 폐기
-def delete_by_id() :
+def delete_by_id(global_id) :
         cnt = 0
-        while True : 
+        while True :
             print()
             product_id = input("폐기할 상품 ID : ")
             if product_id.isdigit() == False:
@@ -21,8 +23,9 @@ def delete_by_id() :
                 with open(path, "r", encoding='UTF8') as file :
             
                     data = json.load(file)
-                    iceboxes = data['iceboxes']
-                    items = iceboxes[0]['items']
+                    iceboxes = data['iceboxes'][int(global_id)-1]
+
+                    items = iceboxes['items']
                     
                     for i, item in enumerate(items["packaged"]) :
                         if(int(product_id) == item['ID']) :
@@ -50,84 +53,86 @@ def delete_by_id() :
                         print("존재하지 않는 상품 아이디입니다.")
                         continue
                     
-                    plus_delete = input("다른 아이디로 삭제하시겠습니까 ? y/n : ")
+                    plus_delete = input("다른 아이디로 삭제하시겠습니까? (Y/N) : ")
                     additional_delete(plus_delete)
             cnt=0
 
 # 상품 id로 상품 소모
-def consume_by_id() :
+def consume_by_id(global_id) :
     cnt = 0
     while True :
-        with open(path, "r", encoding='UTF8') as file :
-                
-            data = json.load(file)
-            iceboxes = data['iceboxes']
-            items = iceboxes[0]['items']
-            consume_id = input("소모할 상품 ID : ")
-            consume_how = input("소모할 상품 양 : ")
-                        
-            for item in items["packaged"] :
-                if int(consume_id) == item['ID'] :
-                    if item['leftover'] < int(consume_how) :
-                        cnt+=1
-                        print("남은 양이 부족합니다.")
-                        print("ID '{}'에 해당하는 제품 '{}'의 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover']))
+        consume_id = input("소모할 상품 ID : ")
+        consume_how = input("소모할 상품 양 : ")
 
-                        print()
-                        main_screen()
-                        continue
-                    else :
-                        item['leftover']-=int(consume_how)
-                        cnt += 1
-                        with open(path, 'w', encoding='UTF8') as consume_file :
-                            json.dump(data, consume_file, indent="\t", ensure_ascii=False)
-                        print("ID '{}'에 해당하는 제품 '{}'을(를) 소모하고 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover']))
-                        print()
-                        main_screen()
-            
-            for item in items["unpackaged"] :
-                if int(consume_id) == item['ID'] :
-                    if item['leftover-number'] < int(consume_how) :
-                        cnt+=1
-                        print("남은 양이 부족합니다.")
-                        print("ID '{}'에 해당하는 제품 '{}'의 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-number']))
-                        print()
-                        main_screen()
-                        continue
-                    else :
-                        item['leftover-number']-=int(consume_how)
-                        cnt += 1
-                        with open(path, 'w', encoding='UTF8') as consume_file :
-                            json.dump(data, consume_file, indent="\t", ensure_ascii=False)
-                        print("ID '{}'에 해당하는 제품 '{}'을(를) 소모하고 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-number']))
-                        print()
-                        main_screen()
-            
-                        
-        if cnt == 0:
-            print("일치하는 상품 ID가 없습니다.")
-            print()
-            break
-            
+        # 상품 ID와 상품 양에 대한 문법 형식 검사
+        if consume_id.isdigit() == False or consume_how.isdigit() == False:
+                print("상품 ID와 상품 양은 숫자만 입력 가능합니다.")
+                
+        elif consume_id.isdigit() == True or consume_how.isdigit() == True :
         
+            with open(path, "r", encoding='UTF8') as file :
+                
+                data = json.load(file)
+                iceboxes = data['iceboxes'][int(global_id)-1]
+                items = iceboxes['items']
+                
+                            
+                for item in items["packaged"] :
+                    if int(consume_id) == item['ID'] :
+                        if item['leftover-bulk'] < int(consume_how) :
+                            cnt+=1
+                            print("남은 양이 부족합니다.")
+                            print("ID '{}'에 해당하는 제품 '{}'의 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-bulk']))
+                            print()
+                            continue
+                        else :
+                            item['leftover-bulk']-=int(consume_how)
+                            cnt += 1
+                            with open(path, 'w', encoding='UTF8') as consume_file :
+                                json.dump(data, consume_file, indent="\t", ensure_ascii=False)
+                            print("ID '{}'에 해당하는 제품 '{}'을(를) 소모하고 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-bulk']))
+                            print()
+                            product_delete(global_id)
+
+                for item in items["unpackaged"] :
+                    if int(consume_id) == item['ID'] :
+                        if item['leftover-number'] < int(consume_how) :
+                            cnt+=1
+                            print("남은 양이 부족합니다.")
+                            print("ID '{}'에 해당하는 제품 '{}'의 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-number']))
+                            print()
+                            continue
+                        else :
+                            item['leftover-number']-=int(consume_how)
+                            cnt += 1
+                            with open(path, 'w', encoding='UTF8') as consume_file :
+                                json.dump(data, consume_file, indent="\t", ensure_ascii=False)
+                            print("ID '{}'에 해당하는 제품 '{}'을(를) 소모하고 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-number']))
+                            print()
+                            product_delete(global_id)
+ 
+                if cnt == 0:
+                    print("일치하는 상품 ID가 없습니다.")
+                    print()
+                    break
             
 # 유통기한 지난 물품 전체 삭제
-def all_delete() :
+def all_delete(global_id) :
     
     print("유통기한 지난 물품 전체 삭제")
-    delete_all = input("삭제하시겠습니까? (y/n) : ")
+    delete_all = input("삭제하시겠습니까? (Y/N) : ")
 
-    if delete_all == 'y' :
+    if delete_all == 'Y' :
         with open(path, "r", encoding='UTF8') as file :
-            
-
             data = json.load(file)
-            iceboxes = data['iceboxes']
-            items = iceboxes[0]['items']
+            iceboxes = data['iceboxes'][int(global_id)-1]
+            items = iceboxes['items']
             today = int("".join(str(datetime.date.today()).split("-")))
+            today_data = data["today"]
+            today = time.strptime(today_data, "%Y-%m-%d")
 
             for item in items["packaged"].copy() :
-                expiration = int("".join(item['expiration-date'].split("-")))
+                expiration = time.strptime(item['expiration-date'], "%Y-%m-%d")
                 
                 if today > expiration :
                     del items['packaged'][items['packaged'].index(item)]
@@ -136,7 +141,7 @@ def all_delete() :
 
 
             for item in items["unpackaged"].copy() :
-                expiration = int("".join(item['expiration-date'].split("-")))
+                expiration = time.strptime(item['expiration-date'], "%Y-%m-%d")
                 
                 if today > expiration :
                     del items['unpackaged'][items['unpackaged'].index(item)]
@@ -148,39 +153,42 @@ def all_delete() :
         print()
                 
 
-    elif delete_all == 'n' :
+    elif delete_all == 'N' :
         main_screen()
-        exit()
+        # exit()
     else :
-        print("y 또는 n을 입력해주세요.")
+        print("Y 또는 N을 입력해주세요.")
         print()
-        all_delete()
+        all_delete(global_id)
 
 def main_screen() :
     with open(path, "r", encoding='UTF8') as file :
-          
+
             data = json.load(file)
+            iceboxes = data['iceboxes'][int(global_id)-1]
             today = data['today']
-            IceBox_menu.MainMenu(today)
 
-
+            IceBox_menu.MainMenu(today, global_id)
 
 # 추가 삭제
 def additional_delete(request) :
-                
-    if request == 'y' :
-        delete_by_id()
+
+    if request == 'Y' :
+        delete_by_id(global_id)
         
-    elif request == 'n' :
+    elif request == 'N' :
         main_screen()
         exit()
     else :
-        print("y 또는 n을 입력해주세요.")
-        plus_delete = input("다른 아이디로 삭제하시겠습니까 ? y/n : ")
+        print("Y 또는 N을 입력해주세요.")
+        plus_delete = input("다른 아이디로 삭제하시겠습니까? (Y/N) : ")
         additional_delete(plus_delete)
 
                         
-def product_delete():
+def product_delete(UserId):
+    global global_id
+    global_id = UserId
+    
     while True:
         print("0. 돌아가기")
         print("1. 상품 폐기")
@@ -200,9 +208,9 @@ def product_delete():
                 main_screen()
                 break
             elif user_input == '1' :
-                delete_by_id()
+                delete_by_id(global_id)
             elif user_input == '2' :
-                all_delete()
+                all_delete(global_id)
             elif user_input.isdigit() == False :
                 print()
                 print("숫자만 입력 해주세요.")
@@ -210,18 +218,18 @@ def product_delete():
 
             else :
                 print()
-                print("0, 1, 2 중에서 메뉴를 골라주세요.")
+                print("0, 1, 2 이외의 값은 입력할 수 없습니다.")
                 continue
 
         elif user_input == '2' :
-            consume_by_id()
+            consume_by_id(global_id)
         
-        elif user_input.isdigit() == False :
-            print()
-            print("숫자만 입력 해주세요.")
-            continue
-
+        # elif user_input.isdigit() == False :
+        #     print()
+        #     print("다시 입력해주세요.")
+        #     continue
+        
         else :
             print()
-            print("0, 1, 2 중에서 메뉴를 골라주세요.")
+            print("0, 1, 2 이외의 값은 입력할 수 없습니다.")
             continue

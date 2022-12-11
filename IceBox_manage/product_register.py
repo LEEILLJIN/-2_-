@@ -15,15 +15,16 @@ def main_screen2() :
 
 # import IceBox
 path = "./data/IceBox_data.json"
-packaged_updatable_cate = {"파티션": "partition",'상품명': 'name', '총량':'total-bulk', '현재량':'leftover', '카테고리':'category', '보관권장온도':'recommended-temp', '유통기한':'expiration-date'}
+packaged_updatable_cate = {"파티션": "partition",'상품명': 'name', '총량':'total-bulk', '현재량':'leftover-bulk', '카테고리':'category', '보관권장온도':'recommended-temp', '유통기한':'expiration-date'}
 unpackaged_updatable_cate = {"파티션": "partition",'상품명': 'name', '총량' : 'total-number', '현재량' : 'leftover-number', "개당 부피": "bulk-for-unit",'카테고리':'category', '보관권장온도':'recommended-temp', '유통기한':'expiration-date'}
 special_character = ['~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')']
 category_data_type={
     'name': "string",
     'total-bulk': "int",
-    'leftover': "int",
     'total-number': "int",
+    'leftover-bulk': "int",
     'leftover-number': "int",
+    'total-number': "int",
     'category': "select",
     'recommended-temp': "int",
     'expiration-date': "string" 
@@ -40,31 +41,68 @@ partition_object = {
 file_path = './data/IceBox_data.json'
 
 def load_json ():
-    with open(file_path, 'r') as f:
+    with open(file_path, 'r', encoding="utf-8") as f:
         return json.load(f)
 
 def save_json (current_json):
-    with open(file_path, 'w') as f:
+    with open(file_path, 'w', encoding="utf-8") as f:
         json.dump(current_json, f, ensure_ascii=False, indent=2)
     print("상품이 등록되었습니다.")
     print("==========================================")
     
+def getBulk(item):
+    if "total-bulk" in item: 
+        return item["leftover-bulk"]
+    else:
+        return item["leftover-number"]*item["bulk-for-unit"]
+
+    
+def getValidSize(type,inputItem):
+    json_file=loaded_json = load_json()
+    items=list(loaded_json["iceboxes"][0]["items"].values())[0]+list(loaded_json["iceboxes"][0]["items"].values())[1]
+    if type == "냉장":
+        validSize=int(json_file["iceboxes"][0]["refrigerator-size"]) 
+        for item in items:
+            if item["partition"]=="냉장":
+                validSize-=getBulk(item)
+        if (validSize-getBulk(inputItem))>=0:
+            return True
+        else:
+            return False
+    else:
+        validSize=int(json_file["iceboxes"][0]["freezer-size"])
+        for item in items:
+            if item["partition"]=="냉동":
+                validSize-=getBulk(item)
+        if (validSize-getBulk(inputItem))>=0:
+            return True
+        else:
+            return False
+
+
 def save_product (is_packaged,input_data):    
     loaded_json = load_json()
 
     #max seq 구하기
     max_seq=0
-    
-    for item in (list(loaded_json["iceboxes"][0]["items"].values())[0]+list(loaded_json["iceboxes"][0]["items"].values())[1]):
-        if item["ID"]>=max_seq:
-            max_seq=item["ID"]
-    input_data["ID"]=max_seq
+    if loaded_json["iceboxes"][0]["items"] :
+        for item in (list(loaded_json["iceboxes"][0]["items"].values())[0]+list(loaded_json["iceboxes"][0]["items"].values())[1]):
+            if item["ID"]>=max_seq:
+                max_seq=item["ID"]
+        input_data["ID"]=max_seq+1
+    else:
+        input_data["ID"]=max_seq+1
 
     if is_packaged:
         loaded_json["iceboxes"][0]["items"]["packaged"].append(input_data)
     else:
         loaded_json["iceboxes"][0]["items"]["unpackaged"].append(input_data)
-    save_json(loaded_json)
+
+    if getValidSize(input_data["partition"],input_data)==True:
+        save_json(loaded_json)
+    else:
+        print(f'{input_data["partition"]}고 용량 초과입니다.')
+
     
     
 
@@ -92,7 +130,6 @@ def validate_int (input_data):
 
 def save_data(input_data,key,input_process_tmp_data) :
     parsed_input_data=input_data
-
     if key == 'bulk-for-unit':
         parsed_input_data = int(input_data)
 
@@ -107,11 +144,11 @@ def save_data(input_data,key,input_process_tmp_data) :
 
     elif key == 'total-bulk':
         parsed_input_data = int(input_data)
-
-    elif key == 'leftover':
-        parsed_input_data = int(input_data)
         
     elif key == 'total-number':
+        parsed_input_data = int(input_data)
+
+    elif key == 'leftover-bulk':
         parsed_input_data = int(input_data)
 
     elif key == 'leftover-number':
