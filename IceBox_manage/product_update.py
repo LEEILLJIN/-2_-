@@ -1,5 +1,4 @@
 # 상품 수정 화면
-# 상품 수정 화면
 #냉장고 관리 화면에서 사용자가 ‘5’를 입력하면 나오는 화면입니다.
 
 import datetime
@@ -8,6 +7,7 @@ import os
 import sys
 from unicodedata import category
 import time
+import IceBox
 from IceBox import validate_date
 
 from .product_register import getBulk, getValidSize
@@ -24,16 +24,26 @@ category_list = {
     '1' : '야채', '2':'과일', '3':'유제품', '4':'냉동식품', '5':'육류', '6':'어류', '7':'과자', '8':'음료', '9':'주류', '10':'빙과류', '11':'신선제품', '12':'소스', '13':'곡식류', '14':'가루류', '15':'기타'
 }
 
+category_list_english_to_korean = {
+    '야채' : 'vegetable', '과일' : 'fruit' , '유제품': 'dairy-product', '냉동식품':'frozen-food', '육류':'meat', '어류':'seafood', '과자':'snack', '음료':'beverage', '주류':'alcohol', '빙과류':'ice-cream', '신선제품':'fresh-product', '소스':'sauce', '곡식류':'grains', '가루류':'powder', '기타':'etc'
+}
+
 global global_product_id
+global global_user_id
+global global_item
+global global_icebox
+
+
 
 def main_screen2() :
     with open(path, "r", encoding='UTF8') as file :          
             data = json.load(file)
             today = data['today']
-            IceBox_menu.MainMenu(today)
+            IceBox_menu.MainMenu(today,global_user_id)
 
 def search_by_id():
     #수정할 상품 ID 입력하여 해당 ID의 예외 처리 후 적법할 경우 상품을 찾는 함수
+    #user_by_id
     cnt = 0
     global global_product_id 
     while True:
@@ -51,36 +61,42 @@ def search_by_id():
                     update_product(global_product_id)
         cnt=0 
 
-def find_by_id(global_product_id):
-    with open(path, "r", encoding='UTF8') as file :
-                    data = json.load(file)
-                    icebox = data['iceboxes']
-                    items = icebox[0]["items"]
-                    for item in items['packaged'] :
-                        if(int(global_product_id) == item['ID']) :
-                            print(item["partition"])
-                            return [item["partition"], item]
+# def find_by_id(global_product_id):
+#     with open(path, "r", encoding='UTF8') as file :
+#                     data = json.load(file)
+#                     icebox = data['iceboxes']
+#                     items = icebox[0]["items"]
+#                     for item in items['packaged'] :
+#                         if(int(global_product_id) == item['ID']) :
+#                             print(item["partition"])
+#                             return [item["partition"], item]
 
 def view_item_data(global_product_id):
     #상품의 정보를 보여주는 함수
     cnt = 0
     with open(path, "r", encoding='UTF8') as file :
                     data = json.load(file)
-                    icebox = data['iceboxes']
-                    items = icebox[0]["items"]
+                    icebox_select = data['iceboxes'][0] #일단 0번째 냉장고로 초기화
+
+                    for icebox in data['iceboxes'] :
+                        if int(global_product_id) == icebox['id']: 
+                            icebox_select = icebox
+                            break
+                        # else:
+                        #     ice_box_index += 1
+
+                    items = icebox_select["items"]
                     for item in items['packaged'] :
                         if(int(global_product_id) == item['ID']) :
-                            print("<상품 ID: {}, 상품명: {}, 총부피: {}, 현재부피: {}, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["total-bulk"], item["leftover-bulk"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
+                            print("<상품 ID: {}, 상품명: {}, 총량: {}L, 현재량: {}L, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["total-bulk"], item["leftover-bulk"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
                             cnt+=1
-
                         else :
                             continue
                         
                     for item in items['unpackaged'] :
                         if(int(global_product_id) == item['ID']) :
-                            print("<상품 ID: {}, 상품명: {}, 총개수: {}, 현재개수: {}, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"],  item["total-number"], item["leftover-number"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
+                            print("<상품 ID: {}, 상품명: {}, 총량: {}개, 현재량: {}개, 개당부피: {}L, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"],  item["total-number"], item["leftover-number"],item["bulk-for-unit"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
                             cnt+=1
-
                         else :
                             continue
     return cnt
@@ -95,103 +111,96 @@ def validate_cate(update_cate):
 
 
 def get_item_by_id(g):
+    global global_user_id
+    global global_item
+    global global_icebox
+    global global_product_id
+
     with open(path, "r", encoding='UTF8') as file :
         data = json.load(file)
-        icebox = data['iceboxes']
-        items = icebox[0]["items"]
+        icebox_select = data['iceboxes'][0]
+
+        for icebox in data['iceboxes'] :
+            if int(global_user_id) == icebox['id']: 
+                icebox_select = icebox
+                break
+                        # else:
+                        #     ice_box_index += 1
+
+        global_icebox = icebox_select
+        items = icebox_select["items"]
 
         for item in items['packaged'] :
-            if int(g) == item['ID'] :
+            if int(global_product_id) == item['ID'] :
+                global_item = item
                 return item
             else : 
                 continue
             
         for item in items['unpackaged'] :
-            if int(g) == item['ID'] :
+            if int(global_product_id) == item['ID'] :
+                global_item = item
                 return item
             else :
                 continue
 
+def CalculateUsedSize(partition, category, icebox): 
 
-def getLeftoverBulk(inpartition): #냉장고,냉동고 남은부피 계산하기
-    with open(path, "r", encoding='UTF8') as file :
-        data = json.load(file)
-        icebox = data['iceboxes']
-        items = icebox[0]["items"]
-        rtotalsize = int(icebox[0]['refrigerator-size'])
-        ftotalsize = int(icebox[0]['freezer-size'])
+    #냉장,냉동 #한국말카테고리(과일) #냉장고
+    PackagedList = icebox["items"]["packaged"]
+    UnpackagedList = icebox["items"]["unpackaged"]
+    UsedSize = 0
 
-        rleftsize = rtotalsize
-        fleftsize = ftotalsize
-
-    if inpartition == '냉장':
-        for item in items['packaged'] :
-            if item['partition'] == '냉장':
-                rleftsize -= item['total-bulk']
-        
-        for item in items['unpackaged'] :
-            if item['partition'] == '냉장':
-                rleftsize -= item['leftover-number']*item['bulk-for-unit']
-
-        return rleftsize
-    
+    if PackagedList :
+        for i in PackagedList:
+            if (i["category"] == category) and (i["partition"] == partition):
+                UsedSize += i["total-bulk"]
     else :
-        for item in items['packaged'] :
-            if item['partition'] == '냉동':
-                fleftsize -= item['total-bulk']
+        UsedSize += 0
+
+    if UnpackagedList :
+        for i in UnpackagedList:
+            if (i["category"] == category) and (i["partition"] == partition): 
+                UsedSize += i["leftover-number"] * i["bulk-for-unit"]  
+    else :
+        UsedSize += 0
+
+    return UsedSize  
+
+
+# def getLeftoverBulk(inpartition): #냉장고,냉동고 남은부피 계산하기
+#     with open(path, "r", encoding='UTF8') as file :
+#         data = json.load(file)
+#         icebox = data['iceboxes']
+#         items = icebox[0]["items"]
+#         rtotalsize = int(icebox[0]['refrigerator-size'])
+#         ftotalsize = int(icebox[0]['freezer-size'])
+
+#         rleftsize = rtotalsize
+#         fleftsize = ftotalsize
+
+#     if inpartition == '냉장':
+#         for item in items['packaged'] :
+#             if item['partition'] == '냉장':
+#                 rleftsize -= item['total-bulk']
         
-        for item in items['unpackaged'] :
-            if item['partition'] == '냉동':
-                fleftsize -= item['leftover-number']*item['bulk-for-unit']
-        
-        return fleftsize
+#         for item in items['unpackaged'] :
+#             if item['partition'] == '냉장':
+#                 rleftsize -= item['leftover-number']*item['bulk-for-unit']
 
-
-
-
-def isitvalid(global_product_id,update_data): #수정하고 싶은 값
-    cnt = 0
-    #아이템이 냉동인지 냉장인지
-    #아이템이 패키지인지 언패키지인지
-    selected_item = get_item_by_id(global_product_id)
+#         return rleftsize
     
-    print("------현재량-------")
-    print(getLeftoverBulk('냉장'))
-    print(getLeftoverBulk('냉동'))
+#     else :
+#         for item in items['packaged'] :
+#             if item['partition'] == '냉동':
+#                 fleftsize -= item['total-bulk']
+        
+#         for item in items['unpackaged'] :
+#             if item['partition'] == '냉동':
+#                 fleftsize -= item['leftover-number']*item['bulk-for-unit']
+        
+#         return fleftsize
 
-    if 'total_bulk' in selected_item:
-        #패키지가 있는경우
-        #냉장고에서 남은 부피 >= update_data 이면 true
-        if selected_item['partition'] == '냉장':
-            if getLeftoverBulk('냉장') < int(update_data):
-                cnt += 1
-        else :
-            if getLeftoverBulk('냉동') < int(update_data):
-                cnt += 1
-        
-        if cnt <= 0:
-            selected_item['total-bulk'] = int(update_data)
-            return True
-        
-        else :
-            return False
-    
-    else:
-        #패키지가 없는경우
-        #냉장고에서 남은 부피 >= update_data(수량) * selected_item['bulk-for-unit'] 
-        if selected_item['partition'] == '냉장':
-            if getLeftoverBulk('냉장') < int(update_data) * selected_item['bulk-for-unit']:
-                cnt += 1
-        else :
-            if getLeftoverBulk('냉동') < int(update_data) * selected_item['bulk-for-unit']:
-                cnt += 1
-        
-        if cnt <= 0:
-            selected_item['total-number'] = int(update_data)
-            return True
-        
-        else :
-            return False
 
 
 def packaged_isitvalid_total_bulk(global_product_id,update_data):
@@ -199,47 +208,54 @@ def packaged_isitvalid_total_bulk(global_product_id,update_data):
     #아이템이 냉동인지 냉장인지
     #아이템이 패키지인지 언패키지인지
     selected_item = get_item_by_id(global_product_id)
+    global global_item
+    global global_icebox
     
-    print("------현재량-------")
-    print(getLeftoverBulk('냉장'))
-    print(getLeftoverBulk('냉동'))
-        #패키지가 있는경우
-        #냉장고에서 남은 부피 >= update_data 이면 true
-    if selected_item['partition'] == '냉장':
-        if getLeftoverBulk('냉장') < int(update_data):
+    partition = global_item['partition'] #냉장인지 냉동인지
+    category = global_item['category'] #카테고리(한국말)
+    category_english = category_list_english_to_korean.get(category) #카테고리(영어)
+
+    
+    if partition == '냉장':
+        if global_icebox['refrigerator-size'][category_english] - CalculateUsedSize(partition, category, global_icebox) + global_item['total-bulk'] < int(update_data) :
             cnt += 1
     else :
-        if getLeftoverBulk('냉동') < int(update_data):
+        if global_icebox['freezer-size'][category_english] - CalculateUsedSize(partition, category, global_icebox) + global_item['total-bulk'] < int(update_data) :
             cnt += 1
     
     if cnt <= 0:
         return True
     else :
         return False
+
 
 
 def unpackaged_isitvalid_leftover_number(global_product_id,update_data):
     cnt = 0
     #아이템이 냉동인지 냉장인지
     #아이템이 패키지인지 언패키지인지
-    selected_item = get_item_by_id(global_product_id)
     #패키지가 없는경우
     #냉장고에서 남은 부피 >= update_data(수량) * selected_item['bulk-for-unit'] 
-    if selected_item['partition'] == '냉장':
-        if getLeftoverBulk('냉장') < int(update_data) * selected_item['bulk-for-unit']:
+
+    global global_item
+    global global_icebox
+    
+    partition = global_item['partition'] #냉장인지 냉동인지
+    category = global_item['category'] #카테고리(한국말)
+    category_english = category_list_english_to_korean.get(category) #카테고리(영어)
+
+    if partition == '냉장':
+        if global_icebox['refrigerator-size'][category_english] - CalculateUsedSize(partition, category, global_icebox) + global_item['bulk-for-unit']*global_item['leftover-number'] < int(update_data) * global_item['bulk-for-unit'] :
             cnt += 1
     else :
-        if getLeftoverBulk('냉동') < int(update_data) * selected_item['bulk-for-unit']:
+        if global_icebox['freezer-size'][category_english] - CalculateUsedSize(partition, category, global_icebox) + global_item['bulk-for-unit']*global_item['leftover-number'] < int(update_data) * global_item['bulk-for-unit'] :
             cnt += 1
     
-        
     if cnt <= 0:
         return True
         
     else :
         return False
-
-
 
 
 
@@ -253,46 +269,59 @@ def validate_data(update_cate,update_data):
 
             selected_item = get_item_by_id(global_product_id)
 
-            if i == 0:
+            if i == 0: 
                 #상품명 입력 검사
                 if update_data.find(' ')==0 or update_data.find(' ') == len(update_data)-1 or len(update_data) <= 0:
                 #공백류가 맨앞이나 맨뒤에 있다면
-                    return False
+                    print("앞뒤에 공백류를 포함할 수 없습니다.")
+                    cnt += 1
                 for validation in update_data :
                     if validation in special_character :
                         cnt += 1
+
                 if cnt == 0:
                     return True
                 else:
                     return False
 
             elif i == 1:
+                #총량 입력 검사
                 #패키지드
-                if 'total-bulk' in selected_item :
-                    if int(update_data) < selected_item['leftover-bulk']:
-                        return False
+                if update_data.isdigit() == False:
+                    #숫자가 아닌 경우
+                    print("숫자로 입력해주세요.")
+                    cnt += 1
 
-                    if packaged_isitvalid_total_bulk(global_product_id,update_data) == False:
-                        print('용량 초과입니다.')
-                        cnt += 1
-                    else:
-                        print("총량 변경 가능")
+                if update_data.find(' ')>=0:
+                    #공백류가 포함된 경우
+                    print("공백류를 포함할 수 없습니다.")
+                    cnt += 1
+                
+                if update_data.find('0') == 0:
+                    print("선행0을 포함하지 않아야 합니다.")
+                    cnt += 1
+
+                if cnt == 0:
+                    if 'total-bulk' in selected_item :
+                        if int(update_data) < selected_item['leftover-bulk']:
+                            print(selected_item['leftover-bulk'])
+                            print("현재량은 총량을 넘길 수 없습니다.")
+                            cnt += 1
+
+                        if packaged_isitvalid_total_bulk(global_product_id,update_data) == False:
+                            print(selected_item['ID'])
+                            print(selected_item['leftover-bulk'])
+                            print('용량 초과입니다.')
+                            cnt += 1
                 
                 #언패키지드
-                else :
-                    if int(update_data) < selected_item['leftover-number'] :
-                        cnt += 1
-                    
-                    if int(update_data) < 1 or int(update_data) > 100:
-                        cnt += 1
-
-                if update_data.isalpha() or update_data.find(' ')>=0:
-                    #숫자가 아니거나 공백류가 포함된 경우
-                    cnt += 1
-                else:
-                    for validation in update_data :
-                        if validation in special_character :
-                            #특수문자가 포함되어있는 경우
+                    else :
+                        if int(update_data) < selected_item['leftover-number'] :
+                            print("현재량은 총량을 넘길 수 없습니다.")
+                            cnt += 1
+                        
+                        if int(update_data) < 1 or int(update_data) > 100:
+                            print("1이상 100이하의 정수로 입력해주세요.")
                             cnt += 1
 
                 if cnt == 0:
@@ -303,30 +332,39 @@ def validate_data(update_cate,update_data):
 
             elif i ==2:
                 #현재량 입력 검사
-
                 #패키지드
                 if 'total-bulk' in selected_item :
                     if selected_item['total-bulk'] < int(update_data):
-                        print('토탈보다 큽니다.')
+                        print('현재량은 총량을 넘길 수 없습니다.')
                         cnt += 1
 
                 #언패키지드
                 else :
                     if unpackaged_isitvalid_leftover_number(global_product_id,update_data) == False:
-                        print("용량 초과입니다.")
+                        print("해당 칸의 공간이 부족합니다.")
                         cnt += 1
                     
                     if selected_item['total-number'] < int(update_data): 
+                        print("현재량은 총량을 넘길 수 없습니다.")
+                        cnt += 1
+                    
+                    if int(update_data) < 1 or int(update_data) > 100:
+                        print("1이상 100이하의 정수로 입력해주세요.")
                         cnt += 1
 
-                #숫자가 아니거나 공백류가 포함된 경우
-                if update_data.isalpha() or update_data.find(' ')>=0:
-                    return False
-                else:
-                    for validation in update_data :
-                        #특수문자가 포함되어있는 경우
-                        if validation in special_character :
-                            cnt += 1
+                if update_data.isdigit() == False:
+                    #숫자가 아닌 경우
+                    print("숫자로 입력해주세요.")
+                    cnt += 1
+
+                if update_data.find(' ')>=0:
+                    #공백류가 포함된 경우
+                    print("공백류를 포함할 수 없습니다.")
+                    cnt += 1
+                
+                if update_data.find('0') == 0:
+                    print("선행0을 포함하지 않아야 합니다.")
+                    cnt += 1
                             
                 #입력이 적법한 경우            
                 if cnt == 0:
@@ -337,17 +375,20 @@ def validate_data(update_cate,update_data):
             elif i ==3:
                 #카테고리 입력 검사
                 #1.야채, 2.과일, 3.유제품, 4.냉동식품, 5.육류, 6.어류, 7.과자, 8.음료, 9.주류, 10.빙과류, 11.신선제품, 12.소스, 13.곡식류, 14.가루류, 15.기타
-                if update_data.isalpha() or update_data.find(' ')>=0:
-                    #숫자가 아닌 경우 또는 공백류가 포함된 경우
-                    return False
-                elif 1 > int(update_data) or int(update_data) > 15:
-                    #입력 범위에 벗어난 경우
+                if update_data.isdigit() == False:
+                    #숫자가 아닌 경우
+                    print("숫자로 입력해주세요.")
                     cnt += 1
-                else:
-                    for validation in update_data :
-                        if validation in special_character :
-                            #특수문자가 포함되어있는 경우
-                            cnt += 1
+
+                if update_data.find(' ')>=0:
+                    #공백류가 포함된 경우
+                    print("공백류를 포함할 수 없습니다.")
+                    cnt += 1
+
+                if 1 > int(update_data) or int(update_data) > 15:
+                    #입력 범위에 벗어난 경우
+                    print("해당 칸의 공간이 부족합니다.")
+                    cnt += 1
 
                 if cnt == 0:
                     #입력이 적법한 경우
@@ -359,9 +400,19 @@ def validate_data(update_cate,update_data):
                 #보관 권장 온도 입력 검사
                 #공백류가 들어있지 않고 선행 0을 허용하지 않음
                 num = update_data.lstrip("-")
-                num_remove_zero = num.lstrip("0")
-                #선행 0 처리
-                if num != '0' and (num.isdigit() == False or num != num_remove_zero):
+
+                if num.isdigit() == False:
+                    #숫자가 아닌 경우
+                    print("숫자로 입력해주세요.")
+                    cnt += 1
+
+                if num.find(' ')>=0:
+                    #공백류가 포함된 경우
+                    print("공백류를 포함할 수 없습니다.")
+                    cnt += 1
+                
+                if num.find('0') == 0:
+                    print("선행0을 포함하지 않아야 합니다.")
                     cnt += 1
                 
                 if cnt == 0:
@@ -369,6 +420,7 @@ def validate_data(update_cate,update_data):
                     return True
                 else:
                     return False
+
             elif i == 5:
                 #유통기한 입력 검사
                 # import IceBox
@@ -384,23 +436,29 @@ def validate_data(update_cate,update_data):
                     update_data='-'.join(temp)
                     input_date = time.strptime(update_data,"%Y-%m-%d")
                     if today > input_date:
+                        print("오늘 날짜보다 작습니다.")
                         return False
                     else :
                         return True
                 else: 
+                    print("날짜 입력규칙에 맞지 않습니다. 2022-10-11와 같은 형식으로 입력해주세요.")
                     return False
 
 def update_product(global_product_id):
+    cate_pass = 0
 
     while True:
         print()
-        update_cate = input("수정할 항목을 입력해주세요 :")
-        if update_cate == '카테고리':
-            print("1.야채, 2.과일, 3.유제품, 4.냉동식품, 5.육류, 6.어류, 7.과자, 8.음료, 9.주류, 10.빙과류, 11.신선제품, 12.소스, 13.곡식류, 14.가루류, 15.기타")
-        update_data = input("수정 정보를 입력해주세요 :")
-        # print(f"validate_cate : {validate_cate(update_cate)}")
-        # print(f"validate_data : {validate_data(update_cate, update_data)}")
+        if cate_pass == 0:
+            update_cate = input("수정할 항목을 입력해주세요 :")
+            update_cate = update_cate.lstrip()
+            update_cate = update_cate.rstrip()
+            if update_cate == '카테고리':
+                print("1.야채, 2.과일, 3.유제품, 4.냉동식품, 5.육류, 6.어류, 7.과자, 8.음료, 9.주류, 10.빙과류, 11.신선제품, 12.소스, 13.곡식류, 14.가루류, 15.기타")
+
         if validate_cate(update_cate):
+            cate_pass += 1
+            update_data = input("수정 정보를 입력해주세요 :")
             if validate_data(update_cate, update_data):
                 #올바른 수정 항목과 수정 정보가 입력된 경우
                 with open("./data/IceBox_data.json", 'r', encoding='UTF8') as file:
@@ -454,13 +512,21 @@ def update_product(global_product_id):
                         search_by_id()
             else:
                 #잘못된 수정 항목이나 수정 정보가 입력된 경우
-                print("잘못된 수정 항목이거나 수정 정보 값입니다. 다시 입력해주세요.")
+                print("다시 입력해주세요.")
                 continue
         else:
             #잘못된 수정 항목이나 수정 정보가 입력된 경우
-            print("잘못된 수정 항목이거나 수정 정보 값입니다. 다시 입력해주세요.")
+            print("잘못된 수정 항목 값입니다.")
             continue
+        
+#처음 호출되는 함수
+def product_update(user_id_in):
+    global global_user_id 
+    global_user_id = user_id_in
+    search_by_id()
 
-def product_update():
-   search_by_id()
+
+
+
+
 
