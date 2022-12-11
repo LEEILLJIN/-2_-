@@ -46,7 +46,7 @@ def openManageMenu(today, UserID):
         "leftover-bulk": "현재량",
         "recommended-temp": "보관권장온도",
         "expiration-date": "유통기한",
-        "bulk-for-unit": "현재량",
+        "bulk-for-unit": "한개당 수량",
         "total-number": "총량",
         "leftover-number": "현재량"
     }
@@ -71,7 +71,7 @@ def openManageMenu(today, UserID):
                     else:
                         if (k in ["total-bulk", "leftover-bulk"]):
                             unit = "L"
-                        if (k in ["bulk-for-unit", "total-number"]):
+                        if (k in ["bulk-for-unit", "total-number", "leftover-number"]):
                             unit = "개"
                         print(f"{keyNames[k]}: {items[i][j][k]}{unit}", end = "")
                         unit = ""
