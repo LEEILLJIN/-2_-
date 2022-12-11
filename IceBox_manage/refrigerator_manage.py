@@ -51,20 +51,6 @@ def openManageMenu(today, UserID):
         "leftover-number": "현재량"
     }
 
-    # keyNames = {
-    #     "partition": "파티션",
-    #     "name": "상품명",
-    #     "category": "카테고리",
-    #     "ID": "상품ID",
-    #     "total-bulk": "총부피",
-    #     "leftover-bulk": "남은 부피",
-    #     "recommended-temp": "보관권장온도",
-    #     "expiration-date": "유통기한",
-    #     "bulk-for-unit": "한개당 수량",
-    #     "total-number": "총수량",
-    #     "leftover-number": "현재수량"
-    # }
-
     print("냉장")
     for i in items:
         for j in range(len(items[i])):
@@ -124,15 +110,15 @@ def openManageMenu(today, UserID):
     while True:
         subMenuInput = str(input("\n번호를 입력하세요. >> "))
         if subMenuInput == '0':
-            IceBox_menu.MainMenu(today)
+            IceBox_menu.MainMenu(today, UserID)
         elif subMenuInput == '1':
             register_product()
         elif subMenuInput == '2':
             product_show()
         elif subMenuInput == '3':
-            product_delete()
+            product_delete(UserID)
         elif subMenuInput == '4':
-            product_search()
+            product_search(UserID)
         elif subMenuInput == '5':
             product_update()
         else:

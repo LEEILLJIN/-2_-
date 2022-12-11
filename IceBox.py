@@ -94,11 +94,6 @@ def LogIn(today):
 
     with open("./data/IceBox_data.json", 'r', encoding='UTF8') as file:
         json_data = json.load(file)
-    # json_data['today'] = today
-    # today를 업데이트 하는건 IceBox_menu에서
-    # with open("./data/IceBox_data.json", 'w', encoding='UTF8') as file:
-    #     json.dump(json_data, file, ensure_ascii=False, indent=2)
-    # today를 업데이트 하는건 IceBox_menu에서
 
     if json_data["iceboxes"]:
         iceBox = json_data['iceboxes']
@@ -123,6 +118,9 @@ def Validate_Password(PasswordInput, RightPassword) :
         return True
     elif PasswordInput.isspace() or PasswordInput == "":
         print("입력된 값이 없습니다.")
+        return False
+    elif (PasswordInput.isdigit()) and (len(PasswordInput)) == 6:
+        print("비밀번호가 틀렸습니다. 다시 입력해주세요.")
         return False
     else :
         print("비밀번호는 6자리 숫자로 입력해주세요.")
