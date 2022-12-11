@@ -202,9 +202,6 @@ def save_data(input_data,key,input_process_tmp_data) :
     input_process_tmp_data[key]=parsed_input_data
 
 def validate_input_data(input_data,key,input_process_tmp_data) :
-    print(input_data)
-    print(key)
-    print(input_process_tmp_data)
     if key == 'product-type':
         if(validate_int(input_data)==False):
             print("유효하지 않은 선택지입니다. 다시 입력해주세요.")
@@ -287,15 +284,7 @@ def validate_input_data(input_data,key,input_process_tmp_data) :
             print("현재량을 입력해주세요.")
             return False
         else :
-<<<<<<< HEAD
             return True
-=======
-            if int(input_data) >= 0:
-                return True
-            else:
-                print("유효하지 않은 현재량입니다. 다시 입력해주세요.")
-                print("현재량을 입력해주세요.")
-                return False
 
     elif key == 'leftover-bulk':
         if(validate_int(input_data)==False):
@@ -313,7 +302,6 @@ def validate_input_data(input_data,key,input_process_tmp_data) :
                 print("자연수만 입력 가능합니다.")
                 print("다시 입력해주세요.")
                 return False
->>>>>>> master
 
     elif key == 'bulk-for-unit':
             if(validate_int(input_data)==False):
