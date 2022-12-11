@@ -50,6 +50,8 @@ def search_by_id():
         global_product_id = input("수정할 상품의 ID를 입력해주세요 : ")
         if global_product_id.isdigit() == False:
             #ID 입력 예외 처리
+            global_product_id = global_product_id.lstrip()
+            global_product_id = global_product_id.rstrip()
             if len(global_product_id) == 0:
                 print("입력한 값이 없습니다.")
             else :
@@ -65,15 +67,6 @@ def search_by_id():
                     update_product()
         cnt=0 
 
-# def find_by_id(global_product_id):
-#     with open(path, "r", encoding='UTF8') as file :
-#                     data = json.load(file)
-#                     icebox = data['iceboxes']
-#                     items = icebox[0]["items"]
-#                     for item in items['packaged'] :
-#                         if(int(global_product_id) == item['ID']) :
-#                             print(item["partition"])
-#                             return [item["partition"], item]
 
 def view_item_data(global_product_id):
     global global_user_id
@@ -113,7 +106,6 @@ def validate_cate(update_cate):
     else:
         if len(update_cate) == 0:
             print("입력한 값이 없습니다.")
-        
         return False
 
 
@@ -276,7 +268,8 @@ def validate_data(update_cate,update_data):
 
             selected_item = get_item_by_id(global_product_id)
 
-            if len(update_data) == 0:
+            d = update_data.strip()
+            if len(d) == 0:
                 print("입력한 값이 없습니다.")
                 return False
 
@@ -480,17 +473,19 @@ def update_product():
         print()
         if cate_pass == 0:
             update_cate = input("수정할 항목을 입력해주세요 :")
-            if len(update_cate) == 0:
-                    print("입력한 값이 없습니다.")
-                    continue
             update_cate = update_cate.lstrip()
             update_cate = update_cate.rstrip()
+            if len(update_cate) == 0: #여기서는 탭은 안걸림
+                    print("입력한 값이 없습니다.")
+                    continue
             if update_cate == '카테고리':
                 print("1.야채, 2.과일, 3.유제품, 4.냉동식품, 5.육류, 6.어류, 7.과자, 8.음료, 9.주류, 10.빙과류, 11.신선제품, 12.소스, 13.곡식류, 14.가루류, 15.기타")
 
         if validate_cate(update_cate):
             cate_pass += 1
             update_data = input("수정 정보를 입력해주세요 :")
+
+
             if validate_data(update_cate, update_data):
                 #올바른 수정 항목과 수정 정보가 입력된 경우
                 with open("./data/IceBox_data.json", 'r', encoding='UTF8') as file:
