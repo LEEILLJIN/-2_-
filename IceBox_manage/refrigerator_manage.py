@@ -46,16 +46,18 @@ def openManageMenu(today, UserID):
         "leftover-bulk": "현재량",
         "recommended-temp": "보관권장온도",
         "expiration-date": "유통기한",
-        "bulk-for-unit": "한개당 수량",
+        "bulk-for-unit": "현재량",
         "total-number": "총량",
         "leftover-number": "현재량"
     }
+
 
     print("냉장")
     for i in items:
         for j in range(len(items[i])):
             expDate = datetime.strptime(items[i][j]['expiration-date'], '%Y-%m-%d').date()
             cnt = 0
+            unit = ""
             if items[i][j]["partition"] == "냉장":
                 if (today >= expDate):
                     print('\u001b[2;31m', end="")
@@ -64,10 +66,15 @@ def openManageMenu(today, UserID):
                 print("<",end="")
                 for k in items[i][j]:
                     cnt += 1
-                    if (k in ["partition", "bulk-for-unit"]):
+                    if (k in ["partition"]):
                         continue
                     else:
-                        print(f"{keyNames[k]}: {items[i][j][k]}", end = "")
+                        if (k in ["total-bulk", "leftover-bulk"]):
+                            unit = "L"
+                        if (k in ["bulk-for-unit", "total-number"]):
+                            unit = "개"
+                        print(f"{keyNames[k]}: {items[i][j][k]}{unit}", end = "")
+                        unit = ""
                         if (cnt != len(items[i][j])):
                             print(", ", end = "")
                 print(">\u001b[0;0m")
@@ -78,7 +85,8 @@ def openManageMenu(today, UserID):
     for i in items:
         for j in range(len(items[i])):
             expDate = datetime.strptime(items[i][j]['expiration-date'], '%Y-%m-%d').date()
-            cnt = 0;
+            cnt = 0
+            unit = ""
             if items[i][j]["partition"] == "냉동":
                 if (today >= expDate):
                     print('\u001b[2;31m', end="")
@@ -87,10 +95,15 @@ def openManageMenu(today, UserID):
                 print("<",end="")
                 for k in items[i][j]:
                     cnt += 1
-                    if (k in ["partition", "bulk-for-unit"]):
+                    if (k in ["partition"]):
                         continue
                     else:
-                        print(f"{keyNames[k]}: {items[i][j][k]}", end = "")
+                        if (k in ["total-bulk", "leftover-bulk"]):
+                            unit = "L"
+                        if (k in ["bulk-for-unit", "total-number"]):
+                            unit = "개"
+                        print(f"{keyNames[k]}: {items[i][j][k]}{unit}", end = "")
+                        unit = ""
                         if (cnt != len(items[i][j])):
                             print(", ", end = "")
                 print(">\u001b[0;0m")
