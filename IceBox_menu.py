@@ -97,10 +97,10 @@ def CalculateUsedSize(partition, category, icebox):
 def MainMenu(today,UserID):
     #today랑 userID도 같이 인자로 받아와야함
     isIceBox = False
-    # if platform.system() == "Windows":
-    #     os.system("cls")
-    # elif platform.system() == "Darwin":
-    #     os.system("clear")
+    if platform.system() == "Windows":
+        os.system("cls")
+    elif platform.system() == "Darwin":
+        os.system("clear")
 
     with open("./data/IceBox_data.json", 'r', encoding='UTF8') as file:
         json_data = json.load(file)

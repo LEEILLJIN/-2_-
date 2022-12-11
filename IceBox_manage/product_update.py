@@ -58,7 +58,7 @@ def search_by_id():
                     print("입력한 ID와 일치하는 상품이 존재하지 않습니다.")
                     continue
                 else:
-                    update_product(global_product_id)
+                    update_product()
         cnt=0 
 
 # def find_by_id(global_product_id):
@@ -72,6 +72,7 @@ def search_by_id():
 #                             return [item["partition"], item]
 
 def view_item_data(global_product_id):
+    global global_user_id
     #상품의 정보를 보여주는 함수
     cnt = 0
     with open(path, "r", encoding='UTF8') as file :
@@ -79,11 +80,10 @@ def view_item_data(global_product_id):
                     icebox_select = data['iceboxes'][0] #일단 0번째 냉장고로 초기화
 
                     for icebox in data['iceboxes'] :
-                        if int(global_product_id) == icebox['id']: 
+                        if str(global_user_id) == icebox['id']: 
                             icebox_select = icebox
                             break
-                        # else:
-                        #     ice_box_index += 1
+                        
 
                     items = icebox_select["items"]
                     for item in items['packaged'] :
@@ -121,7 +121,7 @@ def get_item_by_id(g):
         icebox_select = data['iceboxes'][0]
 
         for icebox in data['iceboxes'] :
-            if int(global_user_id) == icebox['id']: 
+            if str(global_user_id) == icebox['id']: 
                 icebox_select = icebox
                 break
                         # else:
@@ -287,12 +287,12 @@ def validate_data(update_cate,update_data):
             elif i == 1:
                 #총량 입력 검사
                 #패키지드
-                if update_data.isdigit() == False:
+                if update_data.isdigit() == False or update_data.find('-') >= 0:
                     #숫자가 아닌 경우
-                    print("숫자로 입력해주세요.")
+                    print("양의 정수로 입력해주세요.")
                     cnt += 1
 
-                if update_data.find(' ')>=0:
+                if update_data.find(' ')>=0 :
                     #공백류가 포함된 경우
                     print("공백류를 포함할 수 없습니다.")
                     cnt += 1
@@ -301,16 +301,15 @@ def validate_data(update_cate,update_data):
                     print("선행0을 포함하지 않아야 합니다.")
                     cnt += 1
 
+                
+
                 if cnt == 0:
                     if 'total-bulk' in selected_item :
                         if int(update_data) < selected_item['leftover-bulk']:
-                            print(selected_item['leftover-bulk'])
                             print("현재량은 총량을 넘길 수 없습니다.")
                             cnt += 1
 
                         if packaged_isitvalid_total_bulk(global_product_id,update_data) == False:
-                            print(selected_item['ID'])
-                            print(selected_item['leftover-bulk'])
                             print('용량 초과입니다.')
                             cnt += 1
                 
@@ -332,29 +331,9 @@ def validate_data(update_cate,update_data):
 
             elif i ==2:
                 #현재량 입력 검사
-                #패키지드
-                if 'total-bulk' in selected_item :
-                    if selected_item['total-bulk'] < int(update_data):
-                        print('현재량은 총량을 넘길 수 없습니다.')
-                        cnt += 1
-
-                #언패키지드
-                else :
-                    if unpackaged_isitvalid_leftover_number(global_product_id,update_data) == False:
-                        print("해당 칸의 공간이 부족합니다.")
-                        cnt += 1
-                    
-                    if selected_item['total-number'] < int(update_data): 
-                        print("현재량은 총량을 넘길 수 없습니다.")
-                        cnt += 1
-                    
-                    if int(update_data) < 1 or int(update_data) > 100:
-                        print("1이상 100이하의 정수로 입력해주세요.")
-                        cnt += 1
-
-                if update_data.isdigit() == False:
+                if update_data.isdigit() == False or update_data.find('-') >= 0:
                     #숫자가 아닌 경우
-                    print("숫자로 입력해주세요.")
+                    print("양의 정수로 입력해주세요.")
                     cnt += 1
 
                 if update_data.find(' ')>=0:
@@ -365,6 +344,29 @@ def validate_data(update_cate,update_data):
                 if update_data.find('0') == 0:
                     print("선행0을 포함하지 않아야 합니다.")
                     cnt += 1
+                                
+
+                if cnt == 0 : 
+                    #패키지드
+                    if 'total-bulk' in selected_item :
+                        if selected_item['total-bulk'] < int(update_data):
+                            print('현재량은 총량을 넘길 수 없습니다.')
+                            cnt += 1
+
+                    #언패키지드
+                    else :
+                        if unpackaged_isitvalid_leftover_number(global_product_id,update_data) == False:
+                            print("해당 칸의 공간이 부족합니다.")
+                            cnt += 1
+                        
+                        if selected_item['total-number'] < int(update_data): 
+                            print("현재량은 총량을 넘길 수 없습니다.")
+                            cnt += 1
+                        
+                        if int(update_data) < 1 or int(update_data) > 100:
+                            print("1이상 100이하의 정수로 입력해주세요.")
+                            cnt += 1
+
                             
                 #입력이 적법한 경우            
                 if cnt == 0:
@@ -384,11 +386,16 @@ def validate_data(update_cate,update_data):
                     #공백류가 포함된 경우
                     print("공백류를 포함할 수 없습니다.")
                     cnt += 1
-
-                if 1 > int(update_data) or int(update_data) > 15:
-                    #입력 범위에 벗어난 경우
-                    print("해당 칸의 공간이 부족합니다.")
+                
+                if update_data.find('0') == 0:
+                    print("선행0을 포함하지 않아야 합니다.")
                     cnt += 1
+
+                if cnt == 0 : 
+                    if 1 > int(update_data) or int(update_data) > 15:
+                        #입력 범위에 벗어난 경우
+                        print("1부터 15이하의 정수로 입력해주세요.")
+                        cnt += 1
 
                 if cnt == 0:
                     #입력이 적법한 경우
@@ -444,8 +451,10 @@ def validate_data(update_cate,update_data):
                     print("날짜 입력규칙에 맞지 않습니다. 2022-10-11와 같은 형식으로 입력해주세요.")
                     return False
 
-def update_product(global_product_id):
+def update_product():
     cate_pass = 0
+    global global_user_id
+    global global_icebox
 
     while True:
         print()
@@ -464,8 +473,15 @@ def update_product(global_product_id):
                 with open("./data/IceBox_data.json", 'r', encoding='UTF8') as file:
                     json_data = json.load(file)
 
-                icebox = json_data['iceboxes']
-                items = icebox[0]["items"]
+
+                icebox_select = json_data['iceboxes'][0] #일단 0번째 냉장고로 초기화
+
+                for icebox in json_data['iceboxes'] :
+                    if str(global_user_id) == icebox['id']: 
+                        icebox_select = icebox
+                        break
+
+                items = icebox_select["items"]
                 packaged_itemlist = items["packaged"]
                 unpackaged_itemlist = items["unpackaged"]
 
