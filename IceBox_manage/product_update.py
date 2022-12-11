@@ -50,6 +50,10 @@ def search_by_id():
         global_product_id = input("수정할 상품의 ID를 입력해주세요 : ")
         if global_product_id.isdigit() == False:
             #ID 입력 예외 처리
+            if len(global_product_id) == 0:
+                print("입력한 값이 없습니다.")
+            else :
+                print("입력한 ID와 일치하는 상품이 존재하지 않습니다.")
             continue
         else :
             #ID입력이 적합한 경우
@@ -107,6 +111,9 @@ def validate_cate(update_cate):
     if update_cate in packaged_updatable_cate.keys():
         return True
     else:
+        if len(update_cate) == 0:
+            print("입력한 값이 없습니다.")
+        
         return False
 
 
@@ -269,15 +276,20 @@ def validate_data(update_cate,update_data):
 
             selected_item = get_item_by_id(global_product_id)
 
+            if len(update_data) == 0:
+                print("입력한 값이 없습니다.")
+                return False
+
             if i == 0: 
                 #상품명 입력 검사
                 if update_data.find(' ')==0 or update_data.find(' ') == len(update_data)-1 or len(update_data) <= 0:
                 #공백류가 맨앞이나 맨뒤에 있다면
-                    print("앞뒤에 공백류를 포함할 수 없습니다.")
+                    print("잘못된 수정 정보입니다. 앞뒤에 공백류를 포함할 수 없습니다.")
                     cnt += 1
                 for validation in update_data :
                     if validation in special_character :
                         cnt += 1
+                
 
                 if cnt == 0:
                     return True
@@ -289,16 +301,18 @@ def validate_data(update_cate,update_data):
                 #패키지드
                 if update_data.isdigit() == False or update_data.find('-') >= 0:
                     #숫자가 아닌 경우
-                    print("양의 정수로 입력해주세요.")
+                    if update_data.find(' ') < 0:
+                        print("잘못된 수정 정보입니다. 숫자로 입력해주세요.")
+                        
                     cnt += 1
 
                 if update_data.find(' ')>=0 :
                     #공백류가 포함된 경우
-                    print("공백류를 포함할 수 없습니다.")
+                    print("잘못된 수정 정보입니다. 공백류를 포함할 수 없습니다.")
                     cnt += 1
                 
                 if update_data.find('0') == 0:
-                    print("선행0을 포함하지 않아야 합니다.")
+                    print("잘못된 수정 정보입니다. 선행0을 포함하지 않아야 합니다.")
                     cnt += 1
 
                 
@@ -306,21 +320,21 @@ def validate_data(update_cate,update_data):
                 if cnt == 0:
                     if 'total-bulk' in selected_item :
                         if int(update_data) < selected_item['leftover-bulk']:
-                            print("현재량은 총량을 넘길 수 없습니다.")
+                            print("잘못된 수정 정보입니다. 현재량은 총량을 넘길 수 없습니다.")
                             cnt += 1
 
                         if packaged_isitvalid_total_bulk(global_product_id,update_data) == False:
-                            print('용량 초과입니다.')
+                            print('잘못된 수정 정보입니다. 해당 칸의 공간이 부족합니다.')
                             cnt += 1
                 
                 #언패키지드
                     else :
                         if int(update_data) < selected_item['leftover-number'] :
-                            print("현재량은 총량을 넘길 수 없습니다.")
+                            print("잘못된 수정 정보입니다. 현재량은 총량을 넘길 수 없습니다.")
                             cnt += 1
                         
                         if int(update_data) < 1 or int(update_data) > 100:
-                            print("1이상 100이하의 정수로 입력해주세요.")
+                            print("잘못된 수정 정보입니다. 1이상 100이하의 정수로 입력해주세요.")
                             cnt += 1
 
                 if cnt == 0:
@@ -333,16 +347,18 @@ def validate_data(update_cate,update_data):
                 #현재량 입력 검사
                 if update_data.isdigit() == False or update_data.find('-') >= 0:
                     #숫자가 아닌 경우
-                    print("양의 정수로 입력해주세요.")
+                    if update_data.find(' ') < 0:
+                        print("잘못된 수정 정보입니다. 숫자로 입력해주세요.")
+
                     cnt += 1
 
                 if update_data.find(' ')>=0:
                     #공백류가 포함된 경우
-                    print("공백류를 포함할 수 없습니다.")
+                    print("잘못된 수정 정보입니다. 공백류를 포함할 수 없습니다.")
                     cnt += 1
                 
                 if update_data.find('0') == 0:
-                    print("선행0을 포함하지 않아야 합니다.")
+                    print("잘못된 수정 정보입니다. 선행0을 포함하지 않아야 합니다.")
                     cnt += 1
                                 
 
@@ -350,21 +366,21 @@ def validate_data(update_cate,update_data):
                     #패키지드
                     if 'total-bulk' in selected_item :
                         if selected_item['total-bulk'] < int(update_data):
-                            print('현재량은 총량을 넘길 수 없습니다.')
+                            print('잘못된 수정 정보입니다. 현재량은 총량을 넘길 수 없습니다.')
                             cnt += 1
 
                     #언패키지드
                     else :
                         if unpackaged_isitvalid_leftover_number(global_product_id,update_data) == False:
-                            print("해당 칸의 공간이 부족합니다.")
+                            print("잘못된 수정 정보입니다. 해당 칸의 공간이 부족합니다.")
                             cnt += 1
                         
                         if selected_item['total-number'] < int(update_data): 
-                            print("현재량은 총량을 넘길 수 없습니다.")
+                            print("잘못된 수정 정보입니다. 현재량은 총량을 넘길 수 없습니다.")
                             cnt += 1
                         
                         if int(update_data) < 1 or int(update_data) > 100:
-                            print("1이상 100이하의 정수로 입력해주세요.")
+                            print("잘못된 수정 정보입니다. 1이상 100이하의 정수로 입력해주세요.")
                             cnt += 1
 
                             
@@ -379,22 +395,24 @@ def validate_data(update_cate,update_data):
                 #1.야채, 2.과일, 3.유제품, 4.냉동식품, 5.육류, 6.어류, 7.과자, 8.음료, 9.주류, 10.빙과류, 11.신선제품, 12.소스, 13.곡식류, 14.가루류, 15.기타
                 if update_data.isdigit() == False:
                     #숫자가 아닌 경우
-                    print("숫자로 입력해주세요.")
+                    if update_data.find(' ') < 0:
+                        print("잘못된 수정 정보입니다. 숫자로 입력해주세요.")
+
                     cnt += 1
 
                 if update_data.find(' ')>=0:
                     #공백류가 포함된 경우
-                    print("공백류를 포함할 수 없습니다.")
+                    print("잘못된 수정 정보입니다. 공백류를 포함할 수 없습니다.")
                     cnt += 1
                 
                 if update_data.find('0') == 0:
-                    print("선행0을 포함하지 않아야 합니다.")
+                    print("잘못된 수정 정보입니다. 선행0을 포함하지 않아야 합니다.")
                     cnt += 1
 
                 if cnt == 0 : 
                     if 1 > int(update_data) or int(update_data) > 15:
                         #입력 범위에 벗어난 경우
-                        print("1부터 15이하의 정수로 입력해주세요.")
+                        print("잘못된 수정 정보입니다. 1부터 15이하의 정수로 입력해주세요.")
                         cnt += 1
 
                 if cnt == 0:
@@ -410,16 +428,18 @@ def validate_data(update_cate,update_data):
 
                 if num.isdigit() == False:
                     #숫자가 아닌 경우
-                    print("숫자로 입력해주세요.")
+                    if update_data.find(' ') < 0:
+                        print("잘못된 수정 정보입니다. 숫자로 입력해주세요.")
+
                     cnt += 1
 
                 if num.find(' ')>=0:
                     #공백류가 포함된 경우
-                    print("공백류를 포함할 수 없습니다.")
+                    print("잘못된 수정 정보입니다. 공백류를 포함할 수 없습니다.")
                     cnt += 1
                 
                 if num.find('0') == 0:
-                    print("선행0을 포함하지 않아야 합니다.")
+                    print("잘못된 수정 정보입니다. 선행0을 포함하지 않아야 합니다.")
                     cnt += 1
                 
                 if cnt == 0:
@@ -443,12 +463,12 @@ def validate_data(update_cate,update_data):
                     update_data='-'.join(temp)
                     input_date = time.strptime(update_data,"%Y-%m-%d")
                     if today > input_date:
-                        print("오늘 날짜보다 작습니다.")
+                        print("잘못된 수정 정보입니다. 오늘 날짜 이후로 입력해주세요.")
                         return False
                     else :
                         return True
                 else: 
-                    print("날짜 입력규칙에 맞지 않습니다. 2022-10-11와 같은 형식으로 입력해주세요.")
+                    print("잘못된 수정 정보입니다. 날짜 입력규칙에 맞지 않습니다.")
                     return False
 
 def update_product():
@@ -460,6 +480,9 @@ def update_product():
         print()
         if cate_pass == 0:
             update_cate = input("수정할 항목을 입력해주세요 :")
+            if len(update_cate) == 0:
+                    print("입력한 값이 없습니다.")
+                    continue
             update_cate = update_cate.lstrip()
             update_cate = update_cate.rstrip()
             if update_cate == '카테고리':
@@ -528,7 +551,6 @@ def update_product():
                         search_by_id()
             else:
                 #잘못된 수정 항목이나 수정 정보가 입력된 경우
-                print("다시 입력해주세요.")
                 continue
         else:
             #잘못된 수정 항목이나 수정 정보가 입력된 경우
