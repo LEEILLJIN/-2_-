@@ -11,9 +11,9 @@ import IceBox_menu
 
 path = "./data/IceBox_data.json"
 # 상품 id로 상품 폐기
-def delete_by_id() :
+def delete_by_id(global_id) :
         cnt = 0
-        while True : 
+        while True :
             print()
             product_id = input("폐기할 상품 ID : ")
             if product_id.isdigit() == False:
@@ -23,8 +23,9 @@ def delete_by_id() :
                 with open(path, "r", encoding='UTF8') as file :
             
                     data = json.load(file)
-                    iceboxes = data['iceboxes']
-                    items = iceboxes[0]['items']
+                    iceboxes = data['iceboxes'][int(global_id)-1]
+
+                    items = iceboxes['items']
                     
                     for i, item in enumerate(items["packaged"]) :
                         if(int(product_id) == item['ID']) :
@@ -57,7 +58,7 @@ def delete_by_id() :
             cnt=0
 
 # 상품 id로 상품 소모
-def consume_by_id() :
+def consume_by_id(global_id) :
     cnt = 0
     while True :
         consume_id = input("소모할 상품 ID : ")
@@ -70,10 +71,10 @@ def consume_by_id() :
         elif consume_id.isdigit() == True or consume_how.isdigit() == True :
         
             with open(path, "r", encoding='UTF8') as file :
-                    
+                
                 data = json.load(file)
-                iceboxes = data['iceboxes']
-                items = iceboxes[0]['items']
+                iceboxes = data['iceboxes'][int(global_id)-1]
+                items = iceboxes['items']
                 
                             
                 for item in items["packaged"] :
@@ -82,7 +83,6 @@ def consume_by_id() :
                             cnt+=1
                             print("남은 양이 부족합니다.")
                             print("ID '{}'에 해당하는 제품 '{}'의 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-bulk']))
-
                             print()
                             continue
                         else :
@@ -92,8 +92,8 @@ def consume_by_id() :
                                 json.dump(data, consume_file, indent="\t", ensure_ascii=False)
                             print("ID '{}'에 해당하는 제품 '{}'을(를) 소모하고 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-bulk']))
                             print()
-                            main_screen()
-                
+                            product_delete(global_id)
+
                 for item in items["unpackaged"] :
                     if int(consume_id) == item['ID'] :
                         if item['leftover-number'] < int(consume_how) :
@@ -101,7 +101,6 @@ def consume_by_id() :
                             print("남은 양이 부족합니다.")
                             print("ID '{}'에 해당하는 제품 '{}'의 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-number']))
                             print()
-                            main_screen()
                             continue
                         else :
                             item['leftover-number']-=int(consume_how)
@@ -110,7 +109,7 @@ def consume_by_id() :
                                 json.dump(data, consume_file, indent="\t", ensure_ascii=False)
                             print("ID '{}'에 해당하는 제품 '{}'을(를) 소모하고 남은 양은 '{}'입니다." .format(item['ID'], item['name'], item['leftover-number']))
                             print()
-                            main_screen()
+                            product_delete(global_id)
  
                 if cnt == 0:
                     print("일치하는 상품 ID가 없습니다.")
@@ -118,18 +117,16 @@ def consume_by_id() :
                     break
             
 # 유통기한 지난 물품 전체 삭제
-def all_delete() :
+def all_delete(global_id) :
     
     print("유통기한 지난 물품 전체 삭제")
     delete_all = input("삭제하시겠습니까? (Y/N) : ")
 
     if delete_all == 'Y' :
         with open(path, "r", encoding='UTF8') as file :
-            
-
             data = json.load(file)
-            iceboxes = data['iceboxes']
-            items = iceboxes[0]['items']
+            iceboxes = data['iceboxes'][int(global_id)-1]
+            items = iceboxes['items']
             today = int("".join(str(datetime.date.today()).split("-")))
             today_data = data["today"]
             today = time.strptime(today_data, "%Y-%m-%d")
@@ -158,26 +155,26 @@ def all_delete() :
 
     elif delete_all == 'N' :
         main_screen()
-        exit()
+        # exit()
     else :
         print("Y 또는 N을 입력해주세요.")
         print()
-        all_delete()
+        all_delete(global_id)
 
 def main_screen() :
     with open(path, "r", encoding='UTF8') as file :
-          
+
             data = json.load(file)
+            iceboxes = data['iceboxes'][int(global_id)-1]
             today = data['today']
-            IceBox_menu.MainMenu(today)
 
-
+            IceBox_menu.MainMenu(today, global_id)
 
 # 추가 삭제
 def additional_delete(request) :
-                
+
     if request == 'Y' :
-        delete_by_id()
+        delete_by_id(global_id)
         
     elif request == 'N' :
         main_screen()
@@ -188,11 +185,10 @@ def additional_delete(request) :
         additional_delete(plus_delete)
 
                         
-def product_delete():
-    if platform.system() == "Windows":
-        os.system("cls")
-    elif platform.system() == "Darwin":
-        os.system("clear")
+def product_delete(UserId):
+    global global_id
+    global_id = UserId
+    
     while True:
         print("0. 돌아가기")
         print("1. 상품 폐기")
@@ -212,9 +208,9 @@ def product_delete():
                 main_screen()
                 break
             elif user_input == '1' :
-                delete_by_id()
+                delete_by_id(global_id)
             elif user_input == '2' :
-                all_delete()
+                all_delete(global_id)
             elif user_input.isdigit() == False :
                 print()
                 print("숫자만 입력 해주세요.")
@@ -226,7 +222,7 @@ def product_delete():
                 continue
 
         elif user_input == '2' :
-            consume_by_id()
+            consume_by_id(global_id)
         
         # elif user_input.isdigit() == False :
         #     print()

@@ -30,7 +30,7 @@ def openManageMenu(today, UserID):
     else:
         print("사용자 아이디가 존재하지 않습니다.")
         time.sleep(1.5)
-        IceBox_menu.MainMenu(today)
+        IceBox_menu.MainMenu(today, UserID)
 
     today = datetime.strptime(today, '%Y-%m-%d').date()
     # print("오늘 날짜:", today, "\n")
@@ -116,11 +116,11 @@ def openManageMenu(today, UserID):
         elif subMenuInput == '2':
             product_show()
         elif subMenuInput == '3':
-            product_delete()
+            product_delete(UserID)
         elif subMenuInput == '4':
-            product_search()
+            product_search(UserID)
         elif subMenuInput == '5':
-            product_update()
+            product_update(UserID)
         else:
             print("0이상 5이하의 숫자로 입력해주세요.")
             continue
