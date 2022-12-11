@@ -15,7 +15,7 @@ def icebox_remover(UserID):
         with open(file_path, 'r',encoding="utf-8") as f:
             data = json.load(f)
         # 현재 냉장고가 있는 경우
-        if data['iceboxes']: 
+        if data['iceboxes']:
             current_icebox = data['iceboxes'][icebox_num] # 현재 냉장고의 정보만 가져오기
             # 현재 냉장고 정보 및 삭제 경고 메시지 출력
             print("현재 냉장고 삭제...\n")

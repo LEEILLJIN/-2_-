@@ -129,9 +129,9 @@ def openManageMenu(today, UserID):
         elif subMenuInput == '2':
             product_show()
         elif subMenuInput == '3':
-            product_delete()
+            product_delete(UserID)
         elif subMenuInput == '4':
-            product_search()
+            product_search(UserID)
         elif subMenuInput == '5':
             product_update(UserID)
         else:
