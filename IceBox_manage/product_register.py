@@ -81,10 +81,17 @@ def getValidSize(type,inputItem,UserID):
             return True
         else :
             return False
+    # def categryMatch(prop):
+    #     if prop.category==inputItem["category"]:
+    #         return True
+    #     else:
+    #         return False
+        
 
     loaded_json = load_json()
     selectedIceBox=list(filter(isMatch,loaded_json["iceboxes"]))[0]
-    items=list(selectedIceBox["items"].values())[0]+list(selectedIceBox["items"].values())[1]
+    items=list(filter(lambda x : x==inputItem["category"] ,(list(selectedIceBox["items"].values())[0]+list(selectedIceBox["items"].values())[1])))
+
     #냉장 max print()
     if type == "냉장":
         validSize=int(selectedIceBox["refrigerator-size"][category_object_keys[inputItem["category"]]]) 
@@ -263,7 +270,7 @@ def validate_input_data(input_data,key,input_process_tmp_data) :
         
     elif key == 'total-number':
         if(validate_int(input_data)==False):
-            print("자연수만 입력 가능합니다.")
+            print("유효하지 않은 총량입니다. 다시 입력해주세요.")
             print("다시 입력해주세요.")
             return False
 
