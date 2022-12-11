@@ -4,12 +4,12 @@ import json
 import IceBox_menu
 file_path = "./data/IceBox_data.json"
 
-def main_screen2() :
+def main_screen2(UserID) :
     with open(file_path, "r", encoding='UTF8') as file :
           
             data = json.load(file)
             today = data['today']
-            IceBox_menu.MainMenu(today)
+            IceBox_menu.MainMenu(today,UserID)
 
 
 def sort_display(direction,reverse):
@@ -33,10 +33,11 @@ def show_item(item):
     # print('bulk-for-unit' in item)
     if 'bulk-for-unit' in item:
         #unpackaged
-        print("<상품 ID: {}, 상품명: {}, 총량: {}, 단위 수량: {}, 현재량: {}, 현재수량: {}, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["total-number"]*item["bulk-for-unit"], item["bulk-for-unit"],item["leftover-number"]*item["bulk-for-unit"],item["leftover-number"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
+        
+        print("<상품 ID: {}, 상품명: {}, 총량: {}개, 단위 수량: {}개, 현재량: {}개, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["total-number"]*item["bulk-for-unit"], item["bulk-for-unit"],item["leftover-number"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))
     else:
         #packaged
-        print("<상품 ID: {}, 상품명: {}, 총량: {}, 현재량: {}, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["total-bulk"], item["leftover-bulk"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))  
+        print("<상품 ID: {}, 상품명: {}, 총량: {}L, 현재량: {}L, 카테고리: {}, 분류: {}, 보관권장온도: {}, 유통기한: {}>" .format(item["ID"], item["name"], item["total-bulk"], item["leftover-bulk"], item["category"], item["partition"], item["recommended-temp"], item["expiration-date"]))  
         
 def dic_key_change(dic,prevKey,nextkey) :
     new_items=[]
@@ -52,10 +53,17 @@ def dic_key_change(dic,prevKey,nextkey) :
     return new_items
     
 
-def show_items(sort_filter) :        
-    data=load_json()
-    unpackedged_itmes=data["iceboxes"][0]["items"]["unpackaged"]
-    normarlized_packaged_items = data["iceboxes"][0]["items"]["packaged"]
+def show_items(sort_filter,UserID) :        
+    def isMatch(iceBox):
+        if iceBox["id"]==UserID :
+            return True
+        else :
+            return False
+
+    loaded_json = load_json()
+    selectedIceBox=list(filter(isMatch,loaded_json["iceboxes"]))[0]
+    unpackedged_itmes=selectedIceBox["items"]["unpackaged"]
+    normarlized_packaged_items = selectedIceBox["items"]["packaged"]
     items=unpackedged_itmes+normarlized_packaged_items
     #items
 
@@ -74,11 +82,11 @@ def show_items(sort_filter) :
                      
             
 
-def product_show():
+def product_show(UserID):
     #unpackeged defaultReverseFlag defaultReverseFlagOfreverse Display defaultSortDisplay
     sort_filter=["expiration-date",False,False,"유통기한 기준","up"]
     while True:
-        show_items(sort_filter)
+        show_items(sort_filter,UserID)
         print("==========================================")
         print("0. 돌아가기")
         print("1. 유통기한 기준 조회")
@@ -92,7 +100,7 @@ def product_show():
         user_input = input("조회할 기준을 선택해주세요.:")
         
         if user_input == '0' :
-            main_screen2()
+            main_screen2(UserID)
             break; 
         elif user_input == '1' :
             sort_filter=["expiration-date",False,False,"유통기한 기준","up"]

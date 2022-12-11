@@ -125,9 +125,9 @@ def openManageMenu(today, UserID):
         if subMenuInput == '0':
             IceBox_menu.MainMenu(today, UserID)
         elif subMenuInput == '1':
-            register_product()
+            register_product(UserID)
         elif subMenuInput == '2':
-            product_show()
+            product_show(UserID)
         elif subMenuInput == '3':
             product_delete(UserID)
         elif subMenuInput == '4':

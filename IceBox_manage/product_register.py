@@ -6,12 +6,12 @@ from itertools import product
 from unicodedata import category
 from IceBox import validate_date
 import IceBox_menu
-def main_screen2() :
+def main_screen2(UserID) :
     with open(file_path, "r", encoding='UTF8') as file :
           
             data = json.load(file)
             today = data['today']
-            IceBox_menu.MainMenu(today)
+            IceBox_menu.MainMenu(today,UserID)
 
 # import IceBox
 path = "./data/IceBox_data.json"
@@ -31,6 +31,24 @@ category_data_type={
 }
 category_object = {
     '1' : '야채', '2':'과일', '3':'유제품', '4':'냉동식품', '5':'육류', '6':'어류', '7':'과자', '8':'음료', '9':'주류', '10':'빙과류', '11':'신선제품', '12':'소스', '13':'곡식류', '14':'가루류', '15':'기타'
+}
+
+category_object_keys = {
+    "야채":"vegetable",
+    "굉일":"fruit",
+    "유제품":"dairy-product",
+    "냉동식품":"frozen-food",
+    "육류":"meat",
+    "어류":"seafood",
+    "과자":"snack",
+    "음료":"beverage",
+    "주류":"alcohol",
+    "빙과류":"ice-cream",
+    "신선제품":"fresh-product",
+    "소스":"sauce",
+    "곡식류":"grains",
+    "가루류":"powder",
+    "기타":"etc"
 }
 
 partition_object = {
@@ -57,11 +75,19 @@ def getBulk(item):
         return item["leftover-number"]*item["bulk-for-unit"]
 
     
-def getValidSize(type,inputItem):
-    json_file=loaded_json = load_json()
-    items=list(loaded_json["iceboxes"][0]["items"].values())[0]+list(loaded_json["iceboxes"][0]["items"].values())[1]
+def getValidSize(type,inputItem,UserID):
+    def isMatch(iceBox):
+        if iceBox["id"]==UserID :
+            return True
+        else :
+            return False
+
+    loaded_json = load_json()
+    selectedIceBox=list(filter(isMatch,loaded_json["iceboxes"]))[0]
+    items=list(selectedIceBox["items"].values())[0]+list(selectedIceBox["items"].values())[1]
+    #냉장 max print()
     if type == "냉장":
-        validSize=int(json_file["iceboxes"][0]["refrigerator-size"]) 
+        validSize=int(selectedIceBox["refrigerator-size"][category_object_keys[inputItem["category"]]]) 
         for item in items:
             if item["partition"]=="냉장":
                 validSize-=getBulk(item)
@@ -70,7 +96,7 @@ def getValidSize(type,inputItem):
         else:
             return False
     else:
-        validSize=int(json_file["iceboxes"][0]["freezer-size"])
+        validSize=int(selectedIceBox["freezer-size"][category_object_keys[inputItem["category"]]])
         for item in items:
             if item["partition"]=="냉동":
                 validSize-=getBulk(item)
@@ -80,13 +106,21 @@ def getValidSize(type,inputItem):
             return False
 
 
-def save_product (is_packaged,input_data):    
+
+def save_product (is_packaged,input_data,UserID):    
+    def isMatch(iceBox):
+        if iceBox["id"]==UserID :
+            return True
+        else :
+            return False
+
     loaded_json = load_json()
+    selectedIceBox=list(filter(isMatch,loaded_json["iceboxes"]))[0]
 
     #max seq 구하기
     max_seq=0
-    if loaded_json["iceboxes"][0]["items"] :
-        for item in (list(loaded_json["iceboxes"][0]["items"].values())[0]+list(loaded_json["iceboxes"][0]["items"].values())[1]):
+    if selectedIceBox["items"] :
+        for item in (list(selectedIceBox["items"].values())[0]+list(selectedIceBox["items"].values())[1]):
             if item["ID"]>=max_seq:
                 max_seq=item["ID"]
         input_data["ID"]=max_seq+1
@@ -94,11 +128,11 @@ def save_product (is_packaged,input_data):
         input_data["ID"]=max_seq+1
 
     if is_packaged:
-        loaded_json["iceboxes"][0]["items"]["packaged"].append(input_data)
+        selectedIceBox["items"]["packaged"].append(input_data)
     else:
-        loaded_json["iceboxes"][0]["items"]["unpackaged"].append(input_data)
+        selectedIceBox["items"]["unpackaged"].append(input_data)
 
-    if getValidSize(input_data["partition"],input_data)==True:
+    if getValidSize(input_data["partition"],input_data,UserID)==True:
         save_json(loaded_json)
     else:
         print(f'{input_data["partition"]}고 용량 초과입니다.')
@@ -107,10 +141,10 @@ def save_product (is_packaged,input_data):
     
 
 
-def set_input_process_tmp_data(input_data,key,input_process_tmp_data,exit_object):
+def set_input_process_tmp_data(input_data,key,input_process_tmp_data,exit_object,UserID):
     if(input_data=="0"):
         exit_object["is_exit"]=True
-        main_screen2()
+        main_screen2(UserID)
         return False
     if validate_input_data(input_data,key,input_process_tmp_data) == True:
         save_data(input_data,key,input_process_tmp_data)
@@ -168,17 +202,16 @@ def save_data(input_data,key,input_process_tmp_data) :
     input_process_tmp_data[key]=parsed_input_data
 
 def validate_input_data(input_data,key,input_process_tmp_data) :
-
     if key == 'product-type':
         if(validate_int(input_data)==False):
-            print("자연수만 입력 가능합니다.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 선택지입니다. 다시 입력해주세요.")
+            print("선택지를 입력해주세요.")
             return False
         if (int(input_data) >= 0) & (int(input_data)<=2):
             return True
         else:
-            print("선택지 내에서 선택해주세요.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 선택지입니다. 다시 입력해주세요.")
+            print("선택지를 입력해주세요.")
             return False
         
 
@@ -187,15 +220,45 @@ def validate_input_data(input_data,key,input_process_tmp_data) :
 
     elif key == 'total-bulk':
         if(validate_int(input_data)==False):
-            print("자연수만 입력 가능합니다.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 총량입니다. 다시 입력해주세요.")
+            print("총량을 입력해주세요.")
             return False
         if (int(input_data) >= 0):
             return True
         else:
-            print("자연수만 입력 가능합니다.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 총량입니다. 다시 입력해주세요.")
+            print("총량을 입력해주세요.")
             return False
+
+    elif key == 'leftover-bulk':
+        if(validate_int(input_data)==False):
+            print("유효하지 않은 현재량입니다. 다시 입력해주세요.")
+            print("현재량을 입력해주세요.")
+            return False
+        if input_process_tmp_data["total-bulk"]<int(input_data):
+            print("유효하지 않은 현재량입니다. 다시 입력해주세요.")
+            print("현재량을 입력해주세요.")
+            return False
+        else :
+            return True
+        
+
+    elif key == 'leftover':
+        if(validate_int(input_data)==False):
+            print("유효하지 않은 현재량입니다. 다시 입력해주세요.")
+            print("현재량을 입력해주세요.")
+            return False
+        if input_process_tmp_data["total-bulk"]<int(input_data):
+            print("유효하지 않은 현재량입니다. 다시 입력해주세요.")
+            print("현재량을 입력해주세요.")
+            return False
+        else :
+            if int(input_data) >= 0:
+                return True
+            else:
+                print("유효하지 않은 현재량입니다. 다시 입력해주세요.")
+                print("현재량을 입력해주세요.")
+                return False
             
         
     elif key == 'total-number':
@@ -213,20 +276,15 @@ def validate_input_data(input_data,key,input_process_tmp_data) :
 
     elif key == 'leftover-number':
         if(validate_int(input_data)==False):
-            print("자연수만 입력 가능합니다.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 현재량입니다. 다시 입력해주세요.")
+            print("현재량을 입력해주세요.")
             return False
         if input_process_tmp_data["total-number"]<int(input_data):
-            print("총량보다 작은 값만 입력 가능합니다.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 현재량입니다. 다시 입력해주세요.")
+            print("현재량을 입력해주세요.")
             return False
         else :
-            if int(input_data) >= 0:
-                return True
-            else:
-                print("자연수만 입력 가능합니다.")
-                print("다시 입력해주세요.")
-                return False
+            return True
 
     elif key == 'leftover-bulk':
         if(validate_int(input_data)==False):
@@ -247,47 +305,47 @@ def validate_input_data(input_data,key,input_process_tmp_data) :
 
     elif key == 'bulk-for-unit':
             if(validate_int(input_data)==False):
-                print("자연수만 입력 가능합니다.")
-                print("다시 입력해주세요.")
+                print("유효하지 않은 개당 부피입니다. 다시 입력해주세요.")
+                print("개당 부피를 입력해주세요.")
                 return False
             if int(input_data) >= 0:
                 return True
             else:
-                print("자연수만 입력 가능합니다.")
-                print("다시 입력해주세요.")
+                print("유효하지 않은 현재량입니다. 다시 입력해주세요.")
+                print("현재량을 입력해주세요.")
                 return False
 
     elif key == 'partition':
         if(validate_int(input_data)==False):
-            print("자연수만 입력 가능합니다.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 저장환경입니다. 다시 입력해주세요.")
+            print("저장환경을 입력해주세요.")
             return False
 
         if (int(input_data) >= 0) & (int(input_data) <= 2):
             return True
         else:
-            print("선택지 내에서 선택해주세요.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 저장환경입니다. 다시 입력해주세요.")
+            print("저장환경을 입력해주세요.")
             return False
         
 
     elif key == 'category':
         if(validate_int(input_data)==False):
-            print("자연수만 입력 가능합니다.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 카테고리입니다. 다시 입력해주세요.")
+            print("카테고리를 입력해주세요.")
             return False
         if  (int(input_data) >= 0) & (int(input_data)<=len(list(category_object.keys()))):
             return True
         else:
-            print("선택지 내에서 선택해주세요.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 카테고리입니다. 다시 입력해주세요.")
+            print("카테고리를 입력해주세요.")
             return False
         
         
     elif key == 'recommended-temp':
         if(validate_int(input_data)==False):
-            print("정수만 입력 가능합니다.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 보관온도입니다. 다시 입력해주세요.")
+            print("보관온도를 입력해주세요.")
             return False
         return True
 
@@ -297,17 +355,19 @@ def validate_input_data(input_data,key,input_process_tmp_data) :
             if validate_date(input_data):
                 return True
             else:
-                print("'YYYY-MM-DD' 형식으로 입력 가능합니다.")
-                print("다시 입력해주세요.")
+                print("유효하지 않은 유통기한입니다. 다시 입력해주세요.")
+                print("유통기한을 입력해주세요.")
                 return False
         else :
-            print("'YYYY-MM-DD' 형식으로 입력 가능합니다.")
-            print("다시 입력해주세요.")
+            print("유효하지 않은 유통기한입니다. 다시 입력해주세요.")
+            print("유통기한을 입력해주세요.")
             return False
     return False
 
 
-def register_product():
+
+def register_product(UserID):
+
     #수정할 상품 ID 입력하여 해당 ID의 예외 처리 후 적법할 경우 상품을 찾는 함수
     exit_object={
         "is_exit": False
@@ -319,7 +379,7 @@ def register_product():
         product_register_type =  input("상품의 저장 환경을 선택하세요: ")
 
         #입력값 검증
-        if set_input_process_tmp_data(product_register_type,"product-type",{},exit_object) == False :
+        if set_input_process_tmp_data(product_register_type,"product-type",{},exit_object,UserID) == False :
             continue
 
         if(exit_object["is_exit"]==True):
@@ -364,7 +424,7 @@ def register_product():
             # print(input_data)
 
             #입력값 검증
-            if set_input_process_tmp_data(input_data,input_process_category_key_list[process_step],input_process_tmp_data,exit_object) == False :
+            if set_input_process_tmp_data(input_data,input_process_category_key_list[process_step],input_process_tmp_data,exit_object,UserID) == False :
                 if exit_object["is_exit"]==True:
                     break
                 else:
@@ -376,7 +436,7 @@ def register_product():
                 break
         
         if(exit_object["is_exit"]==False):
-            save_product(is_input_process_tmp_data_packaged,input_process_tmp_data)    
+            save_product(is_input_process_tmp_data_packaged,input_process_tmp_data,UserID)    
         
 
 
