@@ -51,6 +51,7 @@ def openManageMenu(today, UserID):
         "leftover-number": "현재량"
     }
 
+    infoOrder = ["ID", "name", "total-bulk", "leftover-bulk", "bulk-for-unit", "total-number", "leftover-number", "category", "recommended-temp", "expiration-date"]
 
     print("냉장")
     for i in items:
@@ -64,18 +65,21 @@ def openManageMenu(today, UserID):
                 elif (today < expDate and (today + timedelta(5)) >= expDate):
                     print('\u001b[2;33m', end="")
                 print("<",end="")
-                for k in items[i][j]:
+                for k in infoOrder:
                     cnt += 1
-                    if (k in ["partition"]):
+                    if (i in ["packaged"] and k in ["bulk-for-unit", "total-number", "leftover-number"] or i in ["unpackaged"] and k in ["total-bulk", "leftover-bulk"]):
                         continue
                     else:
                         if (k in ["total-bulk", "leftover-bulk"]):
                             unit = "L"
-                        if (k in ["bulk-for-unit", "total-number", "leftover-number"]):
+                        elif (k in ["bulk-for-unit", "total-number", "leftover-number"]):
                             unit = "개"
+                        elif (k in ["recommended-temp"]):
+                            unit = "°C"
+
                         print(f"{keyNames[k]}: {items[i][j][k]}{unit}", end = "")
                         unit = ""
-                        if (cnt != len(items[i][j])):
+                        if (cnt != len(infoOrder)):
                             print(", ", end = "")
                 print(">\u001b[0;0m")
         else:
@@ -93,18 +97,21 @@ def openManageMenu(today, UserID):
                 elif (today < expDate and (today + timedelta(5)) > expDate):
                     print('\u001b[2;33m', end="")
                 print("<",end="")
-                for k in items[i][j]:
+                for k in infoOrder:
                     cnt += 1
-                    if (k in ["partition"]):
+                    if (i in ["packaged"] and k in ["bulk-for-unit", "total-number", "leftover-number"] or i in ["unpackaged"] and k in ["total-bulk", "leftover-bulk"]):
                         continue
                     else:
                         if (k in ["total-bulk", "leftover-bulk"]):
                             unit = "L"
-                        if (k in ["bulk-for-unit", "total-number"]):
+                        elif (k in ["bulk-for-unit", "total-number", "leftover-number"]):
                             unit = "개"
+                        elif (k in ["recommended-temp"]):
+                            unit = "°C"
+
                         print(f"{keyNames[k]}: {items[i][j][k]}{unit}", end = "")
                         unit = ""
-                        if (cnt != len(items[i][j])):
+                        if (cnt != len(infoOrder)):
                             print(", ", end = "")
                 print(">\u001b[0;0m")
         else:
