@@ -35,7 +35,7 @@ category_object = {
 
 category_object_keys = {
     "야채":"vegetable",
-    "굉일":"fruit",
+    "과일":"fruit",
     "유제품":"dairy-product",
     "냉동식품":"frozen-food",
     "육류":"meat",
